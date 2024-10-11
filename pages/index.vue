@@ -27,7 +27,6 @@ onMounted(async () => {
 .product-list {
   display: flex;
   flex-wrap: wrap;
-  list-style: none;
   justify-content: space-around;
 }
 .product-item {
