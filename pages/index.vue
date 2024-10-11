@@ -16,7 +16,7 @@ onMounted(async () => {
       <div v-for="product in products" :key="product.id" class="product-item">
         <h3>{{ product.title }}</h3>
         <img :src="product.image" alt="product image" class="product-image" />
-        <p>{{ product.price | currency }}</p>
+        <p>${{ product.price | currency }}</p>
         <nuxt-link :to="`/product/${product.id}`">View Details</nuxt-link>
       </div>
     </div>
