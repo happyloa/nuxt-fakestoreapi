@@ -16,8 +16,9 @@ onMounted(async () => {
       <nuxt-link
         :to="`/product/${product.id}`"
         v-for="product in products"
-        :key="product.id">
-        <li class="product-item">
+        :key="product.id"
+        class="list-card">
+        <li>
           <h3>{{ product.title }}</h3>
           <img :src="product.image" alt="product image" class="product-image" />
           <p>${{ product.price | currency }}</p>
@@ -33,13 +34,15 @@ onMounted(async () => {
   flex-wrap: wrap;
   justify-content: space-around;
 }
-.product-item {
+
+.list-card {
   border: 1px solid #ccc;
   padding: 16px;
   margin: 16px;
   width: 200px;
   text-align: center;
 }
+
 .product-image {
   width: 100px;
   height: 100px;
