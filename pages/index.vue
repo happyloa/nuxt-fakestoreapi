@@ -47,7 +47,10 @@ onMounted(async () => {
 
 .product-link {
   color: inherit;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   text-decoration: none;
   padding: 16px;
 }
