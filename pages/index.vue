@@ -13,12 +13,16 @@ onMounted(async () => {
   <div>
     <h1>Fake Store API 商品資料串接練習</h1>
     <ul class="product-list">
-      <li v-for="product in products" :key="product.id" class="product-item">
-        <h3>{{ product.title }}</h3>
-        <img :src="product.image" alt="product image" class="product-image" />
-        <p>${{ product.price | currency }}</p>
-        <nuxt-link :to="`/product/${product.id}`">詳細資訊</nuxt-link>
-      </li>
+      <nuxt-link
+        :to="`/product/${product.id}`"
+        v-for="product in products"
+        :key="product.id">
+        <li class="product-item">
+          <h3>{{ product.title }}</h3>
+          <img :src="product.image" alt="product image" class="product-image" />
+          <p>${{ product.price | currency }}</p>
+        </li>
+      </nuxt-link>
     </ul>
   </div>
 </template>
