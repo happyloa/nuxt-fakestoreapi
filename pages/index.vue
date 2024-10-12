@@ -1,4 +1,11 @@
 <script setup>
+useSeoMeta({
+  title: "首頁 | Fake Store API 商品資料串接練習",
+  ogTitle: "首頁 | Fake Store API 商品資料串接練習",
+  description: "Fake Store API 商品資料串接練習 by Aaron",
+  ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
+});
+
 import { ref, onMounted } from "vue";
 
 const products = ref([]);

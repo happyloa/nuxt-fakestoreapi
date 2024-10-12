@@ -10,6 +10,13 @@ onMounted(async () => {
     `https://fakestoreapi.com/products/${route.params.id}`
   );
   product.value = await res.json();
+
+  useSeoMeta({
+    title: `${product.value.title} | Fake Store API 商品資料串接練習`,
+    ogTitle: `${product.value.title} | Fake Store API 商品資料串接練習`,
+    description: "Fake Store API 商品資料串接練習 by Aaron",
+    ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
+  });
 });
 </script>
 
@@ -18,7 +25,7 @@ onMounted(async () => {
     <h1>{{ product.title }}</h1>
     <img :src="product.image" alt="product image" class="product-image" />
     <p>{{ product.description }}</p>
-    <p><strong>Price:</strong> {{ product.price | currency }}</p>
+    <p><strong>價格：</strong> {{ product.price | currency }}</p>
   </div>
 </template>
 
