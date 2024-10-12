@@ -18,7 +18,14 @@ onMounted(async () => {
 
 <template>
   <main class="container">
-    <h1>Fake Store API 商品資料串接練習</h1>
+    <hgroup class="heading-group">
+      <h1>Fake Store API 商品資料串接練習</h1>
+      <p>
+        參考資料：<a href="https://fakestoreapi.com/" target="_blank"
+          >Fake Store API</a
+        >
+      </p>
+    </hgroup>
     <ul class="product-list">
       <li v-for="product in products" :key="product.id" class="list-card">
         <nuxt-link :to="`/product/${product.id}`" class="product-link">
@@ -32,6 +39,21 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.heading-group {
+  text-align: center;
+  margin: 48px 0;
+}
+
+.heading-group h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.heading-group p {
+  font-size: 20px;
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
