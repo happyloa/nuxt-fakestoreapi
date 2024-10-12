@@ -21,7 +21,7 @@ onMounted(async () => {
     <h1>Fake Store API 商品資料串接練習</h1>
     <ul class="product-list">
       <li v-for="product in products" :key="product.id" class="list-card">
-        <nuxt-link :to="`/product/${product.id}`">
+        <nuxt-link :to="`/product/${product.id}`" class="product-link">
           <h3>{{ product.title }}</h3>
           <img :src="product.image" alt="product image" class="product-image" />
           <p>${{ product.price | currency }}</p>
@@ -36,14 +36,19 @@ onMounted(async () => {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  gap: 16px;
 }
 
 .list-card {
   border: 1px solid #ccc;
-  padding: 16px;
-  margin: 16px;
-  width: 200px;
+  max-width: 200px;
   text-align: center;
+}
+
+.product-link {
+  color: inherit;
+  display: block;
+  padding: 16px;
 }
 
 .product-image {
