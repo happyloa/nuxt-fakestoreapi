@@ -17,7 +17,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <main class="container">
     <h1>Fake Store API 商品資料串接練習</h1>
     <ul class="product-list">
       <li v-for="product in products" :key="product.id" class="list-card">
@@ -28,14 +28,13 @@ onMounted(async () => {
         </nuxt-link>
       </li>
     </ul>
-  </div>
+  </main>
 </template>
 
 <style scoped>
 .product-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 }
 
