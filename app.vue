@@ -8,5 +8,6 @@ useSeoMeta({
   <div>
     <NuxtRouteAnnouncer />
     <NuxtPage />
+    <AppFooter />
   </div>
 </template>
