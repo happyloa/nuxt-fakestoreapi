@@ -25,7 +25,10 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
       <li v-for="product in products" :key="product.id" class="list-card">
         <nuxt-link :to="`/product/${product.id}`" class="product-link">
           <h3>{{ product.title }}</h3>
-          <img :src="product.image" alt="product image" class="product-image" />
+          <img
+            :src="product.image"
+            :alt="`${product.title} 圖片`"
+            class="product-image" />
           <p>${{ product.price | currency }}</p>
         </nuxt-link>
       </li>
