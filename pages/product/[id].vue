@@ -24,7 +24,7 @@ useSeoMeta({
         :alt="`${product.title} 圖片`"
         class="product-image" />
       <p>{{ product.description }}</p>
-      <p><strong>價格：</strong> ${{ product.price | currency }}</p>
+      <p><strong>價格：</strong> ${{ product.price }}</p>
     </section>
   </main>
 </template>

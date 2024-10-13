@@ -29,7 +29,7 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
             :src="product.image"
             :alt="`${product.title} 圖片`"
             class="product-image" />
-          <p>${{ product.price | currency }}</p>
+          <p>${{ product.price }}</p>
         </nuxt-link>
       </li>
     </ul>
