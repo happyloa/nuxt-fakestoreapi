@@ -45,11 +45,12 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
 .heading-group h1 {
   font-size: 42px;
   font-weight: 700;
+  line-height: 1.2;
   margin-bottom: 16px;
 }
 
 .heading-group p {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .container {
@@ -60,13 +61,13 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
 
 .product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 16px;
 }
 
 .list-card {
   border: 1px solid #ccc;
-  max-width: 200px;
+  max-width: 100%;
   text-align: center;
 }
 
@@ -81,8 +82,8 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
 }
 
 .product-image {
-  width: 100px;
-  height: 100px;
+  width: 6.25rem;
+  height: 6.25rem;
   object-fit: cover;
 }
 
@@ -91,18 +92,6 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
   .heading-group h1 {
     font-size: 36px;
   }
-
-  .heading-group p {
-    font-size: 18px;
-  }
-
-  .container {
-    padding: 0 16px;
-  }
-
-  .product-list {
-    gap: 12px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -110,21 +99,8 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
     font-size: 32px;
   }
 
-  .heading-group p {
-    font-size: 16px;
-  }
-
-  .container {
-    padding: 0 12px;
-  }
-
   .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-  }
-
-  .list-card {
-    max-width: 150px;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .product-link {
@@ -133,8 +109,8 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
   }
 
   .product-image {
-    width: 80px;
-    height: 80px;
+    width: 5rem;
+    height: 5rem;
   }
 }
 
@@ -143,31 +119,13 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
     font-size: 28px;
   }
 
-  .heading-group p {
-    font-size: 14px;
-  }
-
-  .container {
-    padding: 0 8px;
-  }
-
   .product-list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
-  }
-
-  .list-card {
-    max-width: 120px;
-  }
-
-  .product-link {
-    gap: 8px;
-    padding: 8px;
+    grid-template-columns: 1fr;
   }
 
   .product-image {
-    width: 60px;
-    height: 60px;
+    width: 3.75rem;
+    height: 3.75rem;
   }
 }
 </style>
