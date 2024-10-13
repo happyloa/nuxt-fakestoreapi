@@ -9,10 +9,12 @@ useSeoMeta({
 import { ref, onMounted } from "vue";
 
 const products = ref([]);
+const loading = ref(true); // 加入 Loading 狀態
 
 onMounted(async () => {
   const res = await fetch("https://fakestoreapi.com/products");
   products.value = await res.json();
+  loading.value = false; // 資料載入完成後關閉 Loading 狀態
 });
 </script>
 
@@ -26,7 +28,14 @@ onMounted(async () => {
         >
       </p>
     </hgroup>
-    <ul class="product-list">
+
+    <!-- 顯示 Loading 指示器或產品列表 -->
+    <div v-if="loading" class="loading-indicator">
+      <div class="spinner"></div>
+      <p>從 API 讀取資料中...</p>
+    </div>
+
+    <ul v-else class="product-list">
       <li v-for="product in products" :key="product.id" class="list-card">
         <nuxt-link :to="`/product/${product.id}`" class="product-link">
           <h3>{{ product.title }}</h3>
@@ -58,6 +67,34 @@ onMounted(async () => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* Loading 指示器樣式 */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 100px 0;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .product-list {
