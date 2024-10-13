@@ -6,16 +6,10 @@ useSeoMeta({
   ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
 });
 
-import { ref, onMounted } from "vue";
-
-const products = ref([]);
-const loading = ref(true); // 加入 Loading 狀態
-
-onMounted(async () => {
-  const res = await fetch("https://fakestoreapi.com/products");
-  products.value = await res.json();
-  loading.value = false; // 資料載入完成後關閉 Loading 狀態
-});
+// 使用 useFetch 以確保 SSR 效果
+const { data: products, pending: loading } = useFetch(
+  "https://fakestoreapi.com/products"
+);
 </script>
 
 <template>
