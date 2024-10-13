@@ -85,4 +85,89 @@ const { data: products } = useFetch("https://fakestoreapi.com/products");
   height: 100px;
   object-fit: cover;
 }
+
+/* RWD 斷點設計 */
+@media (max-width: 1024px) {
+  .heading-group h1 {
+    font-size: 36px;
+  }
+
+  .heading-group p {
+    font-size: 18px;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .product-list {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heading-group h1 {
+    font-size: 32px;
+  }
+
+  .heading-group p {
+    font-size: 16px;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .product-list {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .list-card {
+    max-width: 150px;
+  }
+
+  .product-link {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .product-image {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 576px) {
+  .heading-group h1 {
+    font-size: 28px;
+  }
+
+  .heading-group p {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 0 8px;
+  }
+
+  .product-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  .list-card {
+    max-width: 120px;
+  }
+
+  .product-link {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .product-image {
+    width: 60px;
+    height: 60px;
+  }
+}
 </style>
