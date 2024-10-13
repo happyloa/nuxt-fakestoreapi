@@ -19,7 +19,10 @@ useSeoMeta({
   <main class="container">
     <section v-if="product" class="product-details">
       <h1>{{ product.title }}</h1>
-      <img :src="product.image" alt="product image" class="product-image" />
+      <img
+        :src="product.image"
+        :alt="`${product.title} 圖片`"
+        class="product-image" />
       <p>{{ product.description }}</p>
       <p><strong>價格：</strong> ${{ product.price | currency }}</p>
     </section>
