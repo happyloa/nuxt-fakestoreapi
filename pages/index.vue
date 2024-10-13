@@ -7,9 +7,7 @@ useSeoMeta({
 });
 
 // 使用 useFetch 以確保 SSR 效果
-const { data: products, pending: loading } = useFetch(
-  "https://fakestoreapi.com/products"
-);
+const { data: products } = useFetch("https://fakestoreapi.com/products");
 </script>
 
 <template>
@@ -23,13 +21,7 @@ const { data: products, pending: loading } = useFetch(
       </p>
     </hgroup>
 
-    <!-- 顯示 Loading 指示器或產品列表 -->
-    <div v-if="loading" class="loading-indicator">
-      <div class="spinner"></div>
-      <p>從 API 讀取資料中...</p>
-    </div>
-
-    <ul v-else class="product-list">
+    <ul class="product-list">
       <li v-for="product in products" :key="product.id" class="list-card">
         <nuxt-link :to="`/product/${product.id}`" class="product-link">
           <h3>{{ product.title }}</h3>
@@ -61,34 +53,6 @@ const { data: products, pending: loading } = useFetch(
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-}
-
-/* Loading 指示器樣式 */
-.loading-indicator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin: 100px 0;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(0, 0, 0, 0.1);
-  border-top-color: #333;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 .product-list {
