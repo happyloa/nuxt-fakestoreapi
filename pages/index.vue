@@ -30,11 +30,19 @@ const sortOrder = ref("asc");
 const router = useRouter();
 const route = useRoute();
 
-// 在頁面加載時根據查詢參數設置當前分類
+// 在頁面加載時根據查詢參數設置當前分類和排序
 onMounted(() => {
   const categoryFromQuery = route.query.category || "所有商品";
+  const sortFromQuery = route.query.sort || "asc";
+
   if (categories.value.includes(categoryFromQuery)) {
     selectedCategory.value = categoryFromQuery;
+  }
+
+  if (sortFromQuery === "desc") {
+    sortOrder.value = "desc";
+  } else {
+    sortOrder.value = "asc";
   }
 });
 
@@ -53,15 +61,31 @@ const filteredProducts = computed(() => {
   });
 });
 
-// 更新選中的分類並在 URL 上帶參數
+// 更新選中的分類並在 URL 上帶入參數
 const selectCategory = (category) => {
   selectedCategory.value = category;
-  router.push({ query: { category } });
+  updateQueryParams();
 };
 
-// 更新排序方式
+// 更新排序方式並在 URL 上帶入參數
 const updateSortOrder = (order) => {
   sortOrder.value = order;
+  updateQueryParams();
+};
+
+// 更新網址參數（包含分類和排序）
+const updateQueryParams = () => {
+  const query = {};
+
+  if (selectedCategory.value !== "所有商品") {
+    query.category = selectedCategory.value;
+  }
+
+  if (sortOrder.value === "desc") {
+    query.sort = "desc";
+  }
+
+  router.push({ query });
 };
 </script>
 
