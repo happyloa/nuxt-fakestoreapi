@@ -23,6 +23,9 @@ const categories = ref([
 // 當前選中的分類
 const selectedCategory = ref("所有商品");
 
+// 排序方式，預設為升冪
+const sortOrder = ref("asc");
+
 // 路由
 const router = useRouter();
 const route = useRoute();
@@ -35,20 +38,30 @@ onMounted(() => {
   }
 });
 
-// 篩選商品資料
+// 篩選商品資料，並根據選擇的排序方式進行排序（使用id）
 const filteredProducts = computed(() => {
-  if (selectedCategory.value === "所有商品") {
-    return products.value;
-  }
-  return products.value.filter(
-    (product) => product.category === selectedCategory.value
-  );
+  let filtered =
+    selectedCategory.value === "所有商品"
+      ? products.value
+      : products.value.filter(
+          (product) => product.category === selectedCategory.value
+        );
+
+  // 根據 id 進行升冪或降冪排序
+  return filtered.sort((a, b) => {
+    return sortOrder.value === "asc" ? a.id - b.id : b.id - a.id;
+  });
 });
 
 // 更新選中的分類並在 URL 上帶參數
 const selectCategory = (category) => {
   selectedCategory.value = category;
   router.push({ query: { category } });
+};
+
+// 更新排序方式
+const updateSortOrder = (order) => {
+  sortOrder.value = order;
 };
 </script>
 
@@ -91,6 +104,28 @@ const selectCategory = (category) => {
             {{ category }}
           </li>
         </ul>
+
+        <h2>排序方式</h2>
+        <div class="sort-order">
+          <label>
+            <input
+              type="radio"
+              name="sort"
+              value="asc"
+              v-model="sortOrder"
+              @change="updateSortOrder('asc')" />
+            ID：小到大
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="sort"
+              value="desc"
+              v-model="sortOrder"
+              @change="updateSortOrder('desc')" />
+            ID：大到小
+          </label>
+        </div>
       </aside>
     </div>
   </section>
@@ -169,8 +204,7 @@ const selectCategory = (category) => {
 .category-filter ul {
   list-style: none;
   padding: 0;
-  position: sticky;
-  top: 48px;
+  margin-bottom: 16px;
 }
 
 .category-filter li {
@@ -192,10 +226,24 @@ const selectCategory = (category) => {
   font-weight: bold;
 }
 
+.sort-order {
+  display: flex;
+  gap: 16px;
+}
+
 /* RWD 斷點設計 */
 @media (max-width: 1024px) {
   .heading-group h1 {
     font-size: 36px;
+  }
+
+  .category-filter h2 {
+    text-align: center;
+  }
+
+  .sort-order {
+    flex-direction: column;
+    align-items: center;
   }
 }
 
