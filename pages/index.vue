@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter, useRoute } from "vue-router";
+
 useSeoMeta({
   title: "首頁 | Fake Store API 商品資料串接練習",
   ogTitle: "首頁 | Fake Store API 商品資料串接練習",
@@ -21,6 +23,18 @@ const categories = ref([
 // 當前選中的分類
 const selectedCategory = ref("所有商品");
 
+// 路由
+const router = useRouter();
+const route = useRoute();
+
+// 在頁面加載時根據查詢參數設置當前分類
+onMounted(() => {
+  const categoryFromQuery = route.query.category || "所有商品";
+  if (categories.value.includes(categoryFromQuery)) {
+    selectedCategory.value = categoryFromQuery;
+  }
+});
+
 // 篩選商品資料
 const filteredProducts = computed(() => {
   if (selectedCategory.value === "所有商品") {
@@ -31,9 +45,10 @@ const filteredProducts = computed(() => {
   );
 });
 
-// 更新選中的分類
+// 更新選中的分類並在 URL 上帶參數
 const selectCategory = (category) => {
   selectedCategory.value = category;
+  router.push({ query: { category } });
 };
 </script>
 
