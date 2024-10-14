@@ -24,7 +24,6 @@ defineProps({
 .list-card {
   border: 1px solid #ccc;
   border-radius: 16px;
-  max-width: 100%;
   text-align: center;
 }
 
@@ -36,6 +35,12 @@ defineProps({
   gap: 20px;
   text-decoration: none;
   padding: 36px 20px;
+}
+
+.product-link h3 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .product-image {
