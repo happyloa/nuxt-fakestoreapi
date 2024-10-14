@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <p>Fake Store API by 謝宗佑</p>
+    <p>Fake Store API 資料串接練習 by 謝宗佑</p>
     <a href="https://github.com/happyloa/nuxt-fakestoreapi" target="_blank"
       >GitHub Repo 連結</a
     >
