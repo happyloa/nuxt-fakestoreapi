@@ -4,7 +4,7 @@ import { useFetch } from "#app"; // 引入 useFetch 用於進行資料抓取
 
 /* 獲取當前路由參數中的商品 ID，並使用 useFetch 從 API 獲取對應的商品資料 */
 const route = useRoute();
-const { data: product } = useFetch(
+const { data: product } = await useFetch(
   () => `https://fakestoreapi.com/products/${route.params.id}`
 );
 
@@ -47,6 +47,9 @@ useSeoMeta({
 
 /* 商品詳情區域樣式，包括文字對齊和上下邊距 */
 .product-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center; /* 文字置中對齊 */
   margin: 48px 0;
 }
@@ -61,7 +64,9 @@ useSeoMeta({
 /* 商品描述和價格的樣式設置 */
 .product-details p {
   font-size: 20px; /* 中等字體大小 */
+  line-height: 1.5;
   margin-bottom: 16px; /* 元素之間的間距 */
+  max-width: 600px;
 }
 
 /* 商品圖片樣式，設置大小並保持比例 */
