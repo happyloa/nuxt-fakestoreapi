@@ -10,7 +10,7 @@ useSeoMeta({
 });
 
 /* 使用 useFetch 進行 SSR 數據抓取，從 Fake Store API 獲取產品數據 */
-const { data: products } = useFetch("https://fakestoreapi.com/products");
+const { data: products } = await useFetch("https://fakestoreapi.com/products");
 
 /* 定義可用的商品分類 */
 const categories = ref([
