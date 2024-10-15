@@ -66,13 +66,15 @@ const updateSortOrder = (order) => {
 .category-filter {
   flex: 1;
   border-radius: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #0295db; /* 使用藍色邊框 */
   padding: 20px;
+  background-color: #e0e5e9; /* 使用淺灰色背景 */
 }
 
 .category-filter h2 {
   font-size: 24px;
   margin-bottom: 16px;
+  color: #262626; /* 使用深灰色作為標題顏色 */
 }
 
 .category-filter ul {
@@ -82,27 +84,34 @@ const updateSortOrder = (order) => {
 }
 
 .category-filter li {
-  border: 1px solid #ccc;
+  border: 1px solid #9d9da1; /* 使用中灰色邊框 */
   border-radius: 16px;
   cursor: pointer;
   padding: 8px;
   margin-bottom: 8px;
   text-align: center;
   transition: all 0.3s;
+  background-color: #e0e5e9; /* 使用淺灰色背景 */
 }
 
 .category-filter li:hover {
-  background-color: #f0f0f0;
+  background-color: #0295db; /* 使用藍色作為 hover 效果 */
 }
 
 .category-filter li.active {
-  background-color: #f0f0f0;
+  background-color: #262626; /* 使用深灰色作為選中效果 */
+  color: white;
   font-weight: bold;
 }
 
 .sort-order {
   display: flex;
   gap: 16px;
+  color: #9d9da1; /* 使用中灰色作為排序文字顏色 */
+}
+
+label {
+  cursor: pointer;
 }
 
 /* RWD 斷點設計 */
