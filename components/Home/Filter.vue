@@ -45,7 +45,7 @@ const updateSortOrder = (order) => {
           type="radio"
           name="sort"
           value="asc"
-          v-model="sortOrder"
+          :checked="sortOrder === 'asc'"
           @change="updateSortOrder('asc')" />
         ID：小到大
       </label>
@@ -54,7 +54,7 @@ const updateSortOrder = (order) => {
           type="radio"
           name="sort"
           value="desc"
-          v-model="sortOrder"
+          :checked="sortOrder === 'desc'"
           @change="updateSortOrder('desc')" />
         ID：大到小
       </label>
