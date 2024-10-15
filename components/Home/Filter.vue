@@ -1,4 +1,5 @@
 <script setup>
+/* 定義傳入的 props，接收 categories (分類列表)、selectedCategory (當前選中的分類) 和 sortOrder (當前的排序方式) */
 defineProps({
   categories: {
     type: Array,
@@ -14,21 +15,27 @@ defineProps({
   },
 });
 
+/* 定義事件 emit，允許父元件捕捉到分類和排序的變更 */
 const emit = defineEmits(["updateCategory", "updateSortOrder"]);
 
+/* 選擇分類時，觸發事件通知父元件更新當前選中的分類 */
 const selectCategory = (category) => {
   emit("updateCategory", category);
 };
 
+/* 選擇排序方式時，觸發事件通知父元件更新排序方式 */
 const updateSortOrder = (order) => {
   emit("updateSortOrder", order);
 };
 </script>
 
 <template>
+  <!-- 側邊篩選區域 -->
   <aside class="category-filter">
+    <!-- 顯示商品分類標題 -->
     <h2>商品分類</h2>
     <ul>
+      <!-- 使用 v-for 循環渲染分類列表 -->
       <li
         v-for="category in categories"
         :key="category"
@@ -38,8 +45,10 @@ const updateSortOrder = (order) => {
       </li>
     </ul>
 
+    <!-- 顯示排序方式標題 -->
     <h2>排序方式</h2>
     <div class="sort-order">
+      <!-- 排序選項：ID 小到大 -->
       <label>
         <input
           type="radio"
@@ -47,8 +56,11 @@ const updateSortOrder = (order) => {
           value="asc"
           :checked="sortOrder === 'asc'"
           @change="updateSortOrder('asc')" />
+        <!-- 當選中此選項時觸發排序更新事件 -->
         ID：小到大
       </label>
+
+      <!-- 排序選項：ID 大到小 -->
       <label>
         <input
           type="radio"
@@ -56,6 +68,7 @@ const updateSortOrder = (order) => {
           value="desc"
           :checked="sortOrder === 'desc'"
           @change="updateSortOrder('desc')" />
+        <!-- 當選中此選項時觸發排序更新事件 -->
         ID：大到小
       </label>
     </div>
@@ -63,58 +76,66 @@ const updateSortOrder = (order) => {
 </template>
 
 <style scoped>
+/* 整個篩選區塊的樣式，包括邊框、背景顏色和內邊距 */
 .category-filter {
   flex: 1;
   border-radius: 16px;
-  border: 1px solid #0295db; /* 使用藍色邊框 */
+  border: 1px solid #0295db;
   padding: 20px;
-  background-color: #e0e5e9; /* 使用淺灰色背景 */
+  background-color: #e0e5e9;
 }
 
+/* 商品分類標題的樣式 */
 .category-filter h2 {
   font-size: 24px;
   margin-bottom: 16px;
-  color: #262626; /* 使用深灰色作為標題顏色 */
+  color: #262626;
 }
 
+/* 分類列表的樣式，移除默認列表樣式 */
 .category-filter ul {
   list-style: none;
   padding: 0;
   margin-bottom: 16px;
 }
 
+/* 單個分類選項的樣式，包括邊框、背景顏色、圓角及文字對齊 */
 .category-filter li {
-  border: 1px solid #9d9da1; /* 使用中灰色邊框 */
+  border: 1px solid #9d9da1;
   border-radius: 16px;
   cursor: pointer;
   padding: 8px;
   margin-bottom: 8px;
   text-align: center;
   transition: all 0.3s;
-  background-color: #e0e5e9; /* 使用淺灰色背景 */
+  background-color: #e0e5e9;
 }
 
+/* 當滑鼠懸停在分類上時，背景顏色變為藍色 */
 .category-filter li:hover {
   background-color: #0295db; /* 使用藍色作為 hover 效果 */
 }
 
+/* 當分類為當前選中的分類時，應用深灰色背景並改變文字顏色 */
 .category-filter li.active {
-  background-color: #262626; /* 使用深灰色作為選中效果 */
+  background-color: #262626;
   color: white;
   font-weight: bold;
 }
 
+/* 排序方式區域的樣式設定 */
 .sort-order {
   display: flex;
-  gap: 16px;
-  color: #9d9da1; /* 使用中灰色作為排序文字顏色 */
+  gap: 16px; /* 排序選項之間的間距 */
+  color: #9d9da1;
 }
 
+/* 排序選項的標籤樣式 */
 label {
   cursor: pointer;
 }
 
-/* RWD 斷點設計 */
+/* RWD 斷點設計，當寬度小於 1024px 時，調整標題和排序選項的顯示方式 */
 @media (max-width: 1024px) {
   .category-filter h2 {
     text-align: center;
