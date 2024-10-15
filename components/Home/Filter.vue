@@ -132,6 +132,7 @@ const updateSortOrder = (order) => {
 
 /* 排序選項的標籤樣式 */
 label {
+  color: #262626;
   cursor: pointer;
 }
 
