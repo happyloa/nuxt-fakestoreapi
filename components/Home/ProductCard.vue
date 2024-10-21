@@ -1,11 +1,14 @@
 <script setup>
 /* 定義傳入的 prop，接收一個必須的 product 物件 */
-defineProps({
+const props = defineProps({
   product: {
     type: Object,
     required: true,
   },
 });
+
+/* 計算評價星數，四捨五入 */
+const roundedRating = computed(() => Math.round(props.product.rating.rate));
 </script>
 
 <template>
@@ -20,6 +23,12 @@ defineProps({
         :src="product.image"
         :alt="`${product.title} 圖片`"
         class="product-image" />
+      <!-- 商品評價，顯示星星 -->
+      <div class="rating">
+        <span v-for="n in 5" :key="n" class="star">
+          {{ n <= roundedRating ? "★" : "☆" }}
+        </span>
+      </div>
       <!-- 商品價格 -->
       <p>${{ product.price }}</p>
     </nuxt-link>
@@ -70,10 +79,30 @@ defineProps({
   border: 2px solid #9d9da1;
 }
 
+/* 評價區域樣式 */
+.rating {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+/* 星星樣式 */
+.star {
+  font-size: 20px;
+  color: #ff8c00; /* 橘色星星 */
+  transition: color 0.3s ease; /* 加入顏色變化的過渡效果 */
+}
+
 /* 商品價格的樣式設定 */
 .product-link p {
   font-size: 16px;
   color: #262626;
+}
+
+/* 當卡片被 hover 時，星星變為金色 */
+.list-card:hover .star {
+  color: #ffd700; /* 金色星星 */
 }
 
 /* 當卡片 hover 時，價格文字的顏色改變 */
