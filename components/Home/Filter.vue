@@ -1,5 +1,5 @@
 <script setup>
-/* 定義傳入的 props，接收 categories (分類列表)、selectedCategory (當前選中的分類) 和 sortOrder (當前的排序方式) */
+/* 定義傳入的 props，接收 categories (分類列表)、selectedCategory (當前選中的分類)、sortOrder (當前的排序方式) 和 searchQuery (搜尋關鍵字) */
 defineProps({
   categories: {
     type: Array,
@@ -10,6 +10,10 @@ defineProps({
     required: true,
   },
   sortOrder: {
+    type: String,
+    required: true,
+  },
+  searchQuery: {
     type: String,
     required: true,
   },
@@ -77,11 +81,12 @@ const onSearch = (event) => {
       </label>
     </div>
 
-    <!-- 搜尋列 -->
+    <!-- 搜尋列，設定 v-model 綁定 searchQuery prop 作為初始值 -->
     <h2>搜尋商品</h2>
     <div class="search-bar">
       <input
         type="text"
+        :value="searchQuery"
         placeholder="搜尋商品..."
         @input="onSearch"
         class="search-input" />

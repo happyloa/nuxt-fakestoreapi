@@ -34,10 +34,11 @@ const searchQuery = ref("");
 const router = useRouter(); // 用於更新 URL
 const route = useRoute(); // 用於獲取當前 URL 查詢參數
 
-/* 在頁面加載時，根據 URL 查詢參數設置當前分類和排序 */
+/* 在頁面加載時，根據 URL 查詢參數設置當前分類、排序和搜尋關鍵字 */
 onMounted(() => {
   const categoryFromQuery = route.query.category || "所有商品";
   const sortFromQuery = route.query.sort || "asc";
+  const searchFromQuery = route.query.q || ""; // 獲取 URL 中的搜尋參數
 
   /* 如果 URL 上有分類參數，並且該分類有效，設置為當前選中的分類 */
   if (categories.value.includes(categoryFromQuery)) {
@@ -50,6 +51,9 @@ onMounted(() => {
   } else {
     sortOrder.value = "asc";
   }
+
+  /* 設置搜尋框初始值 */
+  searchQuery.value = searchFromQuery;
 });
 
 /* 根據選中的分類、排序方式和搜尋關鍵字篩選商品 */
@@ -87,12 +91,13 @@ const updateSortOrder = (order) => {
   updateQueryParams(); // 更新 URL
 };
 
-/* 更新搜尋框的文字 */
+/* 更新搜尋框的文字，並將文字寫入 URL 的 q 參數 */
 const updateSearchQuery = (query) => {
   searchQuery.value = query;
+  updateQueryParams(); // 更新 URL
 };
 
-/* 更新 URL 的查詢參數（包含分類和排序） */
+/* 更新 URL 的查詢參數（包含分類、排序和搜尋） */
 const updateQueryParams = () => {
   const query = {};
 
@@ -104,6 +109,11 @@ const updateQueryParams = () => {
   /* 如果排序方式為降冪，則將排序參數寫入 URL */
   if (sortOrder.value === "desc") {
     query.sort = "desc";
+  }
+
+  /* 將搜尋關鍵字寫入 URL */
+  if (searchQuery.value.trim()) {
+    query.q = searchQuery.value;
   }
 
   /* 更新路由 URL */
@@ -136,6 +146,7 @@ const updateQueryParams = () => {
         :categories="categories"
         :selectedCategory="selectedCategory"
         :sortOrder="sortOrder"
+        :searchQuery="searchQuery"
         @updateCategory="updateCategory"
         @updateSortOrder="updateSortOrder"
         @updateSearchQuery="updateSearchQuery" />
