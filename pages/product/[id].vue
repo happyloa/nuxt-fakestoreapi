@@ -8,6 +8,9 @@ const { data: product } = await useFetch(
   () => `https://fakestoreapi.com/products/${route.params.id}`
 );
 
+/* 計算評價星數，四捨五入 */
+const roundedRating = computed(() => Math.round(product.value.rating.rate));
+
 /* 設置 SEO 元數據 */
 useSeoMeta({
   title: `${product?.value?.title ?? ""} | Fake Store API 商品資料串接練習`,
@@ -31,6 +34,14 @@ useSeoMeta({
         class="product-image" />
       <!-- 顯示商品描述 -->
       <p>{{ product.description }}</p>
+
+      <!-- 顯示評價星數 -->
+      <div class="rating">
+        <span v-for="n in 5" :key="n" class="star">
+          {{ n <= roundedRating ? "★" : "☆" }}
+        </span>
+      </div>
+
       <!-- 顯示商品價格 -->
       <p><strong>價格：</strong> ${{ product.price }}</p>
     </section>
@@ -45,6 +56,16 @@ useSeoMeta({
   padding: 0 20px;
 }
 
+/* 商品圖片樣式，設置大小並保持比例 */
+.product-image {
+  border: 2px solid #9d9da1;
+  border-radius: 8px; /* 圖片圓角設置 */
+  width: 300px;
+  height: 300px;
+  object-fit: cover; /* 圖片自動縮放，保持比例不變 */
+  margin-bottom: 24px; /* 圖片與下方文字的間距 */
+}
+
 /* 商品詳情區域樣式，包括文字對齊和上下邊距 */
 .product-details {
   display: flex;
@@ -56,6 +77,7 @@ useSeoMeta({
 
 /* 商品標題樣式，設置字體大小和下方間距 */
 .product-details h1 {
+  color: #0295db;
   font-size: 36px; /* 大字體顯示標題 */
   font-weight: 700; /* 粗體字 */
   margin-bottom: 24px; /* 與下方內容的間距 */
@@ -63,31 +85,22 @@ useSeoMeta({
 
 /* 商品描述和價格的樣式設置 */
 .product-details p {
+  color: #262626;
   font-size: 20px; /* 中等字體大小 */
   line-height: 1.5;
   margin-bottom: 16px; /* 元素之間的間距 */
   max-width: 600px;
 }
 
-/* 商品圖片樣式，設置大小並保持比例 */
-.product-image {
-  width: 300px;
-  height: 300px;
-  object-fit: cover; /* 圖片自動縮放，保持比例不變 */
-  margin-bottom: 24px; /* 圖片與下方文字的間距 */
+/* 評價星星樣式 */
+.rating {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
-/* 使用新配色設置文字和背景 */
-.product-details h1 {
-  color: #0295db;
-}
-
-.product-details p {
-  color: #262626;
-}
-
-.product-image {
-  border: 2px solid #9d9da1;
-  border-radius: 8px; /* 圖片圓角設置 */
+.star {
+  font-size: 24px;
+  color: #ffd700; /* 橘色星星 */
 }
 </style>
