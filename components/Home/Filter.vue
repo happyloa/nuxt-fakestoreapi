@@ -15,8 +15,12 @@ defineProps({
   },
 });
 
-/* 定義事件 emit，允許父元件捕捉到分類和排序的變更 */
-const emit = defineEmits(["updateCategory", "updateSortOrder"]);
+/* 定義事件 emit，允許父元件捕捉到分類、排序及搜尋框的變更 */
+const emit = defineEmits([
+  "updateCategory",
+  "updateSortOrder",
+  "updateSearchQuery",
+]);
 
 /* 選擇分類時，觸發事件通知父元件更新當前選中的分類 */
 const selectCategory = (category) => {
@@ -26,6 +30,11 @@ const selectCategory = (category) => {
 /* 選擇排序方式時，觸發事件通知父元件更新排序方式 */
 const updateSortOrder = (order) => {
   emit("updateSortOrder", order);
+};
+
+/* 當搜尋框內容改變時，通知父元件更新搜尋關鍵字 */
+const onSearch = (event) => {
+  emit("updateSearchQuery", event.target.value);
 };
 </script>
 
@@ -48,7 +57,6 @@ const updateSortOrder = (order) => {
     <!-- 顯示排序方式標題 -->
     <h2>排序方式</h2>
     <div class="sort-order">
-      <!-- 排序選項：ID 小到大 -->
       <label>
         <input
           type="radio"
@@ -56,11 +64,8 @@ const updateSortOrder = (order) => {
           value="asc"
           :checked="sortOrder === 'asc'"
           @change="updateSortOrder('asc')" />
-        <!-- 當選中此選項時觸發排序更新事件 -->
         ID：小到大
       </label>
-
-      <!-- 排序選項：ID 大到小 -->
       <label>
         <input
           type="radio"
@@ -68,9 +73,18 @@ const updateSortOrder = (order) => {
           value="desc"
           :checked="sortOrder === 'desc'"
           @change="updateSortOrder('desc')" />
-        <!-- 當選中此選項時觸發排序更新事件 -->
         ID：大到小
       </label>
+    </div>
+
+    <!-- 搜尋列 -->
+    <h2>搜尋商品</h2>
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="搜尋商品..."
+        @input="onSearch"
+        class="search-input" />
     </div>
   </aside>
 </template>
@@ -88,7 +102,7 @@ const updateSortOrder = (order) => {
 /* 商品分類標題的樣式 */
 .category-filter h2 {
   font-size: 24px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   color: #262626;
 }
 
@@ -96,7 +110,7 @@ const updateSortOrder = (order) => {
 .category-filter ul {
   list-style: none;
   padding: 0;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 /* 單個分類選項的樣式，包括邊框、背景顏色、圓角及文字對齊 */
@@ -113,7 +127,7 @@ const updateSortOrder = (order) => {
 
 /* 當滑鼠懸停在分類上時，背景顏色變為藍色 */
 .category-filter li:hover {
-  background-color: #0295db; /* 使用藍色作為 hover 效果 */
+  background-color: #0295db;
 }
 
 /* 當分類為當前選中的分類時，應用深灰色背景並改變文字顏色 */
@@ -126,14 +140,27 @@ const updateSortOrder = (order) => {
 /* 排序方式區域的樣式設定 */
 .sort-order {
   display: flex;
-  gap: 16px; /* 排序選項之間的間距 */
+  gap: 16px;
   color: #9d9da1;
+  margin-bottom: 20px;
 }
 
 /* 排序選項的標籤樣式 */
 label {
   color: #262626;
   cursor: pointer;
+}
+
+/* 搜尋列樣式 */
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-input {
+  padding: 10px;
+  border: 1px solid #0295db;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
 /* RWD 斷點設計，當寬度小於 1024px 時，調整標題和排序選項的顯示方式 */

@@ -27,6 +27,9 @@ const selectedCategory = ref("所有商品");
 /* 排序方式，默認為升冪（asc） */
 const sortOrder = ref("asc");
 
+/* 搜尋框的文字，初始為空 */
+const searchQuery = ref("");
+
 /* 路由 */
 const router = useRouter(); // 用於更新 URL
 const route = useRoute(); // 用於獲取當前 URL 查詢參數
@@ -49,7 +52,7 @@ onMounted(() => {
   }
 });
 
-/* 根據選中的分類和排序方式篩選商品 */
+/* 根據選中的分類、排序方式和搜尋關鍵字篩選商品 */
 const filteredProducts = computed(() => {
   /* 如果選中的分類為 "所有商品"，顯示所有商品；否則只顯示對應分類的商品 */
   let filtered =
@@ -58,6 +61,13 @@ const filteredProducts = computed(() => {
       : products.value.filter(
           (product) => product.category === selectedCategory.value
         );
+
+  /* 搜尋框過濾：根據商品標題過濾結果 */
+  if (searchQuery.value.trim()) {
+    filtered = filtered.filter((product) =>
+      product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+  }
 
   /* 根據商品 ID 進行排序，升冪或降冪 */
   return filtered.sort((a, b) => {
@@ -75,6 +85,11 @@ const updateCategory = (category) => {
 const updateSortOrder = (order) => {
   sortOrder.value = order;
   updateQueryParams(); // 更新 URL
+};
+
+/* 更新搜尋框的文字 */
+const updateSearchQuery = (query) => {
+  searchQuery.value = query;
 };
 
 /* 更新 URL 的查詢參數（包含分類和排序） */
@@ -101,13 +116,19 @@ const updateQueryParams = () => {
   <section class="container">
     <!-- 引入 HomeHeading 元件，顯示頁面的標題和簡介 -->
     <HomeHeading />
+
     <div class="product-list-wrapper">
-      <!-- 商品列表，通過 HomeProductCard 元件渲染每個商品 -->
+      <!-- 商品列表 -->
       <ul class="product-list">
-        <HomeProductCard
-          v-for="product in filteredProducts"
-          :key="product.id"
-          :product="product" />
+        <template v-if="filteredProducts.length">
+          <!-- 通過 HomeProductCard 元件渲染每個商品 -->
+          <HomeProductCard
+            v-for="product in filteredProducts"
+            :key="product.id"
+            :product="product" />
+        </template>
+        <!-- 當沒有符合條件的商品時顯示提示訊息 -->
+        <li v-else class="no-products">我們沒有對應商品🥲</li>
       </ul>
 
       <!-- 引入 HomeFilter 元件，用於篩選商品和調整排序 -->
@@ -116,7 +137,8 @@ const updateQueryParams = () => {
         :selectedCategory="selectedCategory"
         :sortOrder="sortOrder"
         @updateCategory="updateCategory"
-        @updateSortOrder="updateSortOrder" />
+        @updateSortOrder="updateSortOrder"
+        @updateSearchQuery="updateSearchQuery" />
     </div>
   </section>
 </template>
@@ -141,6 +163,12 @@ const updateQueryParams = () => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 20px;
+}
+
+/* 當沒有商品時的提示訊息 */
+.no-products {
+  font-size: 1.5rem;
+  color: #262626;
 }
 
 /* RWD 斷點設計，當寬度小於 768px 時，調整為上下佈局 */
