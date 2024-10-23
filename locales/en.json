@@ -1,0 +1,21 @@
+{
+  "title": "Fake Store API Product Integration Practice",
+  "description": "This is a practice for integrating with Fake Store API.",
+  "footer": {
+    "text": "Fake Store API integration practice by Aaron.",
+    "link": "GitHub Repo"
+  },
+  "category": {
+    "all": "All Products",
+    "electronics": "Electronics",
+    "jewelery": "Jewelery",
+    "mens_clothing": "Men's Clothing",
+    "womens_clothing": "Women's Clothing"
+  },
+  "search": "Search Products...",
+  "sort": {
+    "asc": "ID: Low to High",
+    "desc": "ID: High to Low"
+  },
+  "no_products": "We have no matching products."
+}

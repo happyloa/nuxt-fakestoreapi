@@ -1,0 +1,21 @@
+{
+  "title": "Fake Store API 商品資料串接練習",
+  "description": "這是一個 Fake Store API 資料串接的練習。",
+  "footer": {
+    "text": "Fake Store API 資料串接練習 by 謝宗佑。",
+    "link": "GitHub Repo 連結"
+  },
+  "category": {
+    "all": "所有商品",
+    "electronics": "電子產品",
+    "jewelery": "珠寶",
+    "mens_clothing": "男裝",
+    "womens_clothing": "女裝"
+  },
+  "search": "搜尋商品...",
+  "sort": {
+    "asc": "ID：小到大",
+    "desc": "ID：大到小"
+  },
+  "no_products": "我們沒有對應商品。"
+}
