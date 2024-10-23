@@ -1,21 +1,21 @@
 {
   "title": "Fake Store API Integration Practice",
   "description": "Source: ",
-  "footer": {
-    "text": "Fake Store API integration practice by Aaron.",
-    "link": "GitHub Repo"
-  },
   "category_content": {
     "title": "Product Categories"
-  },
-  "search": {
-    "title": "Search",
-    "placeholder": "Search Products..."
   },
   "sort": {
     "title": "Sort by ID",
     "asc": "ID: Low to High",
     "desc": "ID: High to Low"
   },
-  "no_products": "It seems we have no matching products🥲"
+  "search": {
+    "title": "Search",
+    "placeholder": "Search Products..."
+  },
+  "no_products": "It seems we have no matching products🥲",
+  "footer": {
+    "text": "Fake Store API integration practice by Aaron.",
+    "link": "GitHub Repo"
+  }
 }
