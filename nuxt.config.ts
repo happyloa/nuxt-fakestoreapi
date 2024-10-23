@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   // 加入 @nuxtjs/google-fonts 模組，便於從 Google Fonts 取得字型。
-  modules: ["@nuxtjs/google-fonts"],
+  modules: ["@nuxtjs/google-fonts", "@nuxtjs/i18n"],
 
   // Google Fonts 的相關配置
   googleFonts: {
