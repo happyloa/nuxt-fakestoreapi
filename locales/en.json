@@ -5,18 +5,22 @@
     "text": "Fake Store API integration practice by Aaron.",
     "link": "GitHub Repo"
   },
-  "category": {
-    "all": "All Products",
-    "electronics": "Electronics",
-    "jewelery": "Jewelery",
-    "mens_clothing": "Men's Clothing",
-    "womens_clothing": "Women's Clothing"
+  "category_content": {
+    "title": "Product Categories",
+    "categories": {
+      "all": "All Products",
+      "electronics": "Electronics",
+      "jewelery": "Jewelery",
+      "mens_clothing": "Men's Clothing",
+      "womens_clothing": "Women's Clothing"
+    }
   },
   "search": {
     "title": "Search",
     "placeholder": "Search Products..."
   },
   "sort": {
+    "title": "Sort by ID",
     "asc": "ID: Low to High",
     "desc": "ID: High to Low"
   },
