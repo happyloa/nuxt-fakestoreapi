@@ -1,28 +1,48 @@
+<script setup>
+import { useI18n } from "vue-i18n"; // 引入 i18n
+
+/* 使用 i18n 來處理語言切換 */
+const { locale } = useI18n();
+
+/* 設置當前語言變數 */
+const currentLanguage = computed(() => locale.value);
+
+/* 切換語言的函數 */
+const toggleLanguage = () => {
+  locale.value = currentLanguage.value === "en" ? "zh" : "en";
+};
+</script>
+
 <template>
-  <!-- 語言切換按鈕 -->
-  <div class="language-switch">
-    <button @click="$i18n.setLocale('en')">English</button>
-    <button @click="$i18n.setLocale('zh')">中文</button>
-  </div>
+  <!-- 單個語言切換按鈕，固定在畫面右下角 -->
+  <button type="button" class="language-switcher" @click="toggleLanguage">
+    <img src="../public/language-translation.svg" alt="切換語言 icon" />
+  </button>
 </template>
 
 <style scoped>
-.language-switch {
-  margin-top: 20px;
-}
-
-.language-switch button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  background-color: #0295db;
-  color: white;
+/* 固定按鈕樣式，固定在畫面右下角 */
+.language-switcher {
+  position: fixed;
+  bottom: 7%;
+  right: 7%;
+  padding: 20px;
+  background-color: #262626;
+  box-shadow: 0 0 12px 1px rgba(2, 149, 219, 0.7);
   border: none;
-  border-radius: 4px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  z-index: 1000; /* 保證按鈕在其他元素之上 */
 }
 
-.language-switch button:hover {
-  background-color: #026fa1;
+/* 當按鈕被 hover 時改變背景顏色 */
+.language-switcher:hover {
+  background-color: #0295db;
+}
+
+.language-switcher img {
+  width: 25px;
+  filter: invert(1);
 }
 </style>
