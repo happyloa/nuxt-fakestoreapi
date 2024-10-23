@@ -12,7 +12,10 @@
     "mens_clothing": "男裝",
     "womens_clothing": "女裝"
   },
-  "search": "搜尋商品...",
+  "search": {
+    "title": "搜尋",
+    "placeholder": "搜尋商品..."
+  },
   "sort": {
     "asc": "ID：小到大",
     "desc": "ID：大到小"
