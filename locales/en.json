@@ -6,14 +6,7 @@
     "link": "GitHub Repo"
   },
   "category_content": {
-    "title": "Product Categories",
-    "categories": {
-      "all": "All Products",
-      "electronics": "Electronics",
-      "jewelery": "Jewelery",
-      "mens_clothing": "Men's Clothing",
-      "womens_clothing": "Women's Clothing"
-    }
+    "title": "Product Categories"
   },
   "search": {
     "title": "Search",
