@@ -1,6 +1,10 @@
 <script setup>
 import { useRoute } from "vue-router"; // 引入 useRoute 用於獲取路由參數
 import { useFetch } from "#app"; // 引入 useFetch 用於進行資料抓取
+import { useI18n } from "vue-i18n"; // 引入 i18n
+
+/* 使用 i18n 來獲取翻譯 */
+const { t } = useI18n();
 
 /* 獲取當前路由參數中的商品 ID，並使用 useFetch 從 API 獲取對應的商品資料 */
 const route = useRoute();
@@ -11,12 +15,12 @@ const { data: product } = await useFetch(
 /* 計算評價星數，四捨五入 */
 const roundedRating = computed(() => Math.round(product.value.rating.rate));
 
-/* 設置 SEO 元數據 */
+/* 設置 SEO 元數據，動態使用產品標題 */
 useSeoMeta({
-  title: `${product?.value?.title ?? ""} | Fake Store API 商品資料串接練習`,
-  ogTitle: `${product?.value?.title ?? ""} | Fake Store API 商品資料串接練習`,
-  description: "Fake Store API 商品資料串接練習 by Aaron",
-  ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
+  title: `${product?.value?.title ?? ""} | ${t("seo.title")}`,
+  ogTitle: `${product?.value?.title ?? ""} | ${t("seo.title")}`,
+  description: t("seo.description"),
+  ogDescription: t("seo.description"),
 });
 </script>
 

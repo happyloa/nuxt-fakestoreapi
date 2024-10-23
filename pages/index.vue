@@ -1,12 +1,16 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router"; // 引入路由功能
+import { useI18n } from "vue-i18n"; // 引入 i18n
 
-/* 設置 SEO 元數據 */
+/* 使用 i18n 來獲取翻譯 */
+const { t } = useI18n();
+
+/* 設置 SEO 元數據，使用 i18n 來動態顯示翻譯字串 */
 useSeoMeta({
-  title: "首頁 | Fake Store API 商品資料串接練習",
-  ogTitle: "首頁 | Fake Store API 商品資料串接練習",
-  description: "Fake Store API 商品資料串接練習 by Aaron",
-  ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
+  title: t("seo.title"),
+  ogTitle: t("seo.title"),
+  description: t("seo.description"),
+  ogDescription: t("seo.description"),
 });
 
 /* 使用 useFetch 進行 SSR 數據抓取，從 Fake Store API 獲取產品數據 */
