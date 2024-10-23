@@ -14,15 +14,15 @@ const { data: products } = await useFetch("https://fakestoreapi.com/products");
 
 /* 定義可用的商品分類 */
 const categories = ref([
-  "所有商品",
+  "All",
   "electronics",
   "jewelery",
   "men's clothing",
   "women's clothing",
 ]);
 
-/* 當前選中的分類，默認為 "所有商品" */
-const selectedCategory = ref("所有商品");
+/* 當前選中的分類，默認為 "All" */
+const selectedCategory = ref("All");
 
 /* 排序方式，默認為升冪（asc） */
 const sortOrder = ref("asc");
@@ -36,7 +36,7 @@ const route = useRoute(); // 用於獲取當前 URL 查詢參數
 
 /* 在頁面加載時，根據 URL 查詢參數設置當前分類、排序和搜尋關鍵字 */
 onMounted(() => {
-  const categoryFromQuery = route.query.category || "所有商品";
+  const categoryFromQuery = route.query.category || "All";
   const sortFromQuery = route.query.sort || "asc";
   const searchFromQuery = route.query.q || ""; // 獲取 URL 中的搜尋參數
 
@@ -58,9 +58,9 @@ onMounted(() => {
 
 /* 根據選中的分類、排序方式和搜尋關鍵字篩選商品 */
 const filteredProducts = computed(() => {
-  /* 如果選中的分類為 "所有商品"，顯示所有商品；否則只顯示對應分類的商品 */
+  /* 如果選中的分類為 "All"，顯示所有商品；否則只顯示對應分類的商品 */
   let filtered =
-    selectedCategory.value === "所有商品"
+    selectedCategory.value === "All"
       ? products.value
       : products.value.filter(
           (product) => product.category === selectedCategory.value
@@ -101,8 +101,8 @@ const updateSearchQuery = (query) => {
 const updateQueryParams = () => {
   const query = {};
 
-  /* 如果選中的分類不是 "所有商品"，則將分類寫入 URL 查詢參數 */
-  if (selectedCategory.value !== "所有商品") {
+  /* 如果選中的分類不是 "All"，則將分類寫入 URL 查詢參數 */
+  if (selectedCategory.value !== "All") {
     query.category = selectedCategory.value;
   }
 
