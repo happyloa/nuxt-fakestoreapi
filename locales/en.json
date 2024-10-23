@@ -13,6 +13,9 @@
     "title": "Search",
     "placeholder": "Search Products..."
   },
+  "product_details": {
+    "price": "Price:"
+  },
   "no_products": "It seems we have no matching products🥲",
   "footer": {
     "text": "Fake Store API integration practice by Aaron.",

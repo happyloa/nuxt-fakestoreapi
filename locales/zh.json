@@ -13,6 +13,9 @@
     "title": "搜尋",
     "placeholder": "輸入關鍵字..."
   },
+  "product_details": {
+    "price": "價格："
+  },
   "no_products": "我們沒有對應商品🥲",
   "footer": {
     "text": "Fake Store API 資料串接練習 by 謝宗佑。",
