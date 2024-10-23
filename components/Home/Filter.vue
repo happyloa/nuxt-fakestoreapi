@@ -162,6 +162,7 @@ label {
 }
 
 .search-input {
+  width: 100%;
   padding: 10px;
   border: 1px solid #0295db;
   border-radius: 8px;
