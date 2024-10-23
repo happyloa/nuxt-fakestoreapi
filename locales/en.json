@@ -1,6 +1,6 @@
 {
-  "title": "Fake Store API Product Integration Practice",
-  "description": "This is a practice for integrating with Fake Store API.",
+  "title": "Fake Store API Integration Practice",
+  "description": "Source: ",
   "footer": {
     "text": "Fake Store API integration practice by Aaron.",
     "link": "GitHub Repo"
@@ -17,5 +17,5 @@
     "asc": "ID: Low to High",
     "desc": "ID: High to Low"
   },
-  "no_products": "We have no matching products."
+  "no_products": "It seems we have no matching products🥲"
 }

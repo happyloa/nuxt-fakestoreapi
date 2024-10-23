@@ -1,6 +1,6 @@
 {
   "title": "Fake Store API 商品資料串接練習",
-  "description": "這是一個 Fake Store API 資料串接的練習。",
+  "description": "參考資料：",
   "footer": {
     "text": "Fake Store API 資料串接練習 by 謝宗佑。",
     "link": "GitHub Repo 連結"
@@ -17,5 +17,5 @@
     "asc": "ID：小到大",
     "desc": "ID：大到小"
   },
-  "no_products": "我們沒有對應商品。"
+  "no_products": "我們沒有對應商品🥲"
 }
