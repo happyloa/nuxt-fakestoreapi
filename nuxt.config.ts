@@ -30,10 +30,10 @@ export default defineNuxtConfig({
   // i18n 多語言設定
   i18n: {
     locales: [
-      { code: "en", name: "English", iso: "en-US", file: "en.json" },
       { code: "zh", name: "中文", iso: "zh-TW", file: "zh.json" },
+      { code: "en", name: "English", iso: "en-US", file: "en.json" },
     ],
-    defaultLocale: "en", // 預設語言
+    defaultLocale: "zh", // 預設語言
     lazy: true, // 按需加載語言文件
     langDir: "locales/", // 語言文件的存放資料夾
     strategy: "prefix_except_default", // URL 前綴策略
