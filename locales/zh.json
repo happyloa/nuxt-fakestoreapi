@@ -1,10 +1,6 @@
 {
   "title": "Fake Store API 商品資料串接練習",
   "description": "參考資料：",
-  "seo": {
-    "title": "首頁 | Fake Store API 商品資料串接練習",
-    "description": "Fake Store API 資料串接練習 by 謝宗佑"
-  },
   "category_content": {
     "title": "商品分類"
   },
