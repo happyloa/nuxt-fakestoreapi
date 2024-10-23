@@ -7,11 +7,7 @@
     <a href="https://github.com/happyloa/nuxt-fakestoreapi" target="_blank">
       {{ $t("footer.link") }}
     </a>
-    <!-- 語言切換按鈕 -->
-    <div class="language-switch">
-      <button @click="$i18n.setLocale('en')">English</button>
-      <button @click="$i18n.setLocale('zh')">中文</button>
-    </div>
+    <LanguageSwitcher />
   </footer>
 </template>
 
@@ -40,24 +36,5 @@ footer a {
 /* 當滑鼠懸停在連結上時，改變顏色 */
 footer a:hover {
   color: #0295db;
-}
-
-.language-switch {
-  margin-top: 20px;
-}
-
-.language-switch button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  background-color: #0295db;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.language-switch button:hover {
-  background-color: #026fa1;
 }
 </style>
