@@ -1,10 +1,11 @@
 <script setup>
 import { useI18n } from "vue-i18n"; // 引入 i18n
-import { useRouter } from "vue-router"; // 引入 router 以更新 URL
+import { useRouter, useRoute } from "vue-router"; // 引入 router 和 route
 
 /* 使用 i18n 來處理語言切換 */
-const { locale, localePath } = useI18n();
+const { locale, setLocale } = useI18n();
 const router = useRouter();
+const route = useRoute();
 
 /* 設置當前語言變數 */
 const currentLanguage = computed(() => locale.value);
@@ -12,11 +13,17 @@ const currentLanguage = computed(() => locale.value);
 /* 切換語言的函數，更新語言並同步更新網址 */
 const toggleLanguage = () => {
   const newLocale = currentLanguage.value === "en" ? "zh" : "en";
-  locale.value = newLocale;
 
-  /* 使用 localePath 來更新 URL 並重新導向 */
-  const newPath = localePath({ name: router.currentRoute.value.name });
-  router.push(newPath);
+  /* 更新 locale */
+  setLocale(newLocale).then(() => {
+    /* 如果新語言是中文（預設語言），則不需要語言前綴，直接使用路徑 */
+    if (newLocale === "zh") {
+      router.push({ path: route.fullPath.replace(/^\/en/, "") });
+    } else {
+      /* 切換到英文時，加上 /en 前綴 */
+      router.push({ path: `${route.fullPath}` });
+    }
+  });
 };
 </script>
 
