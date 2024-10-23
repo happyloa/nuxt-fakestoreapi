@@ -53,6 +53,7 @@ const toggleLanguage = () => {
 /* 當按鈕被 hover 時改變背景顏色 */
 .language-switcher:hover {
   background-color: #0295db;
+  transform: scale(0.9);
 }
 
 .language-switcher img {
