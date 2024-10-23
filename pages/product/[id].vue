@@ -43,7 +43,9 @@ useSeoMeta({
       </div>
 
       <!-- 顯示商品價格 -->
-      <p><strong>價格：</strong> ${{ product.price }}</p>
+      <p>
+        <strong>{{ $t("product_details.price") }}</strong> ${{ product.price }}
+      </p>
     </section>
   </main>
 </template>
