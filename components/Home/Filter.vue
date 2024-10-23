@@ -46,7 +46,7 @@ const onSearch = (event) => {
   <!-- 側邊篩選區域 -->
   <aside class="category-filter">
     <!-- 顯示商品分類標題 -->
-    <h2>商品分類</h2>
+    <h2>{{ $t("category_content.title") }}</h2>
     <ul>
       <!-- 使用 v-for 循環渲染分類列表 -->
       <li
@@ -59,7 +59,7 @@ const onSearch = (event) => {
     </ul>
 
     <!-- 顯示排序方式標題 -->
-    <h2>排序方式</h2>
+    <h2>{{ $t("sort.title") }}</h2>
     <div class="sort-order">
       <label>
         <input
@@ -68,7 +68,7 @@ const onSearch = (event) => {
           value="asc"
           :checked="sortOrder === 'asc'"
           @change="updateSortOrder('asc')" />
-        ID：小到大
+        {{ $t("sort.asc") }}
       </label>
       <label>
         <input
@@ -77,17 +77,17 @@ const onSearch = (event) => {
           value="desc"
           :checked="sortOrder === 'desc'"
           @change="updateSortOrder('desc')" />
-        ID：大到小
+        {{ $t("sort.desc") }}
       </label>
     </div>
 
     <!-- 搜尋列，設定 v-model 綁定 searchQuery prop 作為初始值 -->
-    <h2>搜尋商品</h2>
+    <h2>{{ $t("search.title") }}</h2>
     <div class="search-bar">
       <input
         type="text"
         :value="searchQuery"
-        placeholder="輸入關鍵字..."
+        :placeholder="`${$t('search.placeholder')}`"
         @input="onSearch"
         class="search-input" />
     </div>

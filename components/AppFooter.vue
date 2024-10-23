@@ -1,12 +1,17 @@
 <template>
   <!-- 頁尾區域 -->
   <footer>
-    <!-- 顯示作者與 Fake Store API 練習的描述 -->
-    <p>Fake Store API 資料串接練習 by 謝宗佑</p>
+    <!-- 使用 i18n 來動態顯示頁尾翻譯字串 -->
+    <p>{{ $t("footer.text") }}</p>
     <!-- GitHub Repository 連結，點擊後於新標籤頁打開 -->
     <a href="https://github.com/happyloa/nuxt-fakestoreapi" target="_blank">
-      GitHub Repo 連結
+      {{ $t("footer.link") }}
     </a>
+    <!-- 語言切換按鈕 -->
+    <div class="language-switch">
+      <button @click="$i18n.setLocale('en')">English</button>
+      <button @click="$i18n.setLocale('zh')">中文</button>
+    </div>
   </footer>
 </template>
 
@@ -35,5 +40,24 @@ footer a {
 /* 當滑鼠懸停在連結上時，改變顏色 */
 footer a:hover {
   color: #0295db;
+}
+
+.language-switch {
+  margin-top: 20px;
+}
+
+.language-switch button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #0295db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.language-switch button:hover {
+  background-color: #026fa1;
 }
 </style>

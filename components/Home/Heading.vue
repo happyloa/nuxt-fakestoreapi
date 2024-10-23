@@ -1,9 +1,11 @@
 <template>
-  <!-- 標題組合，包含 h1 標題和一個段落，提供 Fake Store API 的練習說明和連結 -->
+  <!-- 標題組合，包含 h1 標題和一個段落 -->
   <hgroup class="heading-group">
-    <h1>Fake Store API 商品資料串接練習</h1>
+    <!-- 使用 i18n 來動態顯示標題翻譯字串 -->
+    <h1>{{ $t("title") }}</h1>
     <p>
-      參考資料：
+      <!-- 使用 i18n 來動態顯示描述翻譯字串 -->
+      {{ $t("description") }}
       <a href="https://fakestoreapi.com/" target="_blank">Fake Store API</a>
       <!-- 提供到 Fake Store API 的參考連結，使用 target="_blank" 在新標籤頁開啟 -->
     </p>
