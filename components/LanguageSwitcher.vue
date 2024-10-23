@@ -1,15 +1,22 @@
 <script setup>
 import { useI18n } from "vue-i18n"; // 引入 i18n
+import { useRouter } from "vue-router"; // 引入 router 以更新 URL
 
 /* 使用 i18n 來處理語言切換 */
-const { locale } = useI18n();
+const { locale, localePath } = useI18n();
+const router = useRouter();
 
 /* 設置當前語言變數 */
 const currentLanguage = computed(() => locale.value);
 
-/* 切換語言的函數 */
+/* 切換語言的函數，更新語言並同步更新網址 */
 const toggleLanguage = () => {
-  locale.value = currentLanguage.value === "en" ? "zh" : "en";
+  const newLocale = currentLanguage.value === "en" ? "zh" : "en";
+  locale.value = newLocale;
+
+  /* 使用 localePath 來更新 URL 並重新導向 */
+  const newPath = localePath({ name: router.currentRoute.value.name });
+  router.push(newPath);
 };
 </script>
 
