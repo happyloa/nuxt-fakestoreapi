@@ -27,6 +27,19 @@ export default defineNuxtConfig({
     display: "swap",
   },
 
+  // i18n 多語言設定
+  i18n: {
+    locales: [
+      { code: "en", name: "English", iso: "en-US", file: "en.json" },
+      { code: "zh", name: "中文", iso: "zh-TW", file: "zh.json" },
+    ],
+    defaultLocale: "en", // 預設語言
+    lazy: true, // 按需加載語言文件
+    langDir: "locales/", // 語言文件的存放資料夾
+    strategy: "prefix_except_default", // URL 前綴策略
+    vueI18n: "./i18n.config.ts",
+  },
+
   // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
   css: ["~/assets/css/reset.css", "~/assets/css/fonts.css"],
 });
