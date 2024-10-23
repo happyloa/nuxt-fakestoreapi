@@ -87,7 +87,7 @@ const onSearch = (event) => {
       <input
         type="text"
         :value="searchQuery"
-        placeholder="搜尋商品..."
+        placeholder="輸入關鍵字..."
         @input="onSearch"
         class="search-input" />
     </div>
