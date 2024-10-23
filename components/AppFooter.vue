@@ -7,7 +7,6 @@
     <a href="https://github.com/happyloa/nuxt-fakestoreapi" target="_blank">
       {{ $t("footer.link") }}
     </a>
-    <LanguageSwitcher />
   </footer>
 </template>
 

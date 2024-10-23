@@ -8,6 +8,7 @@ useSeoMeta({
   <div>
     <NuxtRouteAnnouncer />
     <NuxtPage />
+    <LanguageSwitcher />
     <AppFooter />
   </div>
 </template>
