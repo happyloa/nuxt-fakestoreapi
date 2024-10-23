@@ -138,7 +138,7 @@ const updateQueryParams = () => {
             :product="product" />
         </template>
         <!-- 當沒有符合條件的商品時顯示提示訊息 -->
-        <li v-else class="no-products">我們沒有對應商品🥲</li>
+        <li v-else class="no-products">{{ $t("no_products") }}</li>
       </ul>
 
       <!-- 引入 HomeFilter 元件，用於篩選商品和調整排序 -->
