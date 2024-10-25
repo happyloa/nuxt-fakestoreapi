@@ -38,6 +38,7 @@
 /* 連結的顏色設定，默認為藍色 */
 a {
   color: #0295db;
+  transition: all 0.3s ease;
 }
 
 /* 連結 hover 狀態下的顏色改變，改為深灰色 */
