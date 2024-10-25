@@ -152,6 +152,7 @@ const onSearch = (event) => {
 /* 排序方式區域的樣式設定 */
 .sort-order {
   display: flex;
+  flex-direction: column;
   gap: 16px;
   color: #9d9da1;
   margin-bottom: 20px;
@@ -174,6 +175,7 @@ label {
   border: 1px solid #0295db;
   border-radius: 8px;
   font-size: 16px;
+  outline: none;
 }
 
 /* RWD 斷點設計，當寬度小於 1024px 時，調整標題和排序選項的顯示方式 */
@@ -183,7 +185,6 @@ label {
   }
 
   .sort-order {
-    flex-direction: column;
     align-items: center;
   }
 }
