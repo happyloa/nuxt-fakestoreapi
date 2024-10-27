@@ -36,19 +36,20 @@ const roundedRating = computed(() => Math.round(props.product.rating.rate));
 </template>
 
 <style scoped>
-/* 卡片的樣式設定，包含邊框、圓角和背景顏色 */
+/* 卡片的樣式設定，包含邊框、圓角和陰影 */
 .list-card {
-  border: 1px solid #0295db;
-  border-radius: 16px; /* 圓角設定 */
+  border: 1px solid #d1d9e6;
+  border-radius: 8px; /* 圓角設定 */
   text-align: center; /* 內容置中 */
-  background-color: #e0e5e9;
-  transition: transform 0.3s ease; /* 加入 hover 動畫效果 */
+  background-color: #ffffff;
+  box-shadow: 4px 4px 12px #b8b9be, -4px -4px 12px #fff !important;
+  transition: all 0.3s ease; /* 加入 hover 動畫效果 */
 }
 
-/* 當卡片被 hover 時，放大並改變背景顏色 */
+/* 當卡片被 hover 時，改變陰影 */
 .list-card:hover {
-  transform: scale(1.05);
-  background-color: #262626;
+  transform: scale(0.975);
+  box-shadow: inset 2px 2px 5px #b8b9be, inset -3px -3px 7px #fff !important;
 }
 
 /* 卡片內的連結樣式，將內容以垂直方式排列，並置中 */
@@ -57,14 +58,13 @@ const roundedRating = computed(() => Math.round(props.product.rating.rate));
   display: flex;
   flex-direction: column; /* 垂直排列 */
   align-items: center;
-  gap: 20px; /* 元素之間的間距 */
+  gap: 16px; /* 元素之間的間距 */
   text-decoration: none; /* 移除文字裝飾 */
-  padding: 36px 20px; /* 內邊距 */
+  padding: 36px 16px; /* 內邊距 */
 }
 
 /* 商品標題的樣式設定 */
 .product-link h3 {
-  font-size: 16px;
   font-weight: 700;
   line-height: 1.2;
   color: #0295db;
@@ -84,30 +84,18 @@ const roundedRating = computed(() => Math.round(props.product.rating.rate));
   display: flex;
   justify-content: center;
   gap: 4px;
-  margin-bottom: 8px;
 }
 
 /* 星星樣式 */
 .star {
   font-size: 20px;
   color: #ff8c00; /* 橘色星星 */
-  transition: color 0.3s ease; /* 加入顏色變化的過渡效果 */
 }
 
 /* 商品價格的樣式設定 */
 .product-link p {
   font-size: 16px;
   color: #262626;
-}
-
-/* 當卡片被 hover 時，星星變為金色 */
-.list-card:hover .star {
-  color: #ffd700; /* 金色星星 */
-}
-
-/* 當卡片 hover 時，價格文字的顏色改變 */
-.list-card:hover p {
-  color: #e0e5e9;
 }
 
 /* RWD 斷點設計，當螢幕寬度小於 768px 時縮小 gap 與 padding */
