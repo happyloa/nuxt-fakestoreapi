@@ -100,7 +100,7 @@ const onSearch = (event) => {
 /* 整個篩選區塊的樣式，包括邊框、背景顏色和內邊距 */
 .category-filter {
   flex: 1;
-  border-radius: 16px;
+  border-radius: 8px;
   border: 1px solid #0295db;
   padding: 20px;
   background-color: #e0e5e9;
