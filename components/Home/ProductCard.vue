@@ -1,4 +1,6 @@
 <script setup>
+import { useCartStore } from '~/stores/cart';
+
 /* 定義傳入的 prop，接收一個必須的 product 物件 */
 const props = defineProps({
   product: {

@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute } from "vue-router"; // 引入 useRoute 用於獲取路由參數
 import { useFetch } from "#app"; // 引入 useFetch 用於進行資料抓取
+import { useCartStore } from '~/stores/cart'
 
 /* 獲取當前路由參數中的商品 ID，並使用 useFetch 從 API 獲取對應的商品資料 */
 const route = useRoute();

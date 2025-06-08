@@ -1,4 +1,6 @@
 <script setup>
+import { useAuthStore } from '~/stores/auth'
+
 const auth = useAuthStore()
 const username = ref('')
 const password = ref('')

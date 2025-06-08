@@ -1,4 +1,7 @@
 <script setup>
+import { useCartStore } from '~/stores/cart'
+import { useAuthStore } from '~/stores/auth'
+
 const cart = useCartStore()
 const auth = useAuthStore()
 </script>
