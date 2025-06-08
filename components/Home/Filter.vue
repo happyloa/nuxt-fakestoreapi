@@ -54,7 +54,8 @@ const onSearch = (event) => {
           v-for="category in categories"
           :key="category"
           @click="selectCategory(category)"
-          :class="{ active: category === selectedCategory }">
+          :class="{ active: category === selectedCategory }"
+        >
           {{ category }}
         </li>
       </ul>
@@ -68,7 +69,8 @@ const onSearch = (event) => {
             name="sort"
             value="asc"
             :checked="sortOrder === 'asc'"
-            @change="updateSortOrder('asc')" />
+            @change="updateSortOrder('asc')"
+          />
           {{ $t("sort.asc") }}
         </label>
         <label>
@@ -77,7 +79,8 @@ const onSearch = (event) => {
             name="sort"
             value="desc"
             :checked="sortOrder === 'desc'"
-            @change="updateSortOrder('desc')" />
+            @change="updateSortOrder('desc')"
+          />
           {{ $t("sort.desc") }}
         </label>
       </div>
@@ -90,7 +93,8 @@ const onSearch = (event) => {
           :value="searchQuery"
           :placeholder="`${$t('search.placeholder')}`"
           @input="onSearch"
-          class="search-input" />
+          class="search-input"
+        />
       </div>
     </div>
   </aside>
@@ -100,10 +104,10 @@ const onSearch = (event) => {
 /* 整個篩選區塊的樣式，包括邊框、背景顏色和內邊距 */
 .category-filter {
   flex: 1;
-  border-radius: 8px;
-  border: 1px solid #0295db;
+  border-radius: var(--radius);
+  border: 1px solid var(--primary);
   padding: 20px;
-  background-color: #e0e5e9;
+  background-color: #fff;
 }
 
 .category-filter .filters-wrapper {
@@ -127,25 +131,26 @@ const onSearch = (event) => {
 
 /* 單個分類選項的樣式，包括邊框、背景顏色、圓角及文字對齊 */
 .category-filter li {
-  border: 1px solid #9d9da1;
+  border: 1px solid var(--primary);
   border-radius: 16px;
   cursor: pointer;
   padding: 8px;
   margin-bottom: 8px;
   text-align: center;
-  transition: all 0.3s;
-  background-color: #e0e5e9;
+  transition: background 0.2s;
+  background-color: var(--bg);
 }
 
 /* 當滑鼠懸停在分類上時，背景顏色變為藍色 */
 .category-filter li:hover {
-  background-color: #0295db;
+  background-color: var(--primary);
+  color: #fff;
 }
 
 /* 當分類為當前選中的分類時，應用深灰色背景並改變文字顏色 */
 .category-filter li.active {
-  background-color: #262626;
-  color: white;
+  background-color: var(--primary);
+  color: #fff;
   font-weight: bold;
 }
 
@@ -154,7 +159,7 @@ const onSearch = (event) => {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  color: #9d9da1;
+  color: #555;
   margin-bottom: 20px;
 }
 
@@ -172,8 +177,8 @@ label {
 .search-input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #0295db;
-  border-radius: 8px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
   font-size: 16px;
   outline: none;
 }

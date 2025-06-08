@@ -1,0 +1,23 @@
+:root {
+  --primary: #1e88e5;
+  --accent: #ff7043;
+  --bg: #f4f5f7;
+  --text: #333;
+  --radius: 8px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+button {
+  cursor: pointer;
+}

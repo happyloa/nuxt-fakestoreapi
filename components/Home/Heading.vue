@@ -17,7 +17,7 @@
 .heading-group {
   text-align: center;
   margin: 48px 0;
-  color: #262626;
+  color: var(--text);
 }
 
 /* 標題 h1 的樣式設置，包括字體大小、字體粗細以及行距 */
@@ -26,24 +26,24 @@
   font-weight: 700; /* 標題字體粗細 */
   line-height: 1.2; /* 行距 */
   margin-bottom: 16px; /* 與下方段落的間距 */
-  color: #0295db;
+  color: var(--primary);
 }
 
 /* 副標題段落的樣式設置，包括字體大小和顏色 */
 .heading-group p {
   font-size: 18px;
-  color: #9d9da1;
+  color: #666;
 }
 
 /* 連結的顏色設定，默認為藍色 */
 a {
-  color: #0295db;
+  color: var(--primary);
   transition: all 0.3s ease;
 }
 
 /* 連結 hover 狀態下的顏色改變，改為深灰色 */
 a:hover {
-  color: #262626;
+  color: var(--accent);
 }
 
 /* 在寬度小於 1024px 的裝置上，調整標題的字體大小 */
