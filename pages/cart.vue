@@ -3,6 +3,13 @@ import { useCartStore } from "~/stores/cart";
 import { useAuthStore } from "~/stores/auth";
 import { onMounted } from 'vue';
 
+useSeoMeta({
+  title: 'Cart | Fake Store',
+  ogTitle: 'Cart | Fake Store',
+  description: 'View items in your shopping cart.',
+  ogDescription: 'View items in your shopping cart.',
+});
+
 const cart = useCartStore();
 const auth = useAuthStore();
 onMounted(() => {
@@ -13,9 +20,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="container">
-    <h1>Cart</h1>
-    <div v-if="cart.items.length">
+<main class="container">
+  <h1>Cart</h1>
+  <div v-if="cart.items.length" class="card">
       <ul class="list">
         <li v-for="item in cart.items" :key="item.id" class="item">
           <img :src="item.image" :alt="item.title" />
@@ -34,7 +41,7 @@ onMounted(() => {
 <style scoped>
 .container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 20px;
 }
 .list {
@@ -47,6 +54,8 @@ onMounted(() => {
   justify-content: space-between;
   margin-bottom: 12px;
   gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
 }
 .item img {
   width: 50px;
@@ -77,5 +86,13 @@ onMounted(() => {
 }
 .clear:hover {
   background: #ff5722;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 </style>

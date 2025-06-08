@@ -12,6 +12,7 @@ const auth = useAuthStore();
       <NuxtLink to="/">Fake Store</NuxtLink>
       <div class="links">
         <NuxtLink to="/cart">Cart({{ cart.count }})</NuxtLink>
+        <span v-if="auth.user" class="user">Hi, {{ auth.user.username }}</span>
         <NuxtLink v-if="!auth.user" to="/login">Login</NuxtLink>
         <button v-else @click="auth.logout" class="logout">Logout</button>
       </div>
@@ -54,6 +55,11 @@ header a:hover {
 .links {
   display: flex;
   gap: 16px;
+}
+
+.user {
+  font-weight: 700;
+  margin-right: 8px;
 }
 
 .logout {

@@ -37,7 +37,7 @@ useSeoMeta({
   <!-- 主內容區域 -->
   <main class="container">
     <!-- 當 product 有資料時顯示商品詳情 -->
-    <section v-if="product" class="product-details">
+    <section v-if="product" class="product-details card">
       <!-- 顯示商品標題 -->
       <h1>{{ product.title }}</h1>
       <!-- 顯示商品圖片，使用 alt 描述圖片 -->
@@ -133,5 +133,13 @@ useSeoMeta({
 }
 .add:hover {
   background: #ff5722;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 </style>
