@@ -11,6 +11,18 @@ const { data: product } = await useFetch(
 /* 計算評價星數，四捨五入 */
 const roundedRating = computed(() => Math.round(product.value.rating.rate));
 
+const cart = useCartStore();
+const addToCart = () => {
+  if (product.value) {
+    cart.addItem({
+      id: product.value.id,
+      title: product.value.title,
+      price: product.value.price,
+      image: product.value.image,
+    });
+  }
+};
+
 /* 設置 SEO 元數據 */
 useSeoMeta({
   title: `${product?.value?.title ?? ""} | Fake Store API 商品資料串接練習`,
@@ -47,6 +59,7 @@ useSeoMeta({
       <p>
         <strong>{{ $t("product_details.price") }}</strong> ${{ product.price }}
       </p>
+      <button class="add" @click="addToCart">Add to Cart</button>
     </section>
   </main>
 </template>
@@ -105,5 +118,16 @@ useSeoMeta({
 .star {
   font-size: 24px;
   color: #ffd700; /* 橘色星星 */
+}
+
+.add {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border: none;
+  background: #0295db;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
 }
 </style>

@@ -9,6 +9,17 @@ const props = defineProps({
 
 /* 計算評價星數，四捨五入 */
 const roundedRating = computed(() => Math.round(props.product.rating.rate));
+
+const cart = useCartStore();
+
+const addToCart = () => {
+  cart.addItem({
+    id: props.product.id,
+    title: props.product.title,
+    price: props.product.price,
+    image: props.product.image,
+  });
+};
 </script>
 
 <template>
@@ -32,6 +43,7 @@ const roundedRating = computed(() => Math.round(props.product.rating.rate));
       <!-- 商品價格 -->
       <p>${{ product.price }}</p>
     </nuxt-link>
+    <button class="add" @click="addToCart">Add to Cart</button>
   </li>
 </template>
 
@@ -96,6 +108,17 @@ const roundedRating = computed(() => Math.round(props.product.rating.rate));
 .product-link p {
   font-size: 16px;
   color: #262626;
+}
+
+.add {
+  margin: 8px auto 16px;
+  padding: 8px 16px;
+  border: none;
+  background: #0295db;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
 }
 
 /* RWD 斷點設計，當螢幕寬度小於 768px 時縮小 gap 與 padding */
