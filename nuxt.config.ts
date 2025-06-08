@@ -16,7 +16,7 @@ export default defineNuxtConfig({
       "Noto+Sans+TC": [100, 300, 400, 500, 700, 900],
     },
     // 啟用字型下載功能，將 Google Fonts 的字型下載到本地，減少依賴 Google 服務，提升載入速度。
-    download: true,
+    download: false,
     // 自動將字型注入到應用中，無需手動在頁面中引用。
     inject: true,
     // 設置字型顯示屬性為 'swap'，這樣可以在字型下載期間先顯示後備字型，提升用戶體驗。
