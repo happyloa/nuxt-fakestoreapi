@@ -1,7 +1,7 @@
 <script setup>
-import { useCartStore } from '~/stores/cart'
+import { useCartStore } from "~/stores/cart";
 
-const cart = useCartStore()
+const cart = useCartStore();
 </script>
 
 <template>
@@ -50,7 +50,7 @@ const cart = useCartStore()
   background: none;
   border: none;
   cursor: pointer;
-  color: #0295db;
+  color: var(--accent);
 }
 .total {
   font-weight: 700;
@@ -59,11 +59,15 @@ const cart = useCartStore()
 .clear {
   margin-top: 8px;
   padding: 8px 16px;
-  background: #0295db;
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 700;
+  transition: background 0.2s ease;
+}
+.clear:hover {
+  background: #ff5722;
 }
 </style>

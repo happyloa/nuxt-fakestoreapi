@@ -1,9 +1,9 @@
 <script setup>
-import { useCartStore } from '~/stores/cart'
-import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from "~/stores/cart";
+import { useAuthStore } from "~/stores/auth";
 
-const cart = useCartStore()
-const auth = useAuthStore()
+const cart = useCartStore();
+const auth = useAuthStore();
 </script>
 
 <template>
@@ -22,8 +22,9 @@ const auth = useAuthStore()
 <style scoped>
 /* 頁尾的樣式設置 */
 header {
-  background-color: #e0e5e9;
-  color: #262626;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 header nav {
@@ -47,7 +48,7 @@ header a {
 
 /* 當滑鼠懸停在連結上時，改變顏色 */
 header a:hover {
-  color: #0295db;
+  color: var(--accent);
 }
 
 .links {
@@ -62,5 +63,10 @@ header a:hover {
   font: inherit;
   color: inherit;
   font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.logout:hover {
+  color: var(--accent);
 }
 </style>

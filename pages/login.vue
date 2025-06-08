@@ -1,12 +1,12 @@
 <script setup>
-import { useAuthStore } from '~/stores/auth'
+import { useAuthStore } from "~/stores/auth";
 
-const auth = useAuthStore()
-const username = ref('')
-const password = ref('')
+const auth = useAuthStore();
+const username = ref("");
+const password = ref("");
 const submit = () => {
-  auth.login(username.value, password.value)
-}
+  auth.login(username.value, password.value);
+};
 </script>
 
 <template>
@@ -34,17 +34,21 @@ const submit = () => {
 }
 input {
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
 }
 button {
   padding: 8px;
-  background: #0295db;
+  background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 700;
+  transition: background 0.2s ease;
+}
+.form button:hover {
+  background: #ff5722;
 }
 .error {
   color: red;

@@ -63,13 +63,13 @@ const filteredProducts = computed(() => {
     selectedCategory.value === "All"
       ? products.value
       : products.value.filter(
-          (product) => product.category === selectedCategory.value
+          (product) => product.category === selectedCategory.value,
         );
 
   /* 搜尋框過濾：根據商品標題過濾結果 */
   if (searchQuery.value.trim()) {
     filtered = filtered.filter((product) =>
-      product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      product.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
     );
   }
 
@@ -135,7 +135,8 @@ const updateQueryParams = () => {
           <HomeProductCard
             v-for="product in filteredProducts"
             :key="product.id"
-            :product="product" />
+            :product="product"
+          />
         </template>
         <!-- 當沒有符合條件的商品時顯示提示訊息 -->
         <li v-else class="no-products">{{ $t("no_products") }}</li>
@@ -149,7 +150,8 @@ const updateQueryParams = () => {
         :searchQuery="searchQuery"
         @updateCategory="updateCategory"
         @updateSortOrder="updateSortOrder"
-        @updateSearchQuery="updateSearchQuery" />
+        @updateSearchQuery="updateSearchQuery"
+      />
     </div>
   </section>
 </template>
@@ -179,7 +181,7 @@ const updateQueryParams = () => {
 /* 當沒有商品時的提示訊息 */
 .no-products {
   font-size: 1.5rem;
-  color: #262626;
+  color: var(--text);
 }
 
 /* RWD 斷點設計，當寬度小於 768px 時，調整為上下佈局 */

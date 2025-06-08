@@ -37,5 +37,9 @@ export default defineNuxtConfig({
   },
 
   // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
-  css: ["~/assets/css/reset.css", "~/assets/css/fonts.css"],
+  css: [
+    "~/assets/css/reset.css",
+    "~/assets/css/fonts.css",
+    "~/assets/css/theme.css",
+  ],
 });
