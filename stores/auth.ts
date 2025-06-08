@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
+import { useCartStore } from './cart'
 
 export interface User {
+  id: number
   username: string
   token: string
 }
@@ -20,7 +22,13 @@ export const useAuthStore = defineStore('auth', {
           method: 'POST',
           body: { username, password }
         })
-        this.user = { username, token: (res as any).token }
+        const users: any[] = await $fetch('https://fakestoreapi.com/users')
+        const found = users.find((u) => u.username === username)
+        this.user = {
+          id: found?.id ?? 1,
+          username,
+          token: (res as any).token
+        }
       } catch (e: any) {
         this.error = e?.message || 'Login failed'
       } finally {
@@ -29,6 +37,8 @@ export const useAuthStore = defineStore('auth', {
     },
     logout() {
       this.user = null
+      const cart = useCartStore()
+      cart.clear()
     }
   }
 })

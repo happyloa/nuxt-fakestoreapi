@@ -1,11 +1,17 @@
 <script setup>
 import { useAuthStore } from "~/stores/auth";
+import { useCartStore } from "~/stores/cart";
+import { ref } from 'vue';
 
 const auth = useAuthStore();
+const cart = useCartStore();
 const username = ref("");
 const password = ref("");
-const submit = () => {
-  auth.login(username.value, password.value);
+const submit = async () => {
+  await auth.login(username.value, password.value);
+  if (auth.user) {
+    cart.fetchCart(auth.user.id);
+  }
 };
 </script>
 

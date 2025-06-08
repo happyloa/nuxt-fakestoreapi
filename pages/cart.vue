@@ -1,7 +1,15 @@
 <script setup>
 import { useCartStore } from "~/stores/cart";
+import { useAuthStore } from "~/stores/auth";
+import { onMounted } from 'vue';
 
 const cart = useCartStore();
+const auth = useAuthStore();
+onMounted(() => {
+  if (auth.user) {
+    cart.fetchCart(auth.user.id);
+  }
+});
 </script>
 
 <template>

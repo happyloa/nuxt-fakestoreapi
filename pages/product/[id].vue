@@ -34,7 +34,6 @@ useSeoMeta({
 </script>
 
 <template>
-  <AppHeader />
   <!-- 主內容區域 -->
   <main class="container">
     <!-- 當 product 有資料時顯示商品詳情 -->
