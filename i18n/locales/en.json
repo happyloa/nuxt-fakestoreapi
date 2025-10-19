@@ -71,7 +71,9 @@
     "resultCount": "{count} products",
     "actions": {
       "viewCart": "View cart",
-      "viewAll": "View all"
+      "viewAll": "View all",
+      "inCart": "In cart",
+      "added": "Added!"
     },
     "toast": {
       "added": "\"{title}\" added to cart"

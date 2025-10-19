@@ -6,9 +6,11 @@ const props = defineProps<{
   product: Product
   showDescription?: boolean
   showActions?: boolean
+  inCart?: boolean
+  recentlyAdded?: boolean
 }>()
 
-const { product, showDescription, showActions } = toRefs(props)
+const { product, showDescription, showActions, inCart, recentlyAdded } = toRefs(props)
 
 const emit = defineEmits<{
   add: [product: Product]
@@ -45,16 +47,45 @@ const truncate = (text: string, length = 80) => {
       </div>
     </div>
 
-    <div v-if="showActions" class="flex flex-wrap gap-2">
-      <NuxtLink :to="`/products/${product.id}`" class="link-button flex-1 justify-center">
+    <div v-if="showActions" class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+      <NuxtLink
+        :to="`/products/${product.id}`"
+        class="link-button w-full justify-center whitespace-nowrap sm:flex-1"
+      >
         {{ $t('actions.viewDetail') }}
       </NuxtLink>
       <button
         type="button"
-        class="flex-1 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50"
+        class="w-full rounded-full border px-4 py-2 text-sm font-semibold transition sm:flex-1"
+        :class="[
+          recentlyAdded
+            ? 'border-primary-200 bg-primary-50 text-primary-700'
+            : inCart
+              ? 'border-slate-300 bg-slate-100 text-slate-700'
+              : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50',
+        ]"
         @click="onAdd"
       >
-        {{ $t('actions.addToCart') }}
+        <span class="flex items-center justify-center gap-2 whitespace-nowrap">
+          <svg
+            v-if="recentlyAdded"
+            class="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M16.667 5.833 8.75 13.75 5 10"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span v-if="recentlyAdded">{{ $t('products.actions.added') }}</span>
+          <span v-else-if="inCart">{{ $t('products.actions.inCart') }}</span>
+          <span v-else>{{ $t('actions.addToCart') }}</span>
+        </span>
       </button>
     </div>
   </article>

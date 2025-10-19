@@ -71,7 +71,9 @@
     "resultCount": "共 {count} 項商品",
     "actions": {
       "viewCart": "查看購物車",
-      "viewAll": "檢視全部"
+      "viewAll": "檢視全部",
+      "inCart": "已在購物車",
+      "added": "已加入！"
     },
     "toast": {
       "added": "已將「{title}」加入購物車"

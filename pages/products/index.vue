@@ -52,13 +52,20 @@ const resetFilters = () => {
 
 const feedbackMessage = ref('')
 const feedbackVisible = ref(false)
+const recentlyAddedId = ref<number | null>(null)
+
+const isInCart = (productId: number) => cart.items.some((item) => item.id === productId)
 
 const onAddToCart = (product: Product) => {
   cart.addItem(product)
   feedbackMessage.value = t('products.toast.added', { title: product.title })
   feedbackVisible.value = true
+  recentlyAddedId.value = product.id
   setTimeout(() => {
     feedbackVisible.value = false
+    if (recentlyAddedId.value === product.id) {
+      recentlyAddedId.value = null
+    }
   }, 2400)
 }
 </script>
@@ -89,6 +96,8 @@ const onAddToCart = (product: Product) => {
       <div
         v-if="feedbackVisible"
         class="mt-6 rounded-3xl border border-primary-200 bg-primary-50 px-6 py-4 text-sm font-semibold text-primary-700 shadow-sm"
+        role="status"
+        aria-live="assertive"
       >
         {{ feedbackMessage }}
       </div>
@@ -154,6 +163,8 @@ const onAddToCart = (product: Product) => {
             v-for="product in filteredProducts"
             :key="product.id"
             :product="product"
+            :in-cart="isInCart(product.id)"
+            :recently-added="recentlyAddedId === product.id"
             show-description
             show-actions
             @add="onAddToCart"
