@@ -35,6 +35,7 @@
     "previewHintDescription": "瀏覽精選商品、建立全新品項、使用示範帳號登入，並檢視會員資訊，全都在同一個介面完成。",
     "featuredTitle": "精選商品",
     "featuredSubtitle": "直接從 Fake Store API 抓取的熱門品項。",
+    "featuredEmpty": "目前沒有可顯示的精選商品。",
     "actions": {
       "browseProducts": "瀏覽商品",
       "createProduct": "新增商品",

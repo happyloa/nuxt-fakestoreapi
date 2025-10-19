@@ -66,7 +66,7 @@ const toggleMenu = () => {
       </nav>
 
       <div class="hidden items-center gap-3 md:flex">
-        <div class="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5">
+        <div class="flex items-center gap-2 rounded-full px-2 py-1">
           <span class="text-xs font-semibold text-slate-500">{{ t('navigation.language') }}</span>
           <select
             class="bg-transparent text-sm font-semibold text-primary-700 focus:outline-none"
@@ -136,7 +136,7 @@ const toggleMenu = () => {
           <div class="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3">
             <span class="text-sm font-semibold text-slate-600">{{ t('navigation.language') }}</span>
             <select
-              class="rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-primary-700"
+              class="rounded-lg bg-transparent px-1.5 py-1 text-sm font-semibold text-primary-700 focus:outline-none"
               :value="locale"
               @change="switchLocale(($event.target as HTMLSelectElement).value)"
             >
