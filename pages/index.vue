@@ -1,204 +1,142 @@
-<script setup>
-import { useRouter, useRoute } from "vue-router"; // 引入路由功能
+<script setup lang="ts">
+import type { Product } from '~/types/fakestore'
+import { useFakeStoreClient } from '~/composables/useFakeStoreClient'
 
-/* 設置 SEO 元數據 */
-useSeoMeta({
-  title: "首頁 | Fake Store API 商品資料串接練習",
-  ogTitle: "首頁 | Fake Store API 商品資料串接練習",
-  description: "Fake Store API 商品資料串接練習 by Aaron",
-  ogDescription: "Fake Store API 商品資料串接練習 by Aaron",
-});
+const client = useFakeStoreClient()
+const { t } = useI18n()
 
-/* 使用 useFetch 進行 SSR 數據抓取，從 Fake Store API 獲取產品數據 */
-const { data: products } = await useFetch("https://fakestoreapi.com/products");
+const { data: featuredProducts, pending, error } = await useAsyncData<Product[]>(
+  'featured-products',
+  () => client.listProducts({ limit: 4 }),
+)
 
-/* 定義可用的商品分類 */
-const categories = ref([
-  "All",
-  "electronics",
-  "jewelery",
-  "men's clothing",
-  "women's clothing",
-]);
-
-/* 當前選中的分類，默認為 "All" */
-const selectedCategory = ref("All");
-
-/* 排序方式，默認為升冪（asc） */
-const sortOrder = ref("asc");
-
-/* 搜尋框的文字，初始為空 */
-const searchQuery = ref("");
-
-/* 路由 */
-const router = useRouter(); // 用於更新 URL
-const route = useRoute(); // 用於獲取當前 URL 查詢參數
-
-/* 在頁面加載時，根據 URL 查詢參數設置當前分類、排序和搜尋關鍵字 */
-onMounted(() => {
-  const categoryFromQuery = route.query.category || "All";
-  const sortFromQuery = route.query.sort || "asc";
-  const searchFromQuery = route.query.q || ""; // 獲取 URL 中的搜尋參數
-
-  /* 如果 URL 上有分類參數，並且該分類有效，設置為當前選中的分類 */
-  if (categories.value.includes(categoryFromQuery)) {
-    selectedCategory.value = categoryFromQuery;
-  }
-
-  /* 根據 URL 上的排序參數設置當前的排序方式 */
-  if (sortFromQuery === "desc") {
-    sortOrder.value = "desc";
-  } else {
-    sortOrder.value = "asc";
-  }
-
-  /* 設置搜尋框初始值 */
-  searchQuery.value = searchFromQuery;
-});
-
-/* 根據選中的分類、排序方式和搜尋關鍵字篩選商品 */
-const filteredProducts = computed(() => {
-  /* 如果選中的分類為 "All"，顯示所有商品；否則只顯示對應分類的商品 */
-  let filtered =
-    selectedCategory.value === "All"
-      ? products.value
-      : products.value.filter(
-          (product) => product.category === selectedCategory.value,
-        );
-
-  /* 搜尋框過濾：根據商品標題過濾結果 */
-  if (searchQuery.value.trim()) {
-    filtered = filtered.filter((product) =>
-      product.title.toLowerCase().includes(searchQuery.value.toLowerCase()),
-    );
-  }
-
-  /* 根據商品 ID 進行排序，升冪或降冪 */
-  return filtered.sort((a, b) => {
-    return sortOrder.value === "asc" ? a.id - b.id : b.id - a.id;
-  });
-});
-
-/* 更新選中的分類，並將分類參數寫入 URL */
-const updateCategory = (category) => {
-  selectedCategory.value = category;
-  updateQueryParams(); // 更新 URL
-};
-
-/* 更新排序方式，並將排序參數寫入 URL */
-const updateSortOrder = (order) => {
-  sortOrder.value = order;
-  updateQueryParams(); // 更新 URL
-};
-
-/* 更新搜尋框的文字，並將文字寫入 URL 的 q 參數 */
-const updateSearchQuery = (query) => {
-  searchQuery.value = query;
-  updateQueryParams(); // 更新 URL
-};
-
-/* 更新 URL 的查詢參數（包含分類、排序和搜尋） */
-const updateQueryParams = () => {
-  const query = {};
-
-  /* 如果選中的分類不是 "All"，則將分類寫入 URL 查詢參數 */
-  if (selectedCategory.value !== "All") {
-    query.category = selectedCategory.value;
-  }
-
-  /* 如果排序方式為降冪，則將排序參數寫入 URL */
-  if (sortOrder.value === "desc") {
-    query.sort = "desc";
-  }
-
-  /* 將搜尋關鍵字寫入 URL */
-  if (searchQuery.value.trim()) {
-    query.q = searchQuery.value;
-  }
-
-  /* 更新路由 URL */
-  router.push({ query });
-};
+const highlights = computed(() => [
+  {
+    title: t('home.highlights.products'),
+    description: t('home.highlights.productsDescription'),
+    link: '/products',
+    action: t('home.actions.browseProducts'),
+  },
+  {
+    title: t('home.highlights.cart'),
+    description: t('home.highlights.cartDescription'),
+    link: '/cart',
+    action: t('home.actions.manageCart'),
+  },
+  {
+    title: t('home.highlights.users'),
+    description: t('home.highlights.usersDescription'),
+    link: '/users',
+    action: t('home.actions.reviewUsers'),
+  },
+])
 </script>
 
 <template>
-  <!-- 主頁內容 -->
-  <section class="container">
-    <!-- 引入 HomeHeading 元件，顯示頁面的標題和簡介 -->
-    <HomeHeading />
+  <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-slate-50 to-white">
+    <div class="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-16 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <div class="max-w-2xl space-y-6">
+        <p class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-700">
+          {{ t('home.badge') }}
+        </p>
+        <h1 class="text-4xl font-bold text-slate-900 sm:text-5xl">
+          {{ t('home.title') }}
+        </h1>
+        <p class="text-lg text-slate-600">
+          {{ t('home.subtitle') }}
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <NuxtLink to="/products" class="link-button text-base">
+            {{ t('home.actions.browseProducts') }}
+          </NuxtLink>
+          <NuxtLink
+            to="/products/new"
+            class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-base font-semibold text-slate-700 transition hover:border-primary-200 hover:bg-primary-50"
+          >
+            {{ t('home.actions.createProduct') }}
+          </NuxtLink>
+        </div>
+        <dl class="grid gap-6 sm:grid-cols-3">
+          <div class="rounded-2xl bg-white/80 p-5 shadow-sm backdrop-blur">
+            <dt class="text-sm font-medium text-slate-500">{{ t('home.stats.catalogue') }}</dt>
+            <dd class="mt-2 text-3xl font-semibold text-primary-700">20+</dd>
+          </div>
+          <div class="rounded-2xl bg-white/80 p-5 shadow-sm backdrop-blur">
+            <dt class="text-sm font-medium text-slate-500">{{ t('home.stats.apiCoverage') }}</dt>
+            <dd class="mt-2 text-3xl font-semibold text-primary-700">100%</dd>
+          </div>
+          <div class="rounded-2xl bg-white/80 p-5 shadow-sm backdrop-blur">
+            <dt class="text-sm font-medium text-slate-500">{{ t('home.stats.responseTime') }}</dt>
+            <dd class="mt-2 text-3xl font-semibold text-primary-700">~120ms</dd>
+          </div>
+        </dl>
+      </div>
 
-    <div class="product-list-wrapper">
-      <!-- 商品列表 -->
-      <ul class="product-list">
-        <template v-if="filteredProducts.length">
-          <!-- 通過 HomeProductCard 元件渲染每個商品 -->
-          <HomeProductCard
-            v-for="product in filteredProducts"
-            :key="product.id"
-            :product="product"
-          />
-        </template>
-        <!-- 當沒有符合條件的商品時顯示提示訊息 -->
-        <li v-else class="no-products">{{ $t("no_products") }}</li>
-      </ul>
+      <div class="relative w-full max-w-xl self-center rounded-3xl bg-white/80 p-8 shadow-xl backdrop-blur">
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-800">{{ t('home.previewTitle') }}</h2>
+          <NuxtLink to="/cart" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
+            {{ t('home.previewAction') }}
+          </NuxtLink>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between rounded-2xl border border-slate-200 bg-white/90 px-4 py-3">
+            <div>
+              <p class="text-sm font-semibold text-slate-700">{{ t('home.previewCartTitle') }}</p>
+              <p class="text-xs text-slate-400">{{ t('home.previewCartSubtitle') }}</p>
+            </div>
+            <span class="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-700">
+              {{ t('home.previewCartStatus') }}
+            </span>
+          </div>
+          <div class="rounded-2xl border border-dashed border-slate-200 bg-white/70 p-6 text-sm text-slate-500">
+            <p class="font-semibold text-slate-700">{{ t('home.previewHintTitle') }}</p>
+            <p class="mt-1 leading-relaxed">{{ t('home.previewHintDescription') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <!-- 引入 HomeFilter 元件，用於篩選商品和調整排序 -->
-      <HomeFilter
-        :categories="categories"
-        :selectedCategory="selectedCategory"
-        :sortOrder="sortOrder"
-        :searchQuery="searchQuery"
-        @updateCategory="updateCategory"
-        @updateSortOrder="updateSortOrder"
-        @updateSearchQuery="updateSearchQuery"
+  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-xl space-y-4">
+        <h2 class="text-3xl font-bold text-slate-900">{{ t('home.featuredTitle') }}</h2>
+        <p class="text-slate-600">{{ t('home.featuredSubtitle') }}</p>
+      </div>
+      <NuxtLink to="/products" class="link-button">
+        {{ t('home.actions.browseProducts') }}
+      </NuxtLink>
+    </div>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <ProductCard
+        v-for="product in featuredProducts || []"
+        :key="product.id"
+        :product="product"
+        show-description
+        show-actions
       />
+      <div v-if="pending" class="card col-span-full flex items-center justify-center text-slate-500">
+        {{ t('common.loading') }}
+      </div>
+      <div v-if="error" class="card col-span-full bg-red-50 text-sm text-red-600">
+        {{ t('common.error') }}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-6 md:grid-cols-3">
+        <article v-for="item in highlights" :key="item.title" class="card">
+          <h3 class="text-xl font-semibold text-slate-900">{{ item.title }}</h3>
+          <p class="mt-3 text-sm leading-relaxed text-slate-600">{{ item.description }}</p>
+          <NuxtLink :to="item.link" class="link-button mt-6 w-full justify-center">
+            {{ item.action }}
+          </NuxtLink>
+        </article>
+      </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-/* 設置主容器的最大寬度和邊距 */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* 商品列表區域和篩選器之間的佈局設定 */
-.product-list-wrapper {
-  display: flex;
-  gap: 20px;
-}
-
-/* 商品列表的佈局，使用 grid 進行排列 */
-.product-list {
-  flex: 3;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-  gap: 20px;
-}
-
-/* 當沒有商品時的提示訊息 */
-.no-products {
-  font-size: 1.5rem;
-  color: var(--text);
-}
-
-/* RWD 斷點設計，當寬度小於 768px 時，調整為上下佈局 */
-@media (max-width: 768px) {
-  .product-list-wrapper {
-    flex-direction: column-reverse;
-  }
-
-  .product-list {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* 當寬度小於 576px 時，顯示單列商品 */
-@media (max-width: 576px) {
-  .product-list {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

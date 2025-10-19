@@ -1,36 +1,48 @@
 import { defineStore } from 'pinia'
+import { useFakeStoreClient } from '~/composables/useFakeStoreClient'
 import { useCartStore } from './cart'
 
-export interface User {
+export interface SessionUser {
   id: number
   username: string
   token: string
 }
 
+interface AuthState {
+  user: SessionUser | null
+  loading: boolean
+  error: string
+}
+
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    user: null as User | null,
+  state: (): AuthState => ({
+    user: null,
     loading: false,
-    error: ''
+    error: '',
   }),
   actions: {
     async login(username: string, password: string) {
+      const client = useFakeStoreClient()
       this.loading = true
       this.error = ''
       try {
-        const res = await $fetch('https://fakestoreapi.com/auth/login', {
-          method: 'POST',
-          body: { username, password }
-        })
-        const users: any[] = await $fetch('https://fakestoreapi.com/users')
-        const found = users.find((u) => u.username === username)
+        const [{ token }, users] = await Promise.all([
+          client.login(username, password),
+          client.listUsers(),
+        ])
+        const found = users.find((user) => user.username === username)
         this.user = {
           id: found?.id ?? 1,
           username,
-          token: (res as any).token
+          token,
         }
-      } catch (e: any) {
-        this.error = e?.message || 'Login failed'
+        if (this.user) {
+          const cart = useCartStore()
+          await cart.fetchCart(this.user.id)
+        }
+      } catch (error: any) {
+        this.error = error?.message || 'Login failed'
+        this.user = null
       } finally {
         this.loading = false
       }
@@ -39,6 +51,6 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       const cart = useCartStore()
       cart.clear()
-    }
-  }
+    },
+  },
 })

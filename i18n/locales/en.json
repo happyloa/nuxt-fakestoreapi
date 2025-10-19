@@ -1,0 +1,194 @@
+{
+  "app": {
+    "title": "Fake Store Experience"
+  },
+  "navigation": {
+    "home": "Overview",
+    "products": "Products",
+    "cart": "Cart",
+    "users": "Users",
+    "addProduct": "New Product",
+    "language": "Language"
+  },
+  "actions": {
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "viewDetail": "View details",
+    "addToCart": "Add to cart",
+    "reset": "Reset",
+    "cancel": "Cancel"
+  },
+  "common": {
+    "loading": "Loading data…",
+    "error": "Something went wrong. Please try again."
+  },
+  "home": {
+    "badge": "Full API coverage",
+    "title": "Build, test, and demo the Fake Store API",
+    "subtitle": "A Nuxt 4 playground that showcases fetching, creating, and managing products, carts, and users with a polished Tailwind UI.",
+    "previewTitle": "Real-time Cart Sync",
+    "previewAction": "Open cart",
+    "previewCartTitle": "Demo Cart",
+    "previewCartSubtitle": "Synced with your Fake Store account",
+    "previewCartStatus": "Live",
+    "previewHintTitle": "What can you explore?",
+    "previewHintDescription": "Browse curated products, craft new listings, authenticate with demo accounts, and inspect customer profiles without leaving this experience.",
+    "featuredTitle": "Curated picks",
+    "featuredSubtitle": "A snapshot of products fetched directly from the Fake Store API.",
+    "actions": {
+      "browseProducts": "Browse products",
+      "createProduct": "Create product",
+      "manageCart": "Manage cart",
+      "reviewUsers": "Review users"
+    },
+    "highlights": {
+      "products": "Product catalogue",
+      "productsDescription": "Filter, search, and inspect Fake Store products with instant SSR hydration.",
+      "cart": "Smart cart",
+      "cartDescription": "Persist your selections with live API syncs for demo accounts.",
+      "users": "User explorer",
+      "usersDescription": "Dive into member profiles and their historical orders."
+    },
+    "stats": {
+      "catalogue": "Products available",
+      "apiCoverage": "API coverage",
+      "responseTime": "Avg. response time"
+    }
+  },
+  "products": {
+    "badge": "API data",
+    "title": "Product catalogue",
+    "subtitle": "Search, filter, and sort Fake Store products while adding items to your synced cart.",
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search by product name",
+      "category": "Category",
+      "all": "All",
+      "sort": "Sort",
+      "sortAsc": "Name A → Z",
+      "sortDesc": "Name Z → A"
+    },
+    "resultCount": "{count} products",
+    "actions": {
+      "viewCart": "View cart",
+      "viewAll": "View all"
+    },
+    "toast": {
+      "added": "\"{title}\" added to cart"
+    },
+    "empty": "No products match your filters.",
+    "reviews": "reviews",
+    "related": "Related products"
+  },
+  "createProduct": {
+    "badge": "POST /products",
+    "title": "Create a new product",
+    "subtitle": "Send a request to the Fake Store API and inspect the generated response.",
+    "fields": {
+      "title": "Title",
+      "price": "Price",
+      "image": "Image URL",
+      "category": "Category",
+      "description": "Description"
+    },
+    "placeholders": {
+      "title": "e.g. Vintage leather backpack",
+      "price": "e.g. 149",
+      "image": "https://…",
+      "category": "Select a category",
+      "description": "Describe the product in detail"
+    },
+    "actions": {
+      "creating": "Creating",
+      "submit": "Submit product"
+    },
+    "success": "Product created with ID {id}!"
+  },
+  "cart": {
+    "badge": "Your cart",
+    "title": "Shopping cart",
+    "subtitle": "Review your selections and sync them with Fake Store.",
+    "actions": {
+      "continueShopping": "Continue shopping",
+      "remove": "Remove",
+      "processing": "Syncing cart",
+      "checkout": "Sync with API"
+    },
+    "messages": {
+      "syncing": "Syncing cart with Fake Store…",
+      "loginRequired": "Sign in with a demo account to sync carts.",
+      "synced": "Cart synced successfully!",
+      "failed": "We couldn’t sync your cart."
+    },
+    "itemPrice": "${price}",
+    "quantity": "Qty",
+    "empty": "Your cart is empty — start exploring products!",
+    "summary": {
+      "title": "Order summary",
+      "subtotal": "Subtotal",
+      "tax": "Estimated tax",
+      "total": "Total",
+      "note": "All totals are illustrative for the Fake Store demo."
+    },
+    "help": {
+      "title": "Need demo credentials?",
+      "description": "Use the users explorer to pick a username and password for the Fake Store sandbox.",
+      "action": "View demo users"
+    }
+  },
+  "auth": {
+    "badge": "Demo access",
+    "title": "Sign in to sync carts",
+    "subtitle": "Use any Fake Store demo credentials to test authentication and cart retrieval.",
+    "fields": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "placeholders": {
+      "username": "johnd",
+      "password": "m38rmF$"
+    },
+    "actions": {
+      "signIn": "Sign in",
+      "signingIn": "Signing in"
+    },
+    "helper": "Use credentials from the Users page to experiment with the API.",
+    "validation": {
+      "required": "Enter both username and password."
+    }
+  },
+  "users": {
+    "badge": "Members",
+    "title": "Fake Store users",
+    "subtitle": "Inspect demo accounts, their contact details, and recent orders.",
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search by name or username",
+      "sort": "Sort",
+      "asc": "Name A → Z",
+      "desc": "Name Z → A"
+    },
+    "actions": {
+      "exploreProducts": "Browse catalogue",
+      "viewProfile": "View profile",
+      "backToList": "Back to users"
+    },
+    "empty": "No users match your search."
+  },
+  "userDetail": {
+    "contact": "Contact details",
+    "account": "Account info",
+    "username": "Username: {username}",
+    "geo": "Coordinates: {lat}, {long}",
+    "orders": "Recent carts",
+    "viewCart": "Open cart",
+    "noOrders": "No cart history available for this user yet.",
+    "orderId": "Cart #{id}",
+    "productLine": "Product {productId}",
+    "productQuantity": "Quantity: {quantity}"
+  },
+  "footer": {
+    "text": "Built with Nuxt 4, Tailwind CSS, and the Fake Store API.",
+    "link": "View on GitHub"
+  }
+}

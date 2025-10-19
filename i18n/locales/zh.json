@@ -1,0 +1,194 @@
+{
+  "app": {
+    "title": "Fake Store 體驗"
+  },
+  "navigation": {
+    "home": "總覽",
+    "products": "商品",
+    "cart": "購物車",
+    "users": "會員",
+    "addProduct": "新增商品",
+    "language": "語言"
+  },
+  "actions": {
+    "login": "登入",
+    "logout": "登出",
+    "viewDetail": "查看詳情",
+    "addToCart": "加入購物車",
+    "reset": "重置",
+    "cancel": "取消"
+  },
+  "common": {
+    "loading": "資料載入中…",
+    "error": "發生錯誤，請稍後再試。"
+  },
+  "home": {
+    "badge": "完整 API 功能",
+    "title": "體驗 Fake Store API 的所有操作",
+    "subtitle": "這是一個使用 Nuxt 4 與 Tailwind CSS 建立的展示專案，示範如何串接 Fake Store API 取得商品、購物車與會員資料，並進行新增與管理。",
+    "previewTitle": "即時同步購物車",
+    "previewAction": "前往購物車",
+    "previewCartTitle": "展示購物車",
+    "previewCartSubtitle": "與 Fake Store 帳號同步",
+    "previewCartStatus": "即時",
+    "previewHintTitle": "可以探索什麼？",
+    "previewHintDescription": "瀏覽精選商品、建立全新品項、使用示範帳號登入，並檢視會員資訊，全都在同一個介面完成。",
+    "featuredTitle": "精選商品",
+    "featuredSubtitle": "直接從 Fake Store API 抓取的熱門品項。",
+    "actions": {
+      "browseProducts": "瀏覽商品",
+      "createProduct": "新增商品",
+      "manageCart": "管理購物車",
+      "reviewUsers": "檢視會員"
+    },
+    "highlights": {
+      "products": "商品目錄",
+      "productsDescription": "提供搜尋、篩選與排序，快速找到想要的品項。",
+      "cart": "智慧購物車",
+      "cartDescription": "示範帳號的購物車會即時同步至 Fake Store API。",
+      "users": "會員探索",
+      "usersDescription": "查看會員詳細資料與歷史訂單紀錄。"
+    },
+    "stats": {
+      "catalogue": "可瀏覽商品",
+      "apiCoverage": "API 覆蓋率",
+      "responseTime": "平均回應時間"
+    }
+  },
+  "products": {
+    "badge": "API 資料",
+    "title": "商品一覽",
+    "subtitle": "支援搜尋、分類與排序，並可直接將商品加入同步購物車。",
+    "filters": {
+      "search": "搜尋",
+      "searchPlaceholder": "輸入商品名稱",
+      "category": "分類",
+      "all": "全部",
+      "sort": "排序",
+      "sortAsc": "名稱 A → Z",
+      "sortDesc": "名稱 Z → A"
+    },
+    "resultCount": "共 {count} 項商品",
+    "actions": {
+      "viewCart": "查看購物車",
+      "viewAll": "檢視全部"
+    },
+    "toast": {
+      "added": "已將「{title}」加入購物車"
+    },
+    "empty": "目前沒有符合條件的商品。",
+    "reviews": "則評價",
+    "related": "相關商品"
+  },
+  "createProduct": {
+    "badge": "POST /products",
+    "title": "建立新商品",
+    "subtitle": "將表單內容送出至 Fake Store API 並查看回傳結果。",
+    "fields": {
+      "title": "商品名稱",
+      "price": "價格",
+      "image": "圖片網址",
+      "category": "分類",
+      "description": "商品描述"
+    },
+    "placeholders": {
+      "title": "例如：復古皮革後背包",
+      "price": "例如：149",
+      "image": "https://…",
+      "category": "請選擇分類",
+      "description": "詳細介紹商品特色"
+    },
+    "actions": {
+      "creating": "建立中",
+      "submit": "送出商品"
+    },
+    "success": "建立成功，商品編號 {id}!"
+  },
+  "cart": {
+    "badge": "購物車",
+    "title": "購物車",
+    "subtitle": "檢視已選擇的商品，並與 Fake Store API 同步。",
+    "actions": {
+      "continueShopping": "繼續逛逛",
+      "remove": "移除",
+      "processing": "同步中",
+      "checkout": "同步至 API"
+    },
+    "messages": {
+      "syncing": "正在與 Fake Store 同步購物車…",
+      "loginRequired": "請先使用示範帳號登入以啟用同步功能。",
+      "synced": "購物車已成功同步！",
+      "failed": "同步失敗，請稍後再試。"
+    },
+    "itemPrice": "${price}",
+    "quantity": "數量",
+    "empty": "購物車目前是空的，快去挑選喜歡的商品！",
+    "summary": {
+      "title": "結帳摘要",
+      "subtotal": "小計",
+      "tax": "預估稅額",
+      "total": "總計",
+      "note": "金額僅供 Fake Store 示範使用，無實際交易。"
+    },
+    "help": {
+      "title": "需要示範帳號嗎？",
+      "description": "可至會員頁面查看可用的示範帳號與密碼。",
+      "action": "查看會員"
+    }
+  },
+  "auth": {
+    "badge": "示範登入",
+    "title": "登入以同步購物車",
+    "subtitle": "使用 Fake Store 提供的示範帳號測試登入與購物車同步流程。",
+    "fields": {
+      "username": "帳號",
+      "password": "密碼"
+    },
+    "placeholders": {
+      "username": "johnd",
+      "password": "m38rmF$"
+    },
+    "actions": {
+      "signIn": "登入",
+      "signingIn": "登入中"
+    },
+    "helper": "登入資訊可在會員頁面查詢。",
+    "validation": {
+      "required": "請輸入帳號與密碼。"
+    }
+  },
+  "users": {
+    "badge": "會員列表",
+    "title": "Fake Store 會員",
+    "subtitle": "查看示範會員的聯絡資訊與購物紀錄。",
+    "filters": {
+      "search": "搜尋",
+      "searchPlaceholder": "輸入姓名或帳號",
+      "sort": "排序",
+      "asc": "姓名 A → Z",
+      "desc": "姓名 Z → A"
+    },
+    "actions": {
+      "exploreProducts": "前往商品頁",
+      "viewProfile": "查看會員",
+      "backToList": "回到會員列表"
+    },
+    "empty": "沒有符合搜尋條件的會員。"
+  },
+  "userDetail": {
+    "contact": "聯絡資訊",
+    "account": "帳號資訊",
+    "username": "使用者名稱：{username}",
+    "geo": "座標：{lat}, {long}",
+    "orders": "近期購物車",
+    "viewCart": "前往購物車",
+    "noOrders": "目前尚未有購物車紀錄。",
+    "orderId": "購物車 #{id}",
+    "productLine": "商品 {productId}",
+    "productQuantity": "數量：{quantity}"
+  },
+  "footer": {
+    "text": "以 Nuxt 4、Tailwind CSS 與 Fake Store API 打造。",
+    "link": "前往 GitHub"
+  }
+}

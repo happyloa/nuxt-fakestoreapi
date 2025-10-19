@@ -1,78 +1,74 @@
-<script setup>
-import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
-import { ref } from 'vue';
+<script setup lang="ts">
+import { useAuthStore } from '~/stores/auth'
+
+const auth = useAuthStore()
+const { t } = useI18n()
+
+const credentials = reactive({
+  username: '',
+  password: '',
+})
 
 useSeoMeta({
-  title: 'Login | Fake Store',
-  ogTitle: 'Login | Fake Store',
-  description: 'Login to manage your cart and orders.',
-  ogDescription: 'Login to manage your cart and orders.',
-});
+  title: t('auth.title'),
+  description: t('auth.subtitle'),
+})
 
-const auth = useAuthStore();
-const cart = useCartStore();
-const username = ref("");
-const password = ref("");
 const submit = async () => {
-  await auth.login(username.value, password.value);
-  if (auth.user) {
-    cart.fetchCart(auth.user.id);
+  if (!credentials.username || !credentials.password) {
+    auth.error = t('auth.validation.required')
+    return
   }
-};
+  await auth.login(credentials.username, credentials.password)
+}
 </script>
 
 <template>
-<main class="container">
-  <h1>Login</h1>
-  <form @submit.prevent="submit" class="form card">
-      <input v-model="username" placeholder="username" />
-      <input type="password" v-model="password" placeholder="password" />
-      <button type="submit" :disabled="auth.loading">Login</button>
-  </form>
-    <p v-if="auth.error" class="error">{{ auth.error }}</p>
-  </main>
+  <section class="mx-auto flex max-w-4xl flex-col items-center gap-10 px-4 py-16 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <p class="inline-flex items-center gap-2 rounded-full bg-primary-100 px-4 py-1 text-sm font-semibold text-primary-700">
+        {{ t('auth.badge') }}
+      </p>
+      <h1 class="mt-4 text-3xl font-bold text-slate-900">{{ t('auth.title') }}</h1>
+      <p class="mt-2 text-slate-600">{{ t('auth.subtitle') }}</p>
+    </div>
+
+    <form class="card w-full max-w-xl space-y-6" @submit.prevent="submit">
+      <label class="block space-y-2">
+        <span class="text-sm font-semibold text-slate-700">{{ t('auth.fields.username') }}</span>
+        <input
+          v-model="credentials.username"
+          type="text"
+          class="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+          :placeholder="t('auth.placeholders.username')"
+        />
+      </label>
+      <label class="block space-y-2">
+        <span class="text-sm font-semibold text-slate-700">{{ t('auth.fields.password') }}</span>
+        <input
+          v-model="credentials.password"
+          type="password"
+          class="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm focus:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-200"
+          :placeholder="t('auth.placeholders.password')"
+        />
+      </label>
+      <button
+        type="submit"
+        class="link-button w-full justify-center text-base"
+        :disabled="auth.loading"
+      >
+        <span v-if="auth.loading" class="flex items-center justify-center gap-2">
+          <span class="h-4 w-4 animate-spin rounded-full border-2 border-primary-200 border-t-white" />
+          {{ t('auth.actions.signingIn') }}
+        </span>
+        <span v-else>{{ t('auth.actions.signIn') }}</span>
+      </button>
+      <p v-if="auth.error" class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+        {{ auth.error }}
+      </p>
+      <p class="text-xs text-slate-400">
+        {{ t('auth.helper') }}
+      </p>
+    </form>
+  </section>
 </template>
-
-<style scoped>
-.container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-input {
-  padding: 8px;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-}
-button {
-  padding: 8px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.2s ease;
-}
-.form button:hover {
-  background: #ff5722;
-}
-.error {
-  color: red;
-  margin-top: 12px;
-}
-</style>

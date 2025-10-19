@@ -1,15 +1,17 @@
-<script setup>
+<script setup lang="ts">
 useSeoMeta({
-  ogImage: "/og-image.webp",
-});
+  titleTemplate: (titleChunk) =>
+    titleChunk ? `${titleChunk} · Fake Store Experience` : 'Fake Store Experience',
+  ogImage: '/og-image.webp',
+})
 </script>
 
 <template>
   <div>
     <NuxtRouteAnnouncer />
-    <AppHeader />
-    <NuxtPage />
-    <LanguageSwitcher />
-    <AppFooter />
+    <NuxtLoadingIndicator color="#2680c2" :height="3" />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
