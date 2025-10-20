@@ -13,13 +13,21 @@ const api = useFakeStoreApi();
 const route = useRoute();
 const router = useRouter();
 
-const { data: products, pending } = await useAsyncData<Product[]>("products:list", () =>
-  api.listProducts(),
-);
+const {
+  data: products,
+  pending,
+  error,
+  refresh,
+} = await useAsyncData<Product[]>("products:list", () => api.listProducts(), {
+  default: () => [],
+});
 
-const { data: categories } = await useAsyncData<string[]>("products:categories", () =>
-  api.listCategories(),
-);
+const {
+  data: categories,
+  refresh: refreshCategories,
+} = await useAsyncData<string[]>("products:categories", () => api.listCategories(), {
+  default: () => [],
+});
 
 const search = ref<string>((route.query.q as string) || "");
 const sort = ref<string>((route.query.sort as string) || "asc");
@@ -40,6 +48,16 @@ const filteredProducts = computed(() => {
   );
   return sorted;
 });
+
+const hasAnyProducts = computed(() => (products.value?.length ?? 0) > 0);
+
+const handleRetry = async () => {
+  try {
+    await Promise.all([refresh(), refreshCategories()]);
+  } catch (err) {
+    console.warn("Failed to refresh products", err);
+  }
+};
 
 watch([search, sort, category], () => {
   const query: Record<string, string> = {};
@@ -72,9 +90,28 @@ watch([search, sort, category], () => {
 
       <ProductGrid :products="filteredProducts" :loading="pending">
         <template #empty>
-          <p class="text-center text-slate-400">
-            {{ $t("products.empty") }}
-          </p>
+          <ProductFallback
+            :title="
+              $t(
+                error
+                  ? 'products.errorTitle'
+                  : hasAnyProducts
+                    ? 'products.noMatchesTitle'
+                    : 'products.emptyTitle',
+              )
+            "
+            :description="
+              $t(
+                error
+                  ? 'products.errorDescription'
+                  : hasAnyProducts
+                    ? 'products.noMatchesDescription'
+                    : 'products.emptyDescription',
+              )
+            "
+            :show-retry="Boolean(error)"
+            @retry="handleRetry"
+          />
         </template>
       </ProductGrid>
     </div>

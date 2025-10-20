@@ -50,6 +50,13 @@
     "pageTitle": "瀏覽所有商品",
     "pageSubtitle": "靈活使用篩選、搜尋與排序功能。",
     "empty": "沒有符合條件的商品。",
+    "emptyTitle": "目前沒有商品可以顯示",
+    "emptyDescription": "Fake Store API 暫時沒有回傳商品，稍後再試一次。",
+    "noMatchesTitle": "沒有符合條件的商品",
+    "noMatchesDescription": "請調整或清除篩選條件後再試一次。",
+    "errorTitle": "取得商品時發生問題",
+    "errorDescription": "Fake Store API 可能暫時無法使用，請稍候重新整理。",
+    "retry": "重新整理",
     "actions": {
       "addToCart": "加入購物車",
       "create": "新增商品"
