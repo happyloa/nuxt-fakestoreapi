@@ -1,13 +1,20 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Product } from '~/types/fakestore'
 
 const props = defineProps<{
   products: Product[]
   pending: boolean
   error: boolean
+  cartItemIds?: Set<number>
+  recentlyAddedId?: number | null
 }>()
 
+const emit = defineEmits<{ (e: 'add', product: Product): void }>()
+
 const { t } = useI18n()
+
+const cartIds = computed(() => props.cartItemIds ?? new Set<number>())
 </script>
 
 <template>
@@ -27,8 +34,11 @@ const { t } = useI18n()
         v-for="product in props.products"
         :key="product.id"
         :product="product"
+        :in-cart="cartIds.has(product.id)"
+        :recently-added="props.recentlyAddedId === product.id"
         show-description
         show-actions
+        @add="emit('add', product)"
       />
       <div v-if="props.pending" class="card col-span-full flex items-center justify-center text-slate-500">
         {{ t('common.loading') }}
