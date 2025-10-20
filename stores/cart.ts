@@ -1,19 +1,15 @@
 import { defineStore } from 'pinia'
+import { useFakeStoreApi } from '~/composables/useFakeStoreApi'
+import type { CartItem } from '~/types/fakestore'
 
-export interface CartItem {
-  id: number
-  title: string
-  price: number
-  image: string
-  quantity: number
-}
+const api = useFakeStoreApi()
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],
     userId: null as number | null,
     loading: false,
-    error: ''
+    error: '',
   }),
   getters: {
     total(state) {
@@ -21,7 +17,7 @@ export const useCartStore = defineStore('cart', {
     },
     count(state) {
       return state.items.reduce((sum, item) => sum + item.quantity, 0)
-    }
+    },
   },
   actions: {
     async fetchCart(userId: number) {
@@ -29,65 +25,76 @@ export const useCartStore = defineStore('cart', {
       this.error = ''
       this.userId = userId
       try {
-        const res: any[] = await $fetch(`https://fakestoreapi.com/carts/user/${userId}`)
-        if (res.length) {
-          const latest = res[res.length - 1]
-          const items = await Promise.all(
-            latest.products.map(async (p: any) => {
-              const prod: any = await $fetch(
-                `https://fakestoreapi.com/products/${p.productId}`,
-              )
-              return {
-                id: prod.id,
-                title: prod.title,
-                price: prod.price,
-                image: prod.image,
-                quantity: p.quantity,
-              }
-            }),
-          )
-          this.items = items
-        } else {
+        const carts = await api.listCartsForUser(userId)
+        if (!carts.length) {
           this.items = []
+          return
         }
-      } catch (e: any) {
-        this.error = e?.message || 'Failed to load cart'
+
+        const latest = carts.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+        )[carts.length - 1]
+
+        const items = await Promise.all(
+          latest.products.map(async (line) => {
+            const product = await api.getProduct(line.productId)
+            return {
+              id: product.id,
+              title: product.title,
+              price: product.price,
+              image: product.image,
+              quantity: line.quantity,
+            }
+          }),
+        )
+
+        this.items = items
+      } catch (error: any) {
+        this.error = error?.message || 'Failed to load cart'
       } finally {
         this.loading = false
       }
     },
     async syncCart() {
-      if (!this.userId) return
+      if (!this.userId || !this.items.length) {
+        return
+      }
+
       try {
-        await $fetch('https://fakestoreapi.com/carts', {
-          method: 'POST',
-          body: {
-            userId: this.userId,
-            date: new Date().toISOString(),
-            products: this.items.map((i) => ({ productId: i.id, quantity: i.quantity })),
-          },
+        await api.createCart({
+          userId: this.userId,
+          date: new Date().toISOString(),
+          products: this.items.map((item) => ({
+            productId: item.id,
+            quantity: item.quantity,
+          })),
         })
-      } catch {
-        // ignore sync errors
+      } catch (error) {
+        console.warn('Failed to sync cart', error)
       }
     },
     addItem(product: { id: number; title: string; price: number; image: string }) {
-      const existing = this.items.find((i) => i.id === product.id)
+      const existing = this.items.find((item) => item.id === product.id)
       if (existing) {
-        existing.quantity++
+        existing.quantity += 1
       } else {
         this.items.push({ ...product, quantity: 1 })
       }
       this.syncCart()
     },
+    updateQuantity(id: number, quantity: number) {
+      const item = this.items.find((entry) => entry.id === id)
+      if (!item) return
+      item.quantity = Math.max(1, quantity)
+      this.syncCart()
+    },
     removeItem(id: number) {
-      this.items = this.items.filter((i) => i.id !== id)
+      this.items = this.items.filter((item) => item.id !== id)
       this.syncCart()
     },
     clear() {
       this.items = []
-      this.syncCart()
       this.userId = null
     },
-  }
+  },
 })

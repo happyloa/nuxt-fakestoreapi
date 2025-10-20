@@ -1,92 +1,89 @@
-![](https://i.imgur.com/mIOKP43.png)
+# Nuxt Fake Store Showcase
 
-# Nuxt FakeStoreAPI 商品資料串接練習
+A polished Nuxt 4 application that integrates the [Fake Store API](https://fakestoreapi.com/) to demonstrate a complete e-commerce workflow. The project has been refreshed with Tailwind CSS, modular UI components, authenticated cart synchronisation, user management and product creation.
 
-此專案為一個基於 Nuxt 3 的電子商務展示平台，整合了 FakeStoreAPI 作為產品資料來源。專案中包含多國語言支援、產品分類篩選、搜尋與排序功能，並使用 Vue 元件來實現可重複使用的 UI 設計。
+![Nuxt Fake Store preview](https://i.imgur.com/mIOKP43.png)
 
-- [線上部署連結](https://nuxt-fakestoreapi.worksbyaaron.com/)
+## ✨ Features
 
-## 目錄結構
+- **Product catalogue** – filter, search and sort products by category or price with instant UI feedback.
+- **Product creation** – submit new items to the Fake Store API with validation feedback and automatic redirect to the created record.
+- **Dynamic product pages** – rich product detail views with rating badges and “add to cart” actions.
+- **Shopping cart** – synchronised with Fake Store carts after login, including quantity management and summary cards.
+- **User explorer** – browse all Fake Store users, inspect their profile details and review historical carts.
+- **Internationalisation** – toggle between Traditional Chinese and English with translated navigation, copy and CTAs.
+- **Modern UI** – Tailwind CSS driven layout, responsive typography, soft glassmorphism panels and dark theme.
+
+## 🧱 Project structure
 
 ```
-├── .gitignore               # 定義版本控制時忽略的檔案
-├── .vscode/settings.json    # VS Code 設定
-├── README.md                # 專案說明文件
-├── app.vue                  # Vue 主應用程式檔案
-├── assets/css               # 樣式檔案（字型與重設樣式）
-├── components               # 自訂 Vue 元件
-│   ├── AppFooter.vue        # 頁尾元件
-│   ├── AppHeader.vue        # 頁首元件
-│   ├── Home                 # 主頁元件（篩選、標題、產品卡片）
-│   └── LanguageSwitcher.vue # 語言切換元件
-├── i18n.config.ts           # 多國語言設定
-├── locales                  # 語系檔（英文與繁體中文）
-├── nuxt.config.ts           # Nuxt 設定檔
-├── pages                    # Nuxt 頁面路由
-│   ├── index.vue            # 主頁
-│   └── product/[id].vue     # 產品詳細頁
-├── public                   # 靜態資源（favicon、語言圖示、SEO 資訊）
-├── server                   # 伺服器端設定
-└── tsconfig.json            # TypeScript 設定
+├── app.vue                     # Application shell with header, footer and layout
+├── components
+│   ├── cart                    # Cart specific components (rows, summaries)
+│   ├── products                # Product cards, filters, hero blocks and forms
+│   ├── users                   # User list and detail components
+│   ├── AppHeader.vue           # Responsive navigation bar
+│   ├── AppFooter.vue           # Footer with quick links
+│   └── LanguageSwitcher.vue    # Floating locale toggle
+├── composables/useFakeStoreApi.ts  # Centralised Fake Store API client
+├── i18n/locales                # i18n strings (English & Traditional Chinese)
+├── pages
+│   ├── index.vue               # Landing page with highlights and quick actions
+│   ├── cart/index.vue          # Cart management page
+│   ├── login.vue               # Authentication form for demo credentials
+│   ├── products                # Catalogue list, detail and creation routes
+│   └── users                   # User list and detail routes with cart history
+├── stores                      # Pinia stores for auth & cart synchronisation
+├── assets/css/main.css         # Tailwind layers and design tokens
+├── tailwind.config.ts          # Tailwind theme customisation
+└── nuxt.config.ts              # Nuxt 4 configuration & module setup
 ```
 
-## 安裝與運行步驟
+## 🚀 Getting started
 
-1.安裝套件：
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-    npm install
+2. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-2.啟動開發伺服器：
+3. **Build for production**
+   ```bash
+   npm run build
+   npm run preview
+   ```
 
-    npm run dev
+> ℹ️ The Fake Store API ships with demo credentials such as `mor_2314` / `83r5^_`. Use them to experience cart persistence and user-specific data.
 
-## 主要功能
+## 🧩 Tech stack
 
-- **多國語言支援**：提供繁體中文與英文語系切換。
-- **產品分類篩選**：依產品分類篩選顯示。
-- **產品搜尋與排序**：提供關鍵字搜尋功能及產品列表排序。
-- **動態路由**：根據 API 資料動態生成產品詳細頁面。
-- **SEO 優化**：針對每個頁面設定 SEO 元數據，包括標題與描述。
+- [Nuxt 4](https://nuxt.com/) with server-side rendering
+- [Tailwind CSS](https://tailwindcss.com/) and `@tailwindcss/forms` / `@tailwindcss/typography`
+- [Pinia](https://pinia.vuejs.org/) state management for cart and authentication
+- [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for bilingual support
+- [Fake Store API](https://fakestoreapi.com/) as the back-end data source
 
-## 檔案與功能介紹
+## 🔐 API coverage
 
-### `/components`
+| Capability           | Implementation |
+|----------------------|----------------|
+| Fetch all products   | Landing page & `/products` grid |
+| Fetch product detail | `/products/[id]` detail page |
+| Create product       | `/products/new` form with success feedback |
+| Authenticate user    | `/login` Pinia auth store |
+| Sync shopping cart   | Cart store backed by Fake Store cart endpoints |
+| Fetch users          | `/users` list and `/users/[id]` detail views |
+| Fetch user carts     | User detail page cart history section |
 
-包含主要的 UI 元件，用於頁面組成的基本區塊：
+## 🧪 Testing checklist
 
-- **AppHeader.vue** 和 **AppFooter.vue**：定義頁首與頁尾。
-- **Home/Filter.vue**：用於篩選商品的元件，包含分類選擇、排序及搜尋框。
-- **Home/ProductCard.vue**：商品卡片顯示，包含圖片、標題及價格等。
-- **LanguageSwitcher.vue**：語言切換元件，提供英文與繁體中文。
+- Login using a demo account, refresh the page and confirm the cart persists.
+- Create a product and follow the redirect to its detail page.
+- Switch languages and verify navigation, headings and call-to-actions update accordingly.
+- Resize the window to confirm responsive behaviour on tablets and mobiles.
 
-### `/pages/index.vue`
-
-主頁功能介紹：
-
-- **資料抓取**：使用 `useFetch` 從 FakeStoreAPI 獲取商品資料，顯示在頁面上。
-- **篩選、搜尋與排序**：根據 URL 查詢參數進行商品顯示篩選，支援按分類、排序、搜尋關鍵字來顯示產品。
-- **SEO 設定**：設置頁面 SEO 元數據，利於搜尋引擎優化。
-
-### `/pages/product/[id].vue`
-
-產品詳細頁面：
-
-- **動態路由**：根據產品 ID 從 FakeStoreAPI 獲取特定產品資料。
-- **評價顯示**：使用星級表示法顯示產品評價。
-- **SEO 設定**：針對每個產品的名稱設定標題與描述。
-
-### `nuxt.config.ts`
-
-Nuxt 的主要設定檔，用於設置多國語言、伺服器端渲染及路由設定。
-
-### `/locales`
-
-語系檔，包含 `en.json` 與 `zh.json`，為應用程式提供英文與繁體中文的介面。
-
-### `package.json`
-
-列出使用的套件與執行指令，包括：
-
-- **@nuxtjs/i18n**：多國語言支援套件。
-- **@nuxtjs/google-fonts**：用於載入 Google 字型。
-- **vue-router**：Vue 路由管理。
+Enjoy exploring the Fake Store API with a modern Nuxt experience! 🎉

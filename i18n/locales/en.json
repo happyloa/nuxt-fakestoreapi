@@ -1,0 +1,132 @@
+{
+  "app": {
+    "title": "Nuxt Fake Store"
+  },
+  "navigation": {
+    "home": "Home",
+    "products": "Products",
+    "createProduct": "New Product",
+    "users": "Users",
+    "cart": "Cart",
+    "menu": "Menu",
+    "login": "Login",
+    "logout": "Logout",
+    "welcome": "Hi, {name}",
+    "toggleLanguage": "Toggle language"
+  },
+  "footer": {
+    "title": "Built with the Fake Store API",
+    "subtitle": "A Nuxt 4 playground that demonstrates cart, users and product management powered by Tailwind CSS."
+  },
+  "home": {
+    "hero": {
+      "badge": "Live API demo",
+      "title": "All of Fake Store in a single Nuxt dashboard",
+      "subtitle": "Browse the Fake Store catalogue, manage carts and explore users with a refreshed Tailwind experience.",
+      "ctaPrimary": "Browse catalog",
+      "ctaSecondary": "Create product",
+      "metricsTitle": "Realtime data",
+      "products": "Products",
+      "users": "Active users"
+    },
+    "featured": {
+      "title": "Featured picks",
+      "subtitle": "A snapshot of the latest items available from the Fake Store API.",
+      "viewAll": "View all products"
+    },
+    "categories": {
+      "title": "Categories",
+      "subtitle": "Use categories to narrow down the catalogue quickly."
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "subtitle": "Jump straight into the most common workflows.",
+      "createProduct": "Add a new product",
+      "viewCart": "Open cart",
+      "manageUsers": "Manage users"
+    }
+  },
+  "products": {
+    "pageTitle": "Browse all products",
+    "pageSubtitle": "Filter, search and sort the Fake Store inventory.",
+    "empty": "No products matched your filters.",
+    "actions": {
+      "addToCart": "Add to cart",
+      "create": "Create product"
+    },
+    "filters": {
+      "title": "Filters",
+      "subtitle": "Combine filters to refine the product grid.",
+      "search": "Search",
+      "searchPlaceholder": "Search products...",
+      "category": "Category",
+      "all": "All categories",
+      "sort": "Sort by price",
+      "sortAsc": "Lowest price",
+      "sortDesc": "Highest price"
+    },
+    "details": {
+      "back": "Back to products",
+      "reviews": "{count} reviews",
+      "notFound": "We could not find this product."
+    },
+    "form": {
+      "title": "Create a new product",
+      "subtitle": "Submit a product to the Fake Store API in seconds.",
+      "fields": {
+        "title": "Title",
+        "price": "Price",
+        "category": "Category",
+        "image": "Image URL",
+        "description": "Description"
+      },
+      "submit": "Create product",
+      "submitting": "Creating...",
+      "success": "{title} saved",
+      "error": "Unable to create product"
+    }
+  },
+  "cart": {
+    "title": "Your cart",
+    "clear": "Clear cart",
+    "remove": "Remove",
+    "requiresLogin": "Login to sync your cart with the Fake Store API.",
+    "empty": "Your cart is empty.",
+    "summary": {
+      "title": "Order summary",
+      "items": "Items",
+      "total": "Total",
+      "checkout": "Checkout"
+    }
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "Use one of the demo credentials shipped with the Fake Store API.",
+    "fields": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "submit": "Login",
+    "loading": "Signing in...",
+    "loggedInAs": "Signed in as {name}"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Inspect Fake Store shoppers and their cart history.",
+    "actions": {
+      "viewProfile": "View profile"
+    },
+    "empty": "No users found.",
+    "back": "Back to users",
+    "notFound": "This user does not exist.",
+    "detail": {
+      "contact": "Contact",
+      "address": "Address",
+      "coordinates": "Geo: {lat}, {long}",
+      "cartHistory": "Cart history",
+      "itemsCount": "{count} products",
+      "quantity": "Qty {quantity}",
+      "noCarts": "No carts recorded for this user yet."
+    }
+  }
+}
