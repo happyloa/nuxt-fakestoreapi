@@ -14,6 +14,15 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
   ],
 
+  // 自動載入 components 資料夾下的元件，並移除資料夾前綴，確保
+  // <SiteHeader />、<ProductGrid /> 等命名在伺服器與瀏覽器兩端一致，避免水合錯誤。
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
+  ],
+
   // Google Fonts 的相關配置
   googleFonts: {
     families: {
