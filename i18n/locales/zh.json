@@ -1,0 +1,109 @@
+{
+  "header": {
+    "welcome": "嗨，{name}!"
+  },
+  "products": {
+    "hero": {
+      "badge": "Fake Store API 即時資料",
+      "title": "在一個介面管理所有商品",
+      "subtitle": "結合 Fake Store API 的商品資料，支援瀏覽、篩選、建立與查看詳細資訊。",
+      "ctaPrimary": "建立新商品",
+      "ctaSecondary": "查看會員資料"
+    },
+    "stats": {
+      "totalProducts": "商品總數",
+      "averagePrice": "平均價格",
+      "categories": "分類數量"
+    },
+    "filters": {
+      "title": "智慧篩選",
+      "description": "透過關鍵字、分類與排序組合，快速找到需要的商品。",
+      "searchLabel": "搜尋",
+      "searchPlaceholder": "輸入商品名稱或描述...",
+      "categoryLabel": "分類",
+      "allCategories": "全部分類",
+      "sortLabel": "排序方式",
+      "sortAsc": "ID 由小到大",
+      "sortDesc": "ID 由大到小",
+      "reset": "重置篩選"
+    },
+    "actions": {
+      "addToCart": "加入購物車"
+    },
+    "empty": {
+      "title": "目前沒有符合的商品",
+      "description": "試著調整篩選條件，或直接新增一個全新的商品。",
+      "cta": "新增第一個商品"
+    },
+    "details": {
+      "back": "返回商品列表",
+      "rating": "評分 {rate}",
+      "reviews": "{count} 則評價",
+      "missing": "找不到這項商品，請回到列表重新選擇。"
+    },
+    "form": {
+      "back": "回到商品列表",
+      "heading": "建立新商品",
+      "subheading": "填寫完整資訊，立即透過 Fake Store API 發佈。",
+      "titleLabel": "商品名稱",
+      "titlePlaceholder": "時尚純棉 T 恤",
+      "priceLabel": "價格 (USD)",
+      "pricePlaceholder": "99.00",
+      "descriptionLabel": "商品描述",
+      "descriptionPlaceholder": "介紹這項商品的特色與亮點...",
+      "imageLabel": "圖片網址",
+      "imagePlaceholder": "https://",
+      "categoryLabel": "商品分類",
+      "categoryPlaceholder": "請選擇分類",
+      "submit": "送出建立",
+      "successSuffix": "建立成功！"
+    }
+  },
+  "cart": {
+    "title": "購物車",
+    "subtitle": "登入後會自動與 Fake Store API 的購物車同步。",
+    "loginPrompt": "請先登入以載入最新的購物車資料並同步後續變動。",
+    "itemPrice": "USD {price}",
+    "remove": "移除",
+    "empty": "購物車目前是空的，快去逛逛商品吧！",
+    "summary": {
+      "title": "訂單摘要",
+      "description": "確認商品與金額後再進行下一步。",
+      "items": "項目數：{count}",
+      "total": "總計：USD {total}",
+      "checkout": "前往結帳",
+      "clear": "清空購物車"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "會員列表",
+      "description": "瀏覽 Fake Store API 提供的所有會員資料。",
+      "searchLabel": "快速搜尋",
+      "searchPlaceholder": "以姓名、帳號或 Email 搜尋",
+      "empty": "查無符合的會員資料。"
+    },
+    "card": {
+      "address": "地址",
+      "contact": "聯絡資訊",
+      "phone": "電話",
+      "geo": "緯度 {lat}，經度 {long}"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "會員登入",
+      "subtitle": "使用 Fake Store API 提供的示範帳號進行登入，便於測試購物車同步。",
+      "username": "帳號",
+      "password": "密碼",
+      "submit": "登入",
+      "success": "歡迎回來，{name}！購物車已準備就緒。",
+      "logout": "登出"
+    }
+  },
+  "footer": {
+    "title": "專案說明",
+    "description": "以 Nuxt 4、Tailwind CSS 與 Fake Store API 打造的示範作品。",
+    "copyright": "© {year} Fake Store Dashboard. 版權所有。"
+  }
+}

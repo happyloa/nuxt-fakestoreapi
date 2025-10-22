@@ -1,98 +1,84 @@
-<script setup>
-import { useCartStore } from "~/stores/cart";
-import { useAuthStore } from "~/stores/auth";
-import { onMounted } from 'vue';
+<script setup lang="ts">
+import { onMounted, watch } from 'vue'
+import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+
+onMounted(() => {
+  if (authStore.user) {
+    cartStore.fetchCart(authStore.user.id)
+  }
+})
+
+watch(
+  () => authStore.user?.id,
+  (userId) => {
+    if (userId) {
+      cartStore.fetchCart(userId)
+    } else {
+      cartStore.clear()
+    }
+  },
+)
+
+const handleClear = () => {
+  cartStore.clear({ preserveUser: true })
+}
+
+const handleIncrement = (id: number) => {
+  cartStore.increment(id)
+}
+
+const handleDecrement = (id: number) => {
+  cartStore.decrement(id)
+}
+
+const handleRemove = (id: number) => {
+  cartStore.removeItem(id)
+}
 
 useSeoMeta({
-  title: 'Cart | Fake Store',
-  ogTitle: 'Cart | Fake Store',
-  description: 'View items in your shopping cart.',
-  ogDescription: 'View items in your shopping cart.',
-});
-
-const cart = useCartStore();
-const auth = useAuthStore();
-onMounted(() => {
-  if (auth.user) {
-    cart.fetchCart(auth.user.id);
-  }
-});
+  title: 'Cart | Fake Store Dashboard',
+  description: 'View and manage your Fake Store API shopping cart.',
+  ogTitle: 'Cart | Fake Store Dashboard',
+  ogDescription: 'View and manage your Fake Store API shopping cart.',
+})
 </script>
 
 <template>
-<main class="container">
-  <h1>Cart</h1>
-  <div v-if="cart.items.length" class="card">
-      <ul class="list">
-        <li v-for="item in cart.items" :key="item.id" class="item">
-          <img :src="item.image" :alt="item.title" />
-          <span>{{ item.title }} x {{ item.quantity }}</span>
-          <span>${{ item.price * item.quantity }}</span>
-          <button @click="cart.removeItem(item.id)">Remove</button>
-        </li>
-      </ul>
-      <p class="total">Total: ${{ cart.total }}</p>
-      <button @click="cart.clear()" class="clear">Clear Cart</button>
+  <div class="space-y-8">
+    <BaseSectionHeading
+      :title="$t('cart.title')"
+      :description="$t('cart.subtitle')"
+    />
+
+    <BaseAlert v-if="!authStore.user" variant="info">
+      {{ $t('cart.loginPrompt') }}
+    </BaseAlert>
+
+    <div v-else class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+      <div class="space-y-4">
+        <CartItemsList
+          :items="cartStore.items"
+          @increment="handleIncrement"
+          @decrement="handleDecrement"
+          @remove="handleRemove"
+        />
+        <BaseAlert v-if="cartStore.error" variant="error">
+          {{ cartStore.error }}
+        </BaseAlert>
+        <BaseAlert v-if="!cartStore.items.length && !cartStore.loading" variant="warning">
+          {{ $t('cart.empty') }}
+        </BaseAlert>
+      </div>
+      <CartSummary
+        :total="cartStore.total"
+        :item-count="cartStore.count"
+        :loading="cartStore.loading"
+        @clear="handleClear"
+      />
     </div>
-    <p v-else>No items.</p>
-  </main>
+  </div>
 </template>
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-}
-.list {
-  list-style: none;
-  padding: 0;
-}
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
-.item img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-.item button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--accent);
-}
-.total {
-  font-weight: 700;
-  margin-top: 16px;
-}
-.clear {
-  margin-top: 8px;
-  padding: 8px 16px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.2s ease;
-}
-.clear:hover {
-  background: #ff5722;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-</style>

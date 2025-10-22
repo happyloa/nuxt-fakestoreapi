@@ -1,0 +1,109 @@
+{
+  "header": {
+    "welcome": "Hi, {name}!"
+  },
+  "products": {
+    "hero": {
+      "badge": "Powered by Fake Store API",
+      "title": "Manage every product in one modern workspace",
+      "subtitle": "Browse, filter, create and inspect catalogue items with live data coming from the Fake Store API.",
+      "ctaPrimary": "Create product",
+      "ctaSecondary": "Meet the users"
+    },
+    "stats": {
+      "totalProducts": "Products in catalogue",
+      "averagePrice": "Average price",
+      "categories": "Available categories"
+    },
+    "filters": {
+      "title": "Smart filters",
+      "description": "Combine search, category and sorting to find the exact product you need.",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search by name or description...",
+      "categoryLabel": "Category",
+      "allCategories": "All categories",
+      "sortLabel": "Sort by",
+      "sortAsc": "ID ↑",
+      "sortDesc": "ID ↓",
+      "reset": "Reset filters"
+    },
+    "actions": {
+      "addToCart": "Add to cart"
+    },
+    "empty": {
+      "title": "No products found",
+      "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
+      "cta": "Create your first product"
+    },
+    "details": {
+      "back": "Back to all products",
+      "rating": "Rating {rate}",
+      "reviews": "{count} reviews",
+      "missing": "We could not find this product. Please try again from the catalogue."
+    },
+    "form": {
+      "back": "Back to catalogue",
+      "heading": "Create a new product",
+      "subheading": "Fill in every detail and publish directly to the Fake Store API.",
+      "titleLabel": "Product title",
+      "titlePlaceholder": "Sleek cotton t-shirt",
+      "priceLabel": "Price (USD)",
+      "pricePlaceholder": "99.00",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Tell shoppers why this product is special...",
+      "imageLabel": "Image URL",
+      "imagePlaceholder": "https://",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "submit": "Publish product",
+      "successSuffix": "was created successfully!"
+    }
+  },
+  "cart": {
+    "title": "Shopping cart",
+    "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
+    "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
+    "itemPrice": "USD {price}",
+    "remove": "Remove",
+    "empty": "Your cart is empty. Add something from the products page!",
+    "summary": {
+      "title": "Order summary",
+      "description": "Review the totals and proceed when you're ready.",
+      "items": "Items: {count}",
+      "total": "Total: USD {total}",
+      "checkout": "Checkout",
+      "clear": "Clear cart"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Fake Store users",
+      "description": "A snapshot of every user profile available through the API.",
+      "searchLabel": "Quick search",
+      "searchPlaceholder": "Search users by name, username or email",
+      "empty": "No matching users were found."
+    },
+    "card": {
+      "address": "Address",
+      "contact": "Contact",
+      "phone": "Phone",
+      "geo": "Lat {lat}, Long {long}"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Authenticate",
+      "subtitle": "Use the demo credentials from Fake Store API to manage carts.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "success": "Welcome back, {name}! Your cart is ready.",
+      "logout": "Log out"
+    }
+  },
+  "footer": {
+    "title": "About this project",
+    "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
+    "copyright": "© {year} Fake Store Dashboard. All rights reserved."
+  }
+}

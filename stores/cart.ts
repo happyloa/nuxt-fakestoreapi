@@ -84,10 +84,31 @@ export const useCartStore = defineStore('cart', {
       this.items = this.items.filter((i) => i.id !== id)
       this.syncCart()
     },
-    clear() {
+    increment(id: number) {
+      const item = this.items.find((i) => i.id === id)
+      if (item) {
+        item.quantity += 1
+        this.syncCart()
+      }
+    },
+    decrement(id: number) {
+      const item = this.items.find((i) => i.id === id)
+      if (!item) {
+        return
+      }
+      if (item.quantity > 1) {
+        item.quantity -= 1
+      } else {
+        this.items = this.items.filter((i) => i.id !== id)
+      }
+      this.syncCart()
+    },
+    clear({ preserveUser = false }: { preserveUser?: boolean } = {}) {
       this.items = []
       this.syncCart()
-      this.userId = null
+      if (!preserveUser) {
+        this.userId = null
+      }
     },
   }
 })

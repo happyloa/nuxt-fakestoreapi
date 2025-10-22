@@ -7,7 +7,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   // 加入 @nuxtjs/google-fonts 模組，便於從 Google Fonts 取得字型。
-  modules: ["@nuxtjs/google-fonts", "@nuxtjs/i18n", "@pinia/nuxt"],
+  modules: [
+    "@nuxtjs/google-fonts",
+    "@nuxtjs/i18n",
+    "@pinia/nuxt",
+    "@nuxtjs/tailwindcss",
+  ],
 
   // Google Fonts 的相關配置
   googleFonts: {
@@ -31,15 +36,11 @@ export default defineNuxtConfig({
     ],
     defaultLocale: "zh", // 預設語言
     lazy: true, // 按需加載語言文件
-    langDir: "locales/", // 語言文件的存放資料夾
+    langDir: "locales", // 語言文件的存放資料夾（位於 i18n/locales）
     strategy: "prefix_except_default", // URL 前綴策略
     vueI18n: "./i18n.config.ts",
   },
 
   // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
-  css: [
-    "~/assets/css/reset.css",
-    "~/assets/css/fonts.css",
-    "~/assets/css/theme.css",
-  ],
+  css: ["~/assets/css/tailwind.css"],
 });

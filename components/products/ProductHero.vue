@@ -1,0 +1,34 @@
+<template>
+  <section class="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-brand/10 via-white to-accent/10 p-8 sm:p-12">
+    <div class="grid gap-8 md:grid-cols-2 md:items-center">
+      <div class="space-y-6">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-brand shadow-sm">
+          {{ $t('products.hero.badge') }}
+        </p>
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          {{ $t('products.hero.title') }}
+        </h1>
+        <p class="text-base text-slate-600 sm:text-lg">
+          {{ $t('products.hero.subtitle') }}
+        </p>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <BaseButton to="/products/new" as="NuxtLink" class="w-full sm:w-auto">
+            {{ $t('products.hero.ctaPrimary') }}
+          </BaseButton>
+          <BaseButton as="NuxtLink" to="/users" variant="outline" class="w-full sm:w-auto">
+            {{ $t('products.hero.ctaSecondary') }}
+          </BaseButton>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="absolute -left-12 -top-12 hidden h-24 w-24 rounded-full border border-brand/30 md:block"></div>
+        <div class="absolute -right-10 bottom-10 hidden h-24 w-24 rounded-full border border-accent/30 md:block"></div>
+        <img
+          src="/hero-products.svg"
+          alt="Product illustration"
+          class="relative z-10 mx-auto h-48 w-auto drop-shadow-xl"
+        />
+      </div>
+    </div>
+  </section>
+</template>
