@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { computed, resolveComponent, resolveDynamicComponent } from 'vue'
+import { computed } from 'vue'
+import { NuxtLink } from '#components'
 
 type RouteLocation = string | Record<string, any>
 
@@ -57,14 +58,12 @@ const classes = computed(() => {
 const componentTag = computed<ComponentTag>(() => {
   // 依照傳入的屬性決定要渲染的元件型別，優先順序為 as > to > href > button。
   if (props.as) {
-    return resolveDynamicComponent(props.as as any) as ComponentTag
+    return props.as
   }
 
   if (props.to) {
-    // 透過 resolveComponent 取得 NuxtLink 元件後，交由 resolveDynamicComponent 回傳實際的元件定義，
-    // 確保渲染時維持正確的 PascalCase 名稱而非被轉為無效的小寫自訂標籤。
-    const nuxtLink = resolveComponent('NuxtLink') as Component
-    return resolveDynamicComponent(nuxtLink) as ComponentTag
+    // 直接引用 NuxtLink 組件以避免轉為無效的小寫自訂標籤。
+    return NuxtLink as ComponentTag
   }
 
   if (props.href) {
