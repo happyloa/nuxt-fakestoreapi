@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from '#imports'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
@@ -32,16 +32,40 @@ watch(
     isMenuOpen.value = false
   },
 )
+
+const handleEscape = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    isMenuOpen.value = false
+  }
+}
+
+const handleResize = () => {
+  if (window.innerWidth >= 768) {
+    isMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  if (!process.client) return
+  window.addEventListener('keyup', handleEscape)
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  if (!process.client) return
+  window.removeEventListener('keyup', handleEscape)
+  window.removeEventListener('resize', handleResize)
+})
 </script>
 
 <template>
   <header class="sticky top-0 z-50 border-b border-slate-200/40 bg-white/80 backdrop-blur transition-colors duration-200 dark:border-slate-800/60 dark:bg-slate-950/80">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8 xl:px-10">
       <NuxtLink to="/" class="flex items-center gap-2 text-lg font-bold text-brand dark:text-brand-light">
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand text-white shadow-lg shadow-brand/30">FS</span>
         <span>Fake Store Dashboard</span>
       </NuxtLink>
-      <nav class="hidden items-center gap-4 text-sm font-medium text-slate-600 transition-colors duration-200 md:flex dark:text-slate-200">
+      <nav class="hidden items-center gap-2 text-sm font-medium text-slate-600 transition-colors duration-200 md:flex md:flex-wrap md:justify-end md:gap-4 lg:gap-6 dark:text-slate-200">
         <NuxtLink
           v-for="item in navigation"
           :key="item.to"
@@ -72,6 +96,9 @@ watch(
       </nav>
       <button
         class="inline-flex items-center rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 md:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        type="button"
+        :aria-expanded="isMenuOpen"
+        aria-controls="site-navigation-mobile"
         @click="isMenuOpen = !isMenuOpen"
       >
         <span class="sr-only">Toggle navigation</span>
@@ -91,24 +118,50 @@ watch(
         </svg>
       </button>
     </div>
-    <div v-if="isMenuOpen" class="border-t border-slate-200 bg-white transition-colors duration-200 md:hidden dark:border-slate-800 dark:bg-slate-900">
-      <nav class="mx-auto max-w-6xl space-y-2 px-4 py-4 text-sm font-medium text-slate-600 dark:text-slate-200">
-        <NuxtLink
-          v-for="item in navigation"
-          :key="item.to"
-          :to="item.to"
-          class="block rounded-lg px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800"
-        >
-          {{ item.to === '/cart' ? cartLabel : item.name }}
-        </NuxtLink>
-        <div class="flex items-center justify-between gap-3 px-3 py-2">
-          <LanguageSwitcher />
-          <ThemeToggle />
-        </div>
-        <span v-if="auth.user" class="block px-3 text-xs text-slate-500 dark:text-slate-300">
-          {{ $t('header.welcome', { name: auth.user.username }) }}
-        </span>
-      </nav>
-    </div>
+    <Teleport to="body">
+      <div
+        v-if="isMenuOpen"
+        class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity md:hidden"
+        @click="isMenuOpen = false"
+      />
+    </Teleport>
+    <Transition name="slide-down">
+      <div
+        v-if="isMenuOpen"
+        id="site-navigation-mobile"
+        class="md:hidden"
+      >
+        <nav class="absolute inset-x-0 top-full z-50 border-b border-slate-200 bg-white/95 px-4 py-4 text-sm font-medium text-slate-600 shadow-lg shadow-slate-900/5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:text-slate-200">
+          <NuxtLink
+            v-for="item in navigation"
+            :key="item.to"
+            :to="item.to"
+            class="block rounded-lg px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+            {{ item.to === '/cart' ? cartLabel : item.name }}
+          </NuxtLink>
+          <div class="flex items-center justify-between gap-3 px-3 py-2">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
+          <span v-if="auth.user" class="block px-3 text-xs text-slate-500 dark:text-slate-300">
+            {{ $t('header.welcome', { name: auth.user.username }) }}
+          </span>
+        </nav>
+      </div>
+    </Transition>
   </header>
 </template>
+
+<style scoped>
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(-10%);
+}
+</style>

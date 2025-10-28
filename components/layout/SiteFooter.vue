@@ -19,7 +19,7 @@ const links = [
 
 <template>
   <footer class="mt-16 border-t border-slate-200 bg-white transition-colors duration-200 dark:border-slate-800 dark:bg-slate-950">
-    <div class="mx-auto max-w-6xl px-4 py-10 text-slate-600 sm:px-6 lg:px-8 dark:text-slate-300">
+    <div class="mx-auto max-w-7xl px-4 py-10 text-slate-600 sm:px-6 lg:px-8 xl:px-10 dark:text-slate-300">
       <div class="grid gap-8 md:grid-cols-3">
         <div>
           <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $t('footer.title') }}</h3>

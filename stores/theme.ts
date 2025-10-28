@@ -4,6 +4,16 @@ export type ThemePreference = 'light' | 'dark'
 
 const STORAGE_KEY = 'fakestore-theme'
 
+const getStorage = () => {
+  if (!process.client) return null
+  try {
+    return window.sessionStorage
+  } catch (error) {
+    console.warn('Session storage is unavailable', error)
+    return null
+  }
+}
+
 export const useThemeStore = defineStore('theme', {
   state: () => ({
     preference: 'dark' as ThemePreference,
@@ -17,15 +27,16 @@ export const useThemeStore = defineStore('theme', {
     },
     loadFromStorage() {
       if (!process.client) return this.preference
-      const stored = window.localStorage.getItem(STORAGE_KEY) as ThemePreference | null
+      const storage = getStorage()
+      const stored = storage?.getItem(STORAGE_KEY) as ThemePreference | null
       if (stored === 'light' || stored === 'dark') {
         this.preference = stored
       }
       return this.preference
     },
     persist(theme: ThemePreference) {
-      if (!process.client) return
-      window.localStorage.setItem(STORAGE_KEY, theme)
+      const storage = getStorage()
+      storage?.setItem(STORAGE_KEY, theme)
     },
   },
 })
