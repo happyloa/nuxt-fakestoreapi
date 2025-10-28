@@ -1,78 +1,45 @@
-<script setup>
-import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
-import { ref } from 'vue';
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
+import { useNotificationsStore } from '~/stores/notifications'
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const notifications = useNotificationsStore()
+const { t } = useI18n()
+
+const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
+  await authStore.login(username, password)
+  if (authStore.user) {
+    cartStore.fetchCart(authStore.user.id)
+    notifications.success(
+      t('notifications.loggedIn', { name: authStore.user.username }),
+    )
+  }
+}
+
+const handleLogout = () => {
+  authStore.logout()
+  notifications.info(t('notifications.loggedOut'), 2000)
+}
 
 useSeoMeta({
-  title: 'Login | Fake Store',
-  ogTitle: 'Login | Fake Store',
-  description: 'Login to manage your cart and orders.',
-  ogDescription: 'Login to manage your cart and orders.',
-});
-
-const auth = useAuthStore();
-const cart = useCartStore();
-const username = ref("");
-const password = ref("");
-const submit = async () => {
-  await auth.login(username.value, password.value);
-  if (auth.user) {
-    cart.fetchCart(auth.user.id);
-  }
-};
+  title: 'Login | Fake Store Dashboard',
+  description: 'Authenticate with the Fake Store API to sync your shopping cart.',
+  ogTitle: 'Login | Fake Store Dashboard',
+  ogDescription: 'Authenticate with the Fake Store API to sync your shopping cart.',
+})
 </script>
 
 <template>
-<main class="container">
-  <h1>Login</h1>
-  <form @submit.prevent="submit" class="form card">
-      <input v-model="username" placeholder="username" />
-      <input type="password" v-model="password" placeholder="password" />
-      <button type="submit" :disabled="auth.loading">Login</button>
-  </form>
-    <p v-if="auth.error" class="error">{{ auth.error }}</p>
-  </main>
+  <div class="flex flex-col items-center gap-6">
+    <LoginForm :loading="authStore.loading" :error="authStore.error" @submit="handleSubmit" />
+    <BaseAlert v-if="authStore.user" variant="success">
+      {{ $t('auth.login.success', { name: authStore.user.username }) }}
+      <BaseButton class="mt-3" variant="outline" @click="handleLogout">
+        {{ $t('auth.login.logout') }}
+      </BaseButton>
+    </BaseAlert>
+  </div>
 </template>
-
-<style scoped>
-.container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
-}
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-input {
-  padding: 8px;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-}
-button {
-  padding: 8px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.2s ease;
-}
-.form button:hover {
-  background: #ff5722;
-}
-.error {
-  color: red;
-  margin-top: 12px;
-}
-</style>

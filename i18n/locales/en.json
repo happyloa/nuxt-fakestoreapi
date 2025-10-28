@@ -1,0 +1,238 @@
+{
+  "header": {
+    "welcome": "Hi, {name}!",
+    "theme": {
+      "toggleLabel": "Toggle site theme",
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "language": {
+      "toggleLabel": "Switch language, next: {next}"
+    }
+  },
+  "navigation": {
+    "products": "Products",
+    "newProduct": "New product",
+    "cart": "Cart",
+    "users": "Users",
+    "apiPlayground": "API playground",
+    "login": "Login"
+  },
+  "products": {
+    "hero": {
+      "badge": "Powered by Fake Store API",
+      "title": "Manage every product in one modern workspace",
+      "subtitle": "Browse, filter, create and inspect catalogue items with live data coming from the Fake Store API.",
+      "ctaPrimary": "Create product",
+      "ctaSecondary": "Meet the users"
+    },
+    "stats": {
+      "sectionTitle": "Catalogue highlights",
+      "totalProducts": "Products in catalogue",
+      "averagePrice": "Average price",
+      "categories": "Available categories"
+    },
+    "filters": {
+      "title": "Smart filters",
+      "description": "Combine search, category and sorting to find the exact product you need.",
+      "searchLabel": "Search",
+      "searchPlaceholder": "Search by name or description...",
+      "categoryLabel": "Category",
+      "allCategories": "All categories",
+      "sortLabel": "Sort by",
+      "sortAsc": "ID ↑",
+      "sortDesc": "ID ↓",
+      "reset": "Reset filters"
+    },
+    "actions": {
+      "addToCart": "Add to cart"
+    },
+    "listingTitle": "Product catalogue",
+    "empty": {
+      "title": "No products found",
+      "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
+      "cta": "Create your first product"
+    },
+    "details": {
+      "back": "Back to all products",
+      "rating": "Rating {rate}",
+      "reviews": "{count} reviews",
+      "missing": "We could not find this product. Please try again from the catalogue."
+    },
+    "form": {
+      "back": "Back to catalogue",
+      "heading": "Create a new product",
+      "subheading": "Fill in every detail and publish directly to the Fake Store API.",
+      "titleLabel": "Product title",
+      "titlePlaceholder": "Sleek cotton t-shirt",
+      "priceLabel": "Price (USD)",
+      "pricePlaceholder": "99.00",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Tell shoppers why this product is special...",
+      "imageLabel": "Image URL",
+      "imagePlaceholder": "https://",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select a category",
+      "submit": "Publish product",
+      "successSuffix": "was created successfully!"
+    }
+  },
+  "cart": {
+    "title": "Shopping cart",
+    "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
+    "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
+    "itemPrice": "USD {price}",
+    "remove": "Remove",
+    "empty": "Your cart is empty. Add something from the products page!",
+    "itemsHeading": "Items in your cart",
+    "summary": {
+      "title": "Order summary",
+      "description": "Review the totals and proceed when you're ready.",
+      "items": "Items: {count}",
+      "total": "Total: USD {total}",
+      "checkout": "Checkout",
+      "clear": "Clear cart"
+    }
+  },
+  "users": {
+    "list": {
+      "title": "Fake Store users",
+      "description": "A snapshot of every user profile available through the API.",
+      "searchLabel": "Quick search",
+      "searchPlaceholder": "Search users by name, username or email",
+      "empty": "No matching users were found."
+    },
+    "card": {
+      "address": "Address",
+      "contact": "Contact",
+      "phone": "Phone",
+      "geo": "Lat {lat}, Long {long}"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Authenticate",
+      "subtitle": "Use the demo credentials from Fake Store API to manage carts.",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Sign in",
+      "success": "Welcome back, {name}! Your cart is ready.",
+      "logout": "Log out"
+    }
+  },
+  "notifications": {
+    "cartAdded": "Added {title} to your cart.",
+    "productCreated": "{title} published successfully.",
+    "cartCleared": "Cart cleared.",
+    "cartUpdated": "Cart updated.",
+    "cartItemRemoved": "Item removed from cart.",
+    "loggedIn": "Signed in as {name}.",
+    "loggedOut": "You signed out.",
+    "productUpdated": "{title} updated.",
+    "productDeleted": "Product #{id} deleted.",
+    "cartCreated": "Created cart #{id}.",
+    "cartPatched": "Cart #{id} updated.",
+    "cartRemoved": "Cart #{id} deleted.",
+    "userCreated": "Created user {username}.",
+    "userUpdated": "Updated user {username}.",
+    "userDeleted": "Deleted user #{id}.",
+    "checkoutSuccess": "Checkout complete! Order #{id} is ready.",
+    "checkoutEmpty": "Add some items before checking out.",
+    "checkoutLogin": "Log in to checkout your cart.",
+    "checkoutError": "We couldn't finish the checkout. Try again soon."
+  },
+  "api": {
+    "title": "API playground",
+    "subtitle": "Try every Fake Store API endpoint without leaving the dashboard.",
+    "actions": {
+      "runQuery": "Run request",
+      "fetch": "Fetch",
+      "update": "Update",
+      "delete": "Delete",
+      "create": "Create"
+    },
+    "fields": {
+      "productId": "Product ID",
+      "cartId": "Cart ID",
+      "userId": "User ID",
+      "payload": "JSON payload"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "idRequired": "Please enter an ID first.",
+      "invalidJson": "The JSON payload could not be parsed.",
+      "userIdRequired": "Please enter a user ID first."
+    },
+    "results": {
+      "preview": "Response preview",
+      "response": "Response"
+    },
+    "products": {
+      "title": "Products endpoints",
+      "queryTitle": "Query products",
+      "queryDescription": "Combine category, limit and sorting to mirror the /products endpoint.",
+      "querySuccess": "Fetched {count} products.",
+      "singleTitle": "Get product by ID",
+      "singleDescription": "Retrieve a single product directly from /products/:id.",
+      "updateTitle": "Update product",
+      "updateDescription": "Send a PUT request to update any product fields.",
+      "updateSuccess": "Product #{id} updated successfully.",
+      "deleteTitle": "Delete product",
+      "deleteDescription": "Issue a DELETE request to remove a product.",
+      "deleteSuccess": "Product #{id} deleted successfully.",
+      "fields": {
+        "category": "Category",
+        "limit": "Limit",
+        "sort": "Sort"
+      }
+    },
+    "carts": {
+      "title": "Cart endpoints",
+      "queryTitle": "Query carts",
+      "queryDescription": "Filter carts with optional dates, limits and sorting.",
+      "querySuccess": "Fetched {count} carts.",
+      "singleTitle": "Get cart by ID",
+      "singleDescription": "Retrieve a single cart using /carts/:id.",
+      "userTitle": "Get carts by user",
+      "userDescription": "Load the entire cart history for a user via /carts/user/:id.",
+      "createTitle": "Create cart",
+      "createDescription": "Send a POST request with a custom payload.",
+      "createSuccess": "Cart #{id} created successfully.",
+      "updateTitle": "Update cart",
+      "updateDescription": "Update cart contents with PUT /carts/:id.",
+      "updateSuccess": "Cart #{id} updated successfully.",
+      "deleteTitle": "Delete cart",
+      "deleteDescription": "Delete a cart record with DELETE /carts/:id.",
+      "deleteSuccess": "Cart #{id} deleted successfully.",
+      "fields": {
+        "limit": "Limit",
+        "sort": "Sort",
+        "startDate": "Start date",
+        "endDate": "End date"
+      }
+    },
+    "users": {
+      "title": "User endpoints",
+      "singleTitle": "Get user by ID",
+      "singleDescription": "Retrieve a full profile from /users/:id.",
+      "createTitle": "Create user",
+      "createDescription": "POST a new user record with nested address data.",
+      "createSuccess": "User {username} created successfully.",
+      "updateTitle": "Update user",
+      "updateDescription": "PUT changes to any user fields.",
+      "updateSuccess": "User #{id} updated successfully.",
+      "deleteTitle": "Delete user",
+      "deleteDescription": "Remove a user with DELETE /users/:id.",
+      "deleteSuccess": "User #{id} deleted successfully."
+    }
+  },
+  "ui": {
+    "loading": "Loading...",
+    "dismiss": "Dismiss"
+  },
+  "footer": {
+    "title": "About this project",
+    "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
+    "copyright": "© {year} Fake Store Dashboard. All rights reserved."
+  }
+}

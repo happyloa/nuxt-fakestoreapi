@@ -1,98 +1,126 @@
-<script setup>
-import { useCartStore } from "~/stores/cart";
-import { useAuthStore } from "~/stores/auth";
-import { onMounted } from 'vue';
+<script setup lang="ts">
+import { onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '~/stores/auth'
+import { useCartStore } from '~/stores/cart'
+import { useNotificationsStore } from '~/stores/notifications'
+
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const notifications = useNotificationsStore()
+const { t } = useI18n()
+const checkoutLoading = ref(false)
+
+onMounted(() => {
+  if (authStore.user) {
+    cartStore.fetchCart(authStore.user.id)
+  }
+})
+
+watch(
+  () => authStore.user?.id,
+  (userId) => {
+    if (userId) {
+      cartStore.fetchCart(userId)
+    } else {
+      cartStore.clear()
+    }
+  },
+)
+
+const handleClear = () => {
+  cartStore.clear({ preserveUser: true })
+  notifications.info(t('notifications.cartCleared'), 2000)
+}
+
+const handleIncrement = (id: number) => {
+  cartStore.increment(id)
+  notifications.info(t('notifications.cartUpdated'), 2000)
+}
+
+const handleDecrement = (id: number) => {
+  cartStore.decrement(id)
+  notifications.info(t('notifications.cartUpdated'), 2000)
+}
+
+const handleRemove = (id: number) => {
+  cartStore.removeItem(id)
+  notifications.info(t('notifications.cartItemRemoved'), 2000)
+}
+
+const handleCheckout = async () => {
+  if (!authStore.user) {
+    notifications.info(t('notifications.checkoutLogin'), 2500)
+    return
+  }
+  if (!cartStore.items.length) {
+    notifications.info(t('notifications.checkoutEmpty'), 2500)
+    return
+  }
+  checkoutLoading.value = true
+  try {
+    const order = await cartStore.checkout()
+    if (order) {
+      notifications.success(
+        t('notifications.checkoutSuccess', { id: order.id }),
+        4000,
+      )
+    }
+  } catch (error: any) {
+    notifications.error(error?.message ?? t('notifications.checkoutError'), 4000)
+  } finally {
+    checkoutLoading.value = false
+  }
+}
 
 useSeoMeta({
-  title: 'Cart | Fake Store',
-  ogTitle: 'Cart | Fake Store',
-  description: 'View items in your shopping cart.',
-  ogDescription: 'View items in your shopping cart.',
-});
-
-const cart = useCartStore();
-const auth = useAuthStore();
-onMounted(() => {
-  if (auth.user) {
-    cart.fetchCart(auth.user.id);
-  }
-});
+  title: 'Cart | Fake Store Dashboard',
+  description: 'View and manage your Fake Store API shopping cart.',
+  ogTitle: 'Cart | Fake Store Dashboard',
+  ogDescription: 'View and manage your Fake Store API shopping cart.',
+})
 </script>
 
 <template>
-<main class="container">
-  <h1>Cart</h1>
-  <div v-if="cart.items.length" class="card">
-      <ul class="list">
-        <li v-for="item in cart.items" :key="item.id" class="item">
-          <img :src="item.image" :alt="item.title" />
-          <span>{{ item.title }} x {{ item.quantity }}</span>
-          <span>${{ item.price * item.quantity }}</span>
-          <button @click="cart.removeItem(item.id)">Remove</button>
-        </li>
-      </ul>
-      <p class="total">Total: ${{ cart.total }}</p>
-      <button @click="cart.clear()" class="clear">Clear Cart</button>
+  <section class="space-y-8" aria-labelledby="cart-heading">
+    <BaseSectionHeading
+      id="cart-heading"
+      :title="$t('cart.title')"
+      :description="$t('cart.subtitle')"
+    />
+
+    <BaseAlert v-if="!authStore.user" variant="info">
+      {{ $t('cart.loginPrompt') }}
+    </BaseAlert>
+
+    <div
+      v-else
+      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+    >
+      <section class="space-y-4" aria-labelledby="cart-items-heading">
+        <h2 id="cart-items-heading" class="sr-only">{{ $t('cart.itemsHeading') }}</h2>
+        <CartItemsList
+          :items="cartStore.items"
+          :loading="cartStore.loading"
+          @increment="handleIncrement"
+          @decrement="handleDecrement"
+          @remove="handleRemove"
+        />
+        <BaseAlert v-if="cartStore.error" variant="error">
+          {{ cartStore.error }}
+        </BaseAlert>
+        <BaseAlert v-if="!cartStore.items.length && !cartStore.loading" variant="warning">
+          {{ $t('cart.empty') }}
+        </BaseAlert>
+      </section>
+      <CartSummary
+        :total="cartStore.total"
+        :item-count="cartStore.count"
+        :loading="cartStore.loading"
+        :checkout-loading="checkoutLoading"
+        @clear="handleClear"
+        @checkout="handleCheckout"
+      />
     </div>
-    <p v-else>No items.</p>
-  </main>
+  </section>
 </template>
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-}
-.list {
-  list-style: none;
-  padding: 0;
-}
-.item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-}
-.item img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-.item button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--accent);
-}
-.total {
-  font-weight: 700;
-  margin-top: 16px;
-}
-.clear {
-  margin-top: 8px;
-  padding: 8px 16px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.2s ease;
-}
-.clear:hover {
-  background: #ff5722;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-</style>
