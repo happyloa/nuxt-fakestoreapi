@@ -35,7 +35,8 @@ const props = withDefaults(
 
 const classes = computed(() => {
   // 根據尺寸、樣式與寬度設定組合 Tailwind class。
-  const base = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+  const base =
+    'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
   const sizes: Record<Size, string> = {
     sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2 text-sm sm:text-base',
@@ -55,24 +56,6 @@ const classes = computed(() => {
   return [base, sizes[props.size], variants[props.variant], width].join(' ')
 })
 
-const componentTag = computed<ComponentTag>(() => {
-  // 依照傳入的屬性決定要渲染的元件型別，優先順序為 as > to > href > button。
-  if (props.as) {
-    return props.as
-  }
-
-  if (props.to) {
-    // 直接引用 NuxtLink 組件以避免轉為無效的小寫自訂標籤。
-    return NuxtLink as ComponentTag
-  }
-
-  if (props.href) {
-    return 'a'
-  }
-
-  return 'button'
-})
-
 const isButton = computed(() => {
   // 判斷當前是否為原生 button，用於控制 type 與 disabled 屬性。
   if (props.as) {
@@ -84,9 +67,10 @@ const isButton = computed(() => {
 </script>
 
 <template>
-  <!-- 透過動態元件渲染對應的元素，同時保留 loading 與 slot 內容 -->
+  <!-- 依照傳入的屬性決定渲染元素：自定元件 > NuxtLink > a > button -->
   <component
-    :is="componentTag"
+    v-if="as"
+    :is="as"
     :type="isButton ? type : undefined"
     :to="to"
     :href="href"
@@ -116,4 +100,91 @@ const isButton = computed(() => {
     </svg>
     <slot />
   </component>
+  <NuxtLink
+    v-else-if="to"
+    :to="to"
+    :class="classes"
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </NuxtLink>
+  <a
+    v-else-if="href"
+    :href="href"
+    :class="classes"
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </a>
+  <button
+    v-else
+    :type="type"
+    :class="classes"
+    :disabled="disabled || loading"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </button>
 </template>
