@@ -1,36 +1,36 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { navigateTo, useSwitchLocalePath } from '#imports'
+import { useI18n } from 'vue-i18n'
 
-const { locale, availableLocales } = useI18n()
+const { locale, t } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
-const options = computed(() =>
-  availableLocales.map((code) => ({
-    code,
-    label: code === 'zh' ? '中文' : 'English',
-  })),
-)
+const flags: Record<string, { emoji: string; label: string }> = {
+  zh: { emoji: '🇹🇼', label: '繁體中文' },
+  en: { emoji: '🇺🇸', label: 'English' },
+}
 
-const handleChange = (code: string) => {
-  const path = switchLocalePath(code)
+const nextLocale = computed(() => (locale.value === 'zh' ? 'en' : 'zh'))
+
+const handleToggle = async () => {
+  const target = nextLocale.value
+  const path = switchLocalePath(target)
   if (path) {
-    navigateTo(path)
+    await navigateTo(path)
   }
 }
 </script>
 
 <template>
-  <div class="relative">
-    <select
-      :value="locale"
-      class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
-      @change="handleChange(($event.target as HTMLSelectElement).value)"
-    >
-      <option v-for="option in options" :key="option.code" :value="option.code">
-        {{ option.label }}
-      </option>
-    </select>
-  </div>
+  <button
+    type="button"
+    class="flex items-center gap-2 rounded-full border border-slate-300/60 bg-white/70 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:bg-white dark:border-slate-600 dark:bg-slate-800/80 dark:text-slate-100 dark:hover:bg-slate-700"
+    :title="t('header.language.toggleLabel', { next: flags[nextLocale].label })"
+    @click="handleToggle"
+  >
+    <span class="sr-only">{{ t('header.language.toggleLabel', { next: flags[nextLocale].label }) }}</span>
+    <span class="text-base" aria-hidden="true">{{ flags[locale].emoji }}</span>
+    <span class="hidden sm:inline">{{ flags[locale].label }}</span>
+  </button>
 </template>

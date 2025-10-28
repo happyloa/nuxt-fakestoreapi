@@ -1,5 +1,5 @@
 <template>
-  <div class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-500">
+  <div class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-300">
     <svg
       class="h-5 w-5 animate-spin text-brand"
       xmlns="http://www.w3.org/2000/svg"

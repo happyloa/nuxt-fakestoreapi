@@ -117,6 +117,25 @@ export const useCartStore = defineStore('cart', {
         this.userId = null
       }
     },
+    async checkout() {
+      if (!this.userId) {
+        throw new Error('User not authenticated')
+      }
+      if (!this.items.length) {
+        return null
+      }
+      const order = await this.createRemoteCart({
+        userId: this.userId,
+        date: new Date().toISOString(),
+        products: this.items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+      })
+      this.lastFetchedCart = order
+      this.items = []
+      return order
+    },
     async fetchAllCarts(options: {
       startDate?: string
       endDate?: string

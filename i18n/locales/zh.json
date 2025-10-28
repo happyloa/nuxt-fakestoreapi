@@ -1,6 +1,14 @@
 {
   "header": {
-    "welcome": "嗨，{name}!"
+    "welcome": "嗨，{name}!",
+    "theme": {
+      "toggleLabel": "切換深淺色主題",
+      "light": "切換為淺色模式",
+      "dark": "切換為深色模式"
+    },
+    "language": {
+      "toggleLabel": "切換語言，下一個：{next}"
+    }
   },
   "navigation": {
     "products": "商品列表",
@@ -131,7 +139,11 @@
     "cartRemoved": "購物車 #{id} 已刪除。",
     "userCreated": "已建立會員 {username}。",
     "userUpdated": "會員 {username} 資料已更新。",
-    "userDeleted": "會員 #{id} 已刪除。"
+    "userDeleted": "會員 #{id} 已刪除。",
+    "checkoutSuccess": "結帳完成，訂單編號 #{id} 已建立。",
+    "checkoutEmpty": "購物車內沒有商品，請先加入商品再結帳。",
+    "checkoutLogin": "請先登入帳號，再進行結帳。",
+    "checkoutError": "結帳時發生錯誤，請稍後再試。"
   },
   "api": {
     "title": "API 操作台",

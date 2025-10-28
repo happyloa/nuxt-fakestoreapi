@@ -503,7 +503,7 @@ const handleUserDelete = async () => {
     />
 
     <section class="space-y-6">
-      <h2 class="text-lg font-semibold text-slate-900">
+      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
         {{ $t('api.products.title') }}
       </h2>
       <div class="grid gap-6 lg:grid-cols-2">
@@ -641,7 +641,7 @@ const handleUserDelete = async () => {
     </section>
 
     <section class="space-y-6">
-      <h2 class="text-lg font-semibold text-slate-900">
+      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
         {{ $t('api.carts.title') }}
       </h2>
       <div class="grid gap-6 lg:grid-cols-2">
@@ -832,7 +832,7 @@ const handleUserDelete = async () => {
     </section>
 
     <section class="space-y-6">
-      <h2 class="text-lg font-semibold text-slate-900">
+      <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
         {{ $t('api.users.title') }}
       </h2>
       <div class="grid gap-6 lg:grid-cols-2">

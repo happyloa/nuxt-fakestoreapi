@@ -1,6 +1,14 @@
 {
   "header": {
-    "welcome": "Hi, {name}!"
+    "welcome": "Hi, {name}!",
+    "theme": {
+      "toggleLabel": "Toggle site theme",
+      "light": "Switch to light mode",
+      "dark": "Switch to dark mode"
+    },
+    "language": {
+      "toggleLabel": "Switch language, next: {next}"
+    }
   },
   "navigation": {
     "products": "Products",
@@ -127,7 +135,11 @@
     "cartRemoved": "Cart #{id} deleted.",
     "userCreated": "Created user {username}.",
     "userUpdated": "Updated user {username}.",
-    "userDeleted": "Deleted user #{id}."
+    "userDeleted": "Deleted user #{id}.",
+    "checkoutSuccess": "Checkout complete! Order #{id} is ready.",
+    "checkoutEmpty": "Add some items before checking out.",
+    "checkoutLogin": "Log in to checkout your cart.",
+    "checkoutError": "We couldn't finish the checkout. Try again soon."
   },
   "api": {
     "title": "API playground",

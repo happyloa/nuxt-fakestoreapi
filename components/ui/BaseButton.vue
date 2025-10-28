@@ -39,10 +39,14 @@ const classes = computed(() => {
     lg: 'px-6 py-3 text-base sm:text-lg',
   }
   const variants: Record<Variant, string> = {
-    primary: 'bg-brand text-brand-foreground shadow hover:bg-brand-dark focus-visible:outline-brand',
-    secondary: 'bg-slate-200 text-slate-900 hover:bg-slate-300 focus-visible:outline-slate-400',
-    outline: 'border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus-visible:outline-brand',
-    ghost: 'text-slate-600 hover:bg-slate-100 focus-visible:outline-brand',
+    primary:
+      'bg-brand text-brand-foreground shadow hover:bg-brand-dark focus-visible:outline-brand dark:bg-brand-dark dark:hover:bg-brand dark:text-white',
+    secondary:
+      'bg-slate-200 text-slate-900 hover:bg-slate-300 focus-visible:outline-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:focus-visible:outline-slate-500',
+    outline:
+      'border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus-visible:outline-brand dark:border-slate-600 dark:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800/60',
+    ghost:
+      'text-slate-600 hover:bg-slate-100 focus-visible:outline-brand dark:text-slate-300 dark:hover:bg-slate-800/60 dark:focus-visible:outline-brand',
   }
   const width = props.block ? 'w-full' : ''
   return [base, sizes[props.size], variants[props.variant], width].join(' ')

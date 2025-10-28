@@ -2,10 +2,17 @@
 useSeoMeta({
   ogImage: '/og-image.webp',
 })
+
+useHead({
+  htmlAttrs: {
+    class: 'dark',
+    'data-theme': 'dark',
+  },
+})
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col bg-slate-50">
+  <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
     <NuxtLoadingIndicator color="#2563eb" :height="3" />
     <NuxtRouteAnnouncer />
     <SiteHeader />

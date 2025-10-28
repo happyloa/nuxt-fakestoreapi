@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
@@ -9,6 +9,7 @@ const authStore = useAuthStore()
 const cartStore = useCartStore()
 const notifications = useNotificationsStore()
 const { t } = useI18n()
+const checkoutLoading = ref(false)
 
 onMounted(() => {
   if (authStore.user) {
@@ -45,6 +46,31 @@ const handleDecrement = (id: number) => {
 const handleRemove = (id: number) => {
   cartStore.removeItem(id)
   notifications.info(t('notifications.cartItemRemoved'), 2000)
+}
+
+const handleCheckout = async () => {
+  if (!authStore.user) {
+    notifications.info(t('notifications.checkoutLogin'), 2500)
+    return
+  }
+  if (!cartStore.items.length) {
+    notifications.info(t('notifications.checkoutEmpty'), 2500)
+    return
+  }
+  checkoutLoading.value = true
+  try {
+    const order = await cartStore.checkout()
+    if (order) {
+      notifications.success(
+        t('notifications.checkoutSuccess', { id: order.id }),
+        4000,
+      )
+    }
+  } catch (error: any) {
+    notifications.error(error?.message ?? t('notifications.checkoutError'), 4000)
+  } finally {
+    checkoutLoading.value = false
+  }
 }
 
 useSeoMeta({
@@ -91,7 +117,9 @@ useSeoMeta({
         :total="cartStore.total"
         :item-count="cartStore.count"
         :loading="cartStore.loading"
+        :checkout-loading="checkoutLoading"
         @clear="handleClear"
+        @checkout="handleCheckout"
       />
     </div>
   </section>

@@ -31,12 +31,12 @@ defineProps({
     >
       <li v-for="index in 6" :key="index">
         <BaseCard class="animate-pulse space-y-4">
-          <div class="h-48 rounded-xl bg-slate-200"></div>
-          <div class="h-4 w-3/4 rounded bg-slate-200"></div>
-          <div class="h-3 w-1/2 rounded bg-slate-100"></div>
+          <div class="h-48 rounded-xl bg-slate-200 dark:bg-slate-800"></div>
+          <div class="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700"></div>
+          <div class="h-3 w-1/2 rounded bg-slate-100 dark:bg-slate-700"></div>
           <div class="flex gap-2">
-            <div class="h-6 w-16 rounded-full bg-slate-200"></div>
-            <div class="h-6 w-20 rounded-full bg-slate-200"></div>
+            <div class="h-6 w-16 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+            <div class="h-6 w-20 rounded-full bg-slate-200 dark:bg-slate-700"></div>
           </div>
         </BaseCard>
       </li>
@@ -46,13 +46,13 @@ defineProps({
     </BaseAlert>
     <article
       v-else-if="!products.length"
-      class="rounded-2xl border border-dashed border-slate-300 bg-white px-8 py-16 text-center"
+      class="rounded-2xl border border-dashed border-slate-300 bg-white px-8 py-16 text-center transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900"
       aria-live="polite"
     >
-      <h3 class="text-lg font-semibold text-slate-800">
+      <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
         {{ $t('products.empty.title') }}
       </h3>
-      <p class="mt-2 text-sm text-slate-600">
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
         {{ $t('products.empty.description') }}
       </p>
       <BaseButton as="NuxtLink" to="/products/new" class="mt-6">
@@ -66,19 +66,19 @@ defineProps({
       <li v-for="product in products" :key="product.id" class="h-full">
         <BaseCard class="flex h-full flex-col space-y-4">
           <NuxtLink :to="`/product/${product.id}`" class="flex flex-col space-y-3">
-            <figure class="relative overflow-hidden rounded-2xl bg-slate-100">
+            <figure class="relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
               <img :src="product.image" :alt="product.title" class="mx-auto h-48 w-auto object-contain" />
             </figure>
             <div>
-              <p class="text-xs uppercase tracking-wider text-slate-500">
+              <p class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 {{ product.category }}
               </p>
-              <h3 class="mt-2 line-clamp-2 text-lg font-semibold text-slate-900">
+              <h3 class="mt-2 line-clamp-2 text-lg font-semibold text-slate-900 dark:text-white">
                 {{ product.title }}
               </h3>
             </div>
           </NuxtLink>
-          <footer class="flex items-center justify-between text-sm text-slate-600">
+          <footer class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <BaseBadge variant="brand">${{ product.price.toFixed(2) }}</BaseBadge>
             <div class="flex items-center gap-1 text-xs font-medium">
               <svg

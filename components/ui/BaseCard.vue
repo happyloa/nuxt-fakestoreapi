@@ -12,14 +12,20 @@ const props = withDefaults(
   {
     as: 'article',
     padding: 'p-6',
-    background: 'bg-white',
-    shadow: 'shadow-card',
-    border: 'border border-slate-100',
+    background: 'bg-white dark:bg-slate-900',
+    shadow: 'shadow-card dark:shadow-black/40',
+    border: 'border border-slate-100 dark:border-slate-700/80',
   },
 )
 
 const classes = computed(() =>
-  ['rounded-xl', props.background, props.border, props.shadow, props.padding].join(' '),
+  [
+    'rounded-xl transition-colors duration-200',
+    props.background,
+    props.border,
+    props.shadow,
+    props.padding,
+  ].join(' '),
 )
 </script>
 

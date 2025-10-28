@@ -1,17 +1,17 @@
 <template>
   <section
     id="dashboard-hero"
-    class="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-brand/10 via-white to-accent/10 p-8 sm:p-12"
+    class="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-brand/10 via-white to-accent/10 p-8 transition-colors duration-200 sm:p-12 dark:border-slate-800 dark:from-brand/20 dark:via-slate-900 dark:to-slate-900"
   >
     <div class="grid gap-8 md:grid-cols-2 md:items-center">
       <div class="space-y-6">
-        <p class="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-brand shadow-sm">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-brand shadow-sm dark:bg-slate-800/80 dark:text-brand-light">
           {{ $t('products.hero.badge') }}
         </p>
-        <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
           {{ $t('products.hero.title') }}
         </h1>
-        <p class="text-base text-slate-600 sm:text-lg">
+        <p class="text-base text-slate-600 sm:text-lg dark:text-slate-300">
           {{ $t('products.hero.subtitle') }}
         </p>
         <div class="flex flex-col gap-3 sm:flex-row">
