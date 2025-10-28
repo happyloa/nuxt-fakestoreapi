@@ -1,12 +1,17 @@
 import { watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 const STORAGE_KEY = 'fakestore-locale'
 
-export default defineNuxtPlugin(async () => {
+export default defineNuxtPlugin(async (nuxtApp) => {
   if (!process.client) return
 
-  const { locale, setLocale } = useI18n()
+  const { $i18n } = nuxtApp
+  const locale = $i18n?.locale
+  const setLocale = $i18n?.setLocale
+
+  if (!locale || !setLocale) {
+    return
+  }
   const readLocale = () => {
     try {
       return window.sessionStorage.getItem(STORAGE_KEY)
