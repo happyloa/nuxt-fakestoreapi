@@ -22,7 +22,6 @@ const props = withDefaults(
   }>(),
   {
     type: 'button',
-    as: 'button' as ComponentTag,
     variant: 'primary' as Variant,
     size: 'md' as Size,
     block: false,
@@ -52,8 +51,29 @@ const classes = computed(() => {
   return [base, sizes[props.size], variants[props.variant], width].join(' ')
 })
 
-const componentTag = computed(() => resolveDynamicComponent(props.as as any))
-const isButton = computed(() => props.as === 'button')
+const componentTag = computed<ComponentTag>(() => {
+  if (props.as) {
+    return resolveDynamicComponent(props.as as any) as ComponentTag
+  }
+
+  if (props.to) {
+    return resolveDynamicComponent('NuxtLink') as ComponentTag
+  }
+
+  if (props.href) {
+    return 'a'
+  }
+
+  return 'button'
+})
+
+const isButton = computed(() => {
+  if (props.as) {
+    return props.as === 'button'
+  }
+
+  return !props.to && !props.href
+})
 </script>
 
 <template>

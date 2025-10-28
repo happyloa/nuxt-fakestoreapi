@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { navigateTo, useSwitchLocalePath } from '#imports'
 import { useI18n } from 'vue-i18n'
 
-const { locale, t } = useI18n()
-const switchLocalePath = useSwitchLocalePath()
+const { locale, setLocale, t } = useI18n()
 
 const flags: Record<string, { emoji: string; label: string }> = {
   zh: { emoji: '🇹🇼', label: '繁體中文' },
@@ -15,10 +13,7 @@ const nextLocale = computed(() => (locale.value === 'zh' ? 'en' : 'zh'))
 
 const handleToggle = async () => {
   const target = nextLocale.value
-  const path = switchLocalePath(target)
-  if (path) {
-    await navigateTo(path)
-  }
+  await setLocale(target)
 }
 </script>
 
