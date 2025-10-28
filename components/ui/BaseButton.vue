@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, resolveDynamicComponent } from 'vue'
+import { computed, resolveComponent, resolveDynamicComponent } from 'vue'
 
 type RouteLocation = string | Record<string, any>
 
@@ -8,6 +8,7 @@ type Size = 'sm' | 'md' | 'lg'
 
 type ComponentTag = string | Record<string, any>
 
+// BaseButton 提供統一的樣式與狀態處理，並透過多型支援 button、link 與自定元件。
 const props = withDefaults(
   defineProps<{
     type?: 'button' | 'submit' | 'reset'
@@ -31,6 +32,7 @@ const props = withDefaults(
 )
 
 const classes = computed(() => {
+  // 根據尺寸、樣式與寬度設定組合 Tailwind class。
   const base = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
   const sizes: Record<Size, string> = {
     sm: 'px-3 py-1.5 text-sm',
@@ -52,12 +54,14 @@ const classes = computed(() => {
 })
 
 const componentTag = computed<ComponentTag>(() => {
+  // 依照傳入的屬性決定要渲染的元件型別，優先順序為 as > to > href > button。
   if (props.as) {
     return resolveDynamicComponent(props.as as any) as ComponentTag
   }
 
   if (props.to) {
-    return resolveDynamicComponent('NuxtLink') as ComponentTag
+    // 透過 resolveComponent 取得 NuxtLink 實體，避免被轉成小寫標籤而失效。
+    return resolveComponent('NuxtLink') as ComponentTag
   }
 
   if (props.href) {
@@ -68,6 +72,7 @@ const componentTag = computed<ComponentTag>(() => {
 })
 
 const isButton = computed(() => {
+  // 判斷當前是否為原生 button，用於控制 type 與 disabled 屬性。
   if (props.as) {
     return props.as === 'button'
   }
@@ -77,6 +82,7 @@ const isButton = computed(() => {
 </script>
 
 <template>
+  <!-- 透過動態元件渲染對應的元素，同時保留 loading 與 slot 內容 -->
   <component
     :is="componentTag"
     :type="isButton ? type : undefined"
