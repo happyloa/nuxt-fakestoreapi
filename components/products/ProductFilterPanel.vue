@@ -34,11 +34,21 @@ const sortOptions = computed(() => [
   { label: t('products.filters.sortAsc'), value: 'asc' },
   { label: t('products.filters.sortDesc'), value: 'desc' },
 ])
+
+const categoryOptions = computed(() => [
+  { label: t('products.filters.allCategories'), value: 'all' },
+  ...props.categories.map((category) => ({ label: category, value: category })),
+])
 </script>
 
 <template>
-  <BaseCard class="space-y-6">
+  <BaseCard
+    as="aside"
+    class="space-y-6 lg:sticky lg:top-28"
+    aria-labelledby="smart-filter-heading"
+  >
     <BaseSectionHeading
+      id="smart-filter-heading"
       :title="$t('products.filters.title')"
       :description="$t('products.filters.description')"
     />
@@ -53,7 +63,7 @@ const sortOptions = computed(() => [
         <BaseSelect
           :model-value="selectedCategory"
           :label="$t('products.filters.categoryLabel')"
-          :options="[{ label: $t('products.filters.allCategories'), value: 'all' }, ...categories.map((category) => ({ label: category, value: category }))]"
+          :options="categoryOptions"
           @update:model-value="emit('update:category', $event as string)"
         />
         <BaseSelect

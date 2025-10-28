@@ -19,8 +19,12 @@ const variants: Record<string, string> = {
 </script>
 
 <template>
-  <div :class="['rounded-xl border px-4 py-3 text-sm', variants[variant]]">
+  <aside
+    role="status"
+    :aria-live="variant === 'error' ? 'assertive' : 'polite'"
+    :class="['rounded-xl border px-4 py-3 text-sm', variants[variant]]"
+  >
     <p v-if="title" class="mb-1 font-semibold">{{ title }}</p>
     <slot />
-  </div>
+  </aside>
 </template>

@@ -75,7 +75,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="space-y-12">
+  <section class="space-y-12" aria-labelledby="dashboard-hero">
     <ProductHero />
 
     <ProductStats
@@ -84,7 +84,7 @@ useSeoMeta({
       :categories-count="productsStore.categories.length"
     />
 
-    <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+    <div class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,2.25fr)_minmax(0,1fr)]">
       <ProductGrid
         :products="filteredProducts"
         :loading="productsStore.loading"
@@ -102,5 +102,5 @@ useSeoMeta({
         @refresh="resetFilters"
       />
     </div>
-  </div>
+  </section>
 </template>

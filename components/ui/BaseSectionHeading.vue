@@ -13,7 +13,7 @@ const props = withDefaults(
 </script>
 
 <template>
-  <div :class="['mb-8 space-y-2', align === 'center' ? 'text-center' : 'text-left']">
+  <header :class="['mb-8 space-y-2', align === 'center' ? 'text-center' : 'text-left']">
     <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
       {{ title }}
     </h2>
@@ -21,5 +21,5 @@ const props = withDefaults(
       {{ description }}
     </p>
     <slot />
-  </div>
+  </header>
 </template>

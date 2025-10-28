@@ -3,12 +3,14 @@ import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
+    as?: keyof HTMLElementTagNameMap
     padding?: string
     background?: string
     shadow?: string
     border?: string
   }>(),
   {
+    as: 'article',
     padding: 'p-6',
     background: 'bg-white',
     shadow: 'shadow-card',
@@ -22,7 +24,7 @@ const classes = computed(() =>
 </script>
 
 <template>
-  <div :class="classes">
+  <component :is="props.as" :class="classes" v-bind="$attrs">
     <slot />
-  </div>
+  </component>
 </template>

@@ -16,9 +16,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="grid gap-4 sm:grid-cols-3">
+  <section class="grid gap-4 sm:grid-cols-3" aria-labelledby="product-statistics-heading">
+    <h2 id="product-statistics-heading" class="sr-only">
+      {{ $t('products.stats.sectionTitle') }}
+    </h2>
     <BaseStatCard :label="$t('products.stats.totalProducts')" :value="totalProducts" />
     <BaseStatCard :label="$t('products.stats.averagePrice')" :value="`$${averagePrice.toFixed(2)}`" />
     <BaseStatCard :label="$t('products.stats.categories')" :value="categoriesCount" />
-  </div>
+  </section>
 </template>

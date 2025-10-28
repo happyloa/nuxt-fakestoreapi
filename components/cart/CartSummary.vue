@@ -20,8 +20,13 @@ defineProps({
 </script>
 
 <template>
-  <BaseCard class="space-y-4">
+  <BaseCard
+    as="aside"
+    class="space-y-4"
+    aria-labelledby="cart-summary-heading"
+  >
     <BaseSectionHeading
+      id="cart-summary-heading"
       :title="$t('cart.summary.title')"
       :description="$t('cart.summary.description')"
     />

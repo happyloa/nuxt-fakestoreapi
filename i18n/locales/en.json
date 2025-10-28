@@ -19,6 +19,7 @@
       "ctaSecondary": "Meet the users"
     },
     "stats": {
+      "sectionTitle": "Catalogue highlights",
       "totalProducts": "Products in catalogue",
       "averagePrice": "Average price",
       "categories": "Available categories"
@@ -38,6 +39,7 @@
     "actions": {
       "addToCart": "Add to cart"
     },
+    "listingTitle": "Product catalogue",
     "empty": {
       "title": "No products found",
       "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
@@ -74,6 +76,7 @@
     "itemPrice": "USD {price}",
     "remove": "Remove",
     "empty": "Your cart is empty. Add something from the products page!",
+    "itemsHeading": "Items in your cart",
     "summary": {
       "title": "Order summary",
       "description": "Review the totals and proceed when you're ready.",

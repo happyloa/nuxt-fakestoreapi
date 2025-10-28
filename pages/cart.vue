@@ -56,8 +56,9 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="space-y-8">
+  <section class="space-y-8" aria-labelledby="cart-heading">
     <BaseSectionHeading
+      id="cart-heading"
       :title="$t('cart.title')"
       :description="$t('cart.subtitle')"
     />
@@ -66,8 +67,12 @@ useSeoMeta({
       {{ $t('cart.loginPrompt') }}
     </BaseAlert>
 
-    <div v-else class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <div class="space-y-4">
+    <div
+      v-else
+      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+    >
+      <section class="space-y-4" aria-labelledby="cart-items-heading">
+        <h2 id="cart-items-heading" class="sr-only">{{ $t('cart.itemsHeading') }}</h2>
         <CartItemsList
           :items="cartStore.items"
           :loading="cartStore.loading"
@@ -81,7 +86,7 @@ useSeoMeta({
         <BaseAlert v-if="!cartStore.items.length && !cartStore.loading" variant="warning">
           {{ $t('cart.empty') }}
         </BaseAlert>
-      </div>
+      </section>
       <CartSummary
         :total="cartStore.total"
         :item-count="cartStore.count"
@@ -89,5 +94,5 @@ useSeoMeta({
         @clear="handleClear"
       />
     </div>
-  </div>
+  </section>
 </template>

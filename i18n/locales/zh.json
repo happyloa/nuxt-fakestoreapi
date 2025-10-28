@@ -19,6 +19,7 @@
       "ctaSecondary": "查看會員資料"
     },
     "stats": {
+      "sectionTitle": "商店概況",
       "totalProducts": "商品總數",
       "averagePrice": "平均價格",
       "categories": "分類數量"
@@ -38,6 +39,7 @@
     "actions": {
       "addToCart": "加入購物車"
     },
+    "listingTitle": "商品目錄",
     "empty": {
       "title": "目前沒有符合的商品",
       "description": "試著調整篩選條件，或直接新增一個全新的商品。",
@@ -74,6 +76,7 @@
     "itemPrice": "USD {price}",
     "remove": "移除",
     "empty": "購物車目前是空的，快去逛逛商品吧！",
+    "itemsHeading": "購物車內的商品",
     "summary": {
       "title": "訂單摘要",
       "description": "確認商品與金額後再進行下一步。",
