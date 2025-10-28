@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
 import { computed, resolveComponent, resolveDynamicComponent } from 'vue'
 
 type RouteLocation = string | Record<string, any>
@@ -6,7 +7,7 @@ type RouteLocation = string | Record<string, any>
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
 
-type ComponentTag = string | Record<string, any>
+type ComponentTag = string | Component
 
 // BaseButton 提供統一的樣式與狀態處理，並透過多型支援 button、link 與自定元件。
 const props = withDefaults(
@@ -60,8 +61,10 @@ const componentTag = computed<ComponentTag>(() => {
   }
 
   if (props.to) {
-    // 透過 resolveComponent 取得 NuxtLink 實體，避免被轉成小寫標籤而失效。
-    return resolveComponent('NuxtLink') as ComponentTag
+    // 透過 resolveComponent 取得 NuxtLink 元件後，交由 resolveDynamicComponent 回傳實際的元件定義，
+    // 確保渲染時維持正確的 PascalCase 名稱而非被轉為無效的小寫自訂標籤。
+    const nuxtLink = resolveComponent('NuxtLink') as Component
+    return resolveDynamicComponent(nuxtLink) as ComponentTag
   }
 
   if (props.href) {
