@@ -21,6 +21,8 @@ export interface CreateProductPayload {
   category: string
 }
 
+export type UpdateProductPayload = Partial<CreateProductPayload>
+
 export interface CartProductItem {
   productId: number
   quantity: number
@@ -32,6 +34,14 @@ export interface Cart {
   date: string
   products: CartProductItem[]
 }
+
+export interface CreateCartPayload {
+  userId: number
+  date: string
+  products: CartProductItem[]
+}
+
+export type UpdateCartPayload = Partial<CreateCartPayload>
 
 export interface UserName {
   firstname: string
@@ -58,6 +68,17 @@ export interface User {
   address: UserAddress
   phone: string
 }
+
+export interface CreateUserPayload {
+  email: string
+  username: string
+  password: string
+  name: UserName
+  address: UserAddress
+  phone: string
+}
+
+export type UpdateUserPayload = Partial<CreateUserPayload>
 
 export interface LoginResponse {
   token: string

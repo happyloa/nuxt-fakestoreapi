@@ -2,6 +2,14 @@
   "header": {
     "welcome": "嗨，{name}!"
   },
+  "navigation": {
+    "products": "商品列表",
+    "newProduct": "新增商品",
+    "cart": "購物車",
+    "users": "會員列表",
+    "apiPlayground": "API 操作台",
+    "login": "會員登入"
+  },
   "products": {
     "hero": {
       "badge": "Fake Store API 即時資料",
@@ -99,6 +107,112 @@
       "submit": "登入",
       "success": "歡迎回來，{name}！購物車已準備就緒。",
       "logout": "登出"
+    }
+  },
+  "ui": {
+    "loading": "載入中...",
+    "dismiss": "關閉提示"
+  },
+  "notifications": {
+    "cartAdded": "已將 {title} 加入購物車。",
+    "productCreated": "{title} 已成功發佈。",
+    "cartCleared": "購物車已清空。",
+    "cartUpdated": "購物車已更新。",
+    "cartItemRemoved": "已移除購物車商品。",
+    "loggedIn": "已登入帳號 {name}。",
+    "loggedOut": "您已登出。",
+    "productUpdated": "{title} 更新完成。",
+    "productDeleted": "商品 #{id} 已刪除。",
+    "cartCreated": "已建立購物車 #{id}。",
+    "cartPatched": "購物車 #{id} 更新完成。",
+    "cartRemoved": "購物車 #{id} 已刪除。",
+    "userCreated": "已建立會員 {username}。",
+    "userUpdated": "會員 {username} 資料已更新。",
+    "userDeleted": "會員 #{id} 已刪除。"
+  },
+  "api": {
+    "title": "API 操作台",
+    "subtitle": "直接在儀表板中測試 Fake Store API 的每一支端點。",
+    "actions": {
+      "runQuery": "送出請求",
+      "fetch": "取得資料",
+      "update": "送出更新",
+      "delete": "執行刪除",
+      "create": "建立資料"
+    },
+    "fields": {
+      "productId": "商品編號",
+      "cartId": "購物車編號",
+      "userId": "會員編號",
+      "payload": "JSON 內容"
+    },
+    "errors": {
+      "generic": "操作發生問題，請稍後再試。",
+      "idRequired": "請先輸入編號。",
+      "invalidJson": "無法解析提供的 JSON 內容。",
+      "userIdRequired": "請先輸入會員編號。"
+    },
+    "results": {
+      "preview": "回應預覽",
+      "response": "API 回應"
+    },
+    "products": {
+      "title": "商品相關端點",
+      "queryTitle": "查詢商品列表",
+      "queryDescription": "依照分類、筆數與排序模擬 /products 端點。",
+      "querySuccess": "共取得 {count} 項商品。",
+      "singleTitle": "取得單一商品",
+      "singleDescription": "直接呼叫 /products/:id 取得指定商品。",
+      "updateTitle": "更新商品資料",
+      "updateDescription": "以 PUT 請求更新任意欄位。",
+      "updateSuccess": "商品 #{id} 更新成功。",
+      "deleteTitle": "刪除商品",
+      "deleteDescription": "對 /products/:id 發送 DELETE 刪除指定商品。",
+      "deleteSuccess": "商品 #{id} 已成功刪除。",
+      "fields": {
+        "category": "分類",
+        "limit": "筆數",
+        "sort": "排序"
+      }
+    },
+    "carts": {
+      "title": "購物車相關端點",
+      "queryTitle": "查詢購物車",
+      "queryDescription": "可依日期、筆數與排序篩選 /carts。",
+      "querySuccess": "共取得 {count} 筆購物車資料。",
+      "singleTitle": "取得單一購物車",
+      "singleDescription": "透過 /carts/:id 取得特定購物車。",
+      "userTitle": "依會員查詢購物車",
+      "userDescription": "使用 /carts/user/:id 取得該會員的購物車紀錄。",
+      "createTitle": "建立購物車",
+      "createDescription": "POST 自訂 payload 建立新的購物車。",
+      "createSuccess": "購物車 #{id} 建立成功。",
+      "updateTitle": "更新購物車",
+      "updateDescription": "透過 PUT /carts/:id 更新購物車內容。",
+      "updateSuccess": "購物車 #{id} 更新成功。",
+      "deleteTitle": "刪除購物車",
+      "deleteDescription": "對 /carts/:id 發送 DELETE 移除紀錄。",
+      "deleteSuccess": "購物車 #{id} 已刪除。",
+      "fields": {
+        "limit": "筆數",
+        "sort": "排序",
+        "startDate": "起始日期",
+        "endDate": "結束日期"
+      }
+    },
+    "users": {
+      "title": "會員相關端點",
+      "singleTitle": "取得會員資料",
+      "singleDescription": "使用 /users/:id 取得完整會員資訊。",
+      "createTitle": "建立會員",
+      "createDescription": "POST 包含地址的會員資料。",
+      "createSuccess": "會員 {username} 建立成功。",
+      "updateTitle": "更新會員",
+      "updateDescription": "使用 PUT 請求更新會員欄位。",
+      "updateSuccess": "會員 #{id} 更新成功。",
+      "deleteTitle": "刪除會員",
+      "deleteDescription": "對 /users/:id 發送 DELETE 移除會員。",
+      "deleteSuccess": "會員 #{id} 已刪除。"
     }
   },
   "footer": {

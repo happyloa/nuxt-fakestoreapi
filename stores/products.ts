@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
-import type { CreateProductPayload, Product } from '~/types/fakestore'
+import type {
+  CreateProductPayload,
+  Product,
+  UpdateProductPayload,
+} from '~/types/fakestore'
 
 interface State {
   products: Product[]
@@ -87,6 +91,58 @@ export const useProductsStore = defineStore('products', {
       } finally {
         this.loading = false
       }
+    },
+    async updateProduct(id: number, payload: UpdateProductPayload) {
+      this.loading = true
+      this.error = ''
+      try {
+        const updated = await $fetch<Product>(`https://fakestoreapi.com/products/${id}`, {
+          method: 'PUT',
+          body: payload,
+        })
+        this.products = this.products.map((product) =>
+          product.id === id ? { ...product, ...updated } : product,
+        )
+        return updated
+      } catch (error: any) {
+        this.error = error?.message ?? 'Failed to update product.'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+    async deleteProduct(id: number) {
+      this.loading = true
+      this.error = ''
+      try {
+        await $fetch(`https://fakestoreapi.com/products/${id}`, {
+          method: 'DELETE',
+        })
+        this.products = this.products.filter((product) => product.id !== id)
+      } catch (error: any) {
+        this.error = error?.message ?? 'Failed to delete product.'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+    async queryProducts(options: {
+      limit?: number
+      sort?: 'asc' | 'desc'
+      category?: string
+    }) {
+      const query = new URLSearchParams()
+      if (options.limit) {
+        query.set('limit', String(options.limit))
+      }
+      if (options.sort) {
+        query.set('sort', options.sort)
+      }
+      const baseUrl = options.category && options.category !== 'all'
+        ? `https://fakestoreapi.com/products/category/${encodeURIComponent(options.category)}`
+        : 'https://fakestoreapi.com/products'
+      const url = query.toString() ? `${baseUrl}?${query.toString()}` : baseUrl
+      return await $fetch<Product[]>(url)
     },
   },
 })

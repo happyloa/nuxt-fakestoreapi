@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from '#imports'
+import { useI18n } from 'vue-i18n'
 import { useCartStore } from '~/stores/cart'
 import { useProductsStore } from '~/stores/products'
+import { useNotificationsStore } from '~/stores/notifications'
 
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
+const notifications = useNotificationsStore()
 
 await Promise.all([productsStore.fetchProducts(), productsStore.fetchCategories()])
 
@@ -51,6 +55,9 @@ const handleAddToCart = (product: (typeof productsStore.products)[number]) => {
     price: product.price,
     image: product.image,
   })
+  notifications.success(
+    t('notifications.cartAdded', { title: product.title }),
+  )
 }
 
 const resetFilters = () => {

@@ -1,4 +1,10 @@
 import { defineStore } from 'pinia'
+import type {
+  Cart,
+  CartProductItem,
+  CreateCartPayload,
+  UpdateCartPayload,
+} from '~/types/fakestore'
 
 export interface CartItem {
   id: number
@@ -13,7 +19,9 @@ export const useCartStore = defineStore('cart', {
     items: [] as CartItem[],
     userId: null as number | null,
     loading: false,
-    error: ''
+    error: '',
+    carts: [] as Cart[],
+    lastFetchedCart: null as Cart | null,
   }),
   getters: {
     total(state) {
@@ -47,8 +55,10 @@ export const useCartStore = defineStore('cart', {
             }),
           )
           this.items = items
+          this.lastFetchedCart = latest
         } else {
           this.items = []
+          this.lastFetchedCart = null
         }
       } catch (e: any) {
         this.error = e?.message || 'Failed to load cart'
@@ -59,13 +69,10 @@ export const useCartStore = defineStore('cart', {
     async syncCart() {
       if (!this.userId) return
       try {
-        await $fetch('https://fakestoreapi.com/carts', {
-          method: 'POST',
-          body: {
-            userId: this.userId,
-            date: new Date().toISOString(),
-            products: this.items.map((i) => ({ productId: i.id, quantity: i.quantity })),
-          },
+        await this.createRemoteCart({
+          userId: this.userId,
+          date: new Date().toISOString(),
+          products: this.items.map((i) => ({ productId: i.id, quantity: i.quantity })),
         })
       } catch {
         // ignore sync errors
@@ -108,6 +115,85 @@ export const useCartStore = defineStore('cart', {
       this.syncCart()
       if (!preserveUser) {
         this.userId = null
+      }
+    },
+    async fetchAllCarts(options: {
+      startDate?: string
+      endDate?: string
+      sort?: 'asc' | 'desc'
+      limit?: number
+    } = {}) {
+      const query = new URLSearchParams()
+      if (options.startDate) {
+        query.set('startdate', options.startDate)
+      }
+      if (options.endDate) {
+        query.set('enddate', options.endDate)
+      }
+      if (options.sort) {
+        query.set('sort', options.sort)
+      }
+      if (options.limit) {
+        query.set('limit', String(options.limit))
+      }
+      const url = query.toString()
+        ? `https://fakestoreapi.com/carts?${query.toString()}`
+        : 'https://fakestoreapi.com/carts'
+      try {
+        const carts = await $fetch<Cart[]>(url)
+        this.carts = carts
+        return carts
+      } catch (error: any) {
+        this.error = error?.message ?? 'Failed to load carts.'
+        throw error
+      }
+    },
+    async fetchCartById(id: number) {
+      try {
+        const cart = await $fetch<Cart>(`https://fakestoreapi.com/carts/${id}`)
+        this.lastFetchedCart = cart
+        return cart
+      } catch (error: any) {
+        this.error = error?.message ?? 'Failed to load cart.'
+        throw error
+      }
+    },
+    async fetchCartsByUser(userId: number) {
+      try {
+        const carts = await $fetch<Cart[]>(`https://fakestoreapi.com/carts/user/${userId}`)
+        this.carts = carts
+        return carts
+      } catch (error: any) {
+        this.error = error?.message ?? 'Failed to load user carts.'
+        throw error
+      }
+    },
+    async createRemoteCart(payload: CreateCartPayload) {
+      const created = await $fetch<Cart>('https://fakestoreapi.com/carts', {
+        method: 'POST',
+        body: payload,
+      })
+      this.carts = [created, ...this.carts]
+      return created
+    },
+    async updateRemoteCart(id: number, payload: UpdateCartPayload) {
+      const updated = await $fetch<Cart>(`https://fakestoreapi.com/carts/${id}`, {
+        method: 'PUT',
+        body: payload,
+      })
+      this.carts = this.carts.map((cart) => (cart.id === id ? updated : cart))
+      if (this.lastFetchedCart?.id === id) {
+        this.lastFetchedCart = updated
+      }
+      return updated
+    },
+    async deleteRemoteCart(id: number) {
+      await $fetch(`https://fakestoreapi.com/carts/${id}`, {
+        method: 'DELETE',
+      })
+      this.carts = this.carts.filter((cart) => cart.id !== id)
+      if (this.lastFetchedCart?.id === id) {
+        this.lastFetchedCart = null
       }
     },
   }

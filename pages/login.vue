@@ -1,19 +1,27 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
+import { useNotificationsStore } from '~/stores/notifications'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const notifications = useNotificationsStore()
+const { t } = useI18n()
 
 const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
   await authStore.login(username, password)
   if (authStore.user) {
     cartStore.fetchCart(authStore.user.id)
+    notifications.success(
+      t('notifications.loggedIn', { name: authStore.user.username }),
+    )
   }
 }
 
 const handleLogout = () => {
   authStore.logout()
+  notifications.info(t('notifications.loggedOut'), 2000)
 }
 
 useSeoMeta({

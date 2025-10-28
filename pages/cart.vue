@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '~/stores/auth'
 import { useCartStore } from '~/stores/cart'
+import { useNotificationsStore } from '~/stores/notifications'
 
 const authStore = useAuthStore()
 const cartStore = useCartStore()
+const notifications = useNotificationsStore()
+const { t } = useI18n()
 
 onMounted(() => {
   if (authStore.user) {
@@ -25,18 +29,22 @@ watch(
 
 const handleClear = () => {
   cartStore.clear({ preserveUser: true })
+  notifications.info(t('notifications.cartCleared'), 2000)
 }
 
 const handleIncrement = (id: number) => {
   cartStore.increment(id)
+  notifications.info(t('notifications.cartUpdated'), 2000)
 }
 
 const handleDecrement = (id: number) => {
   cartStore.decrement(id)
+  notifications.info(t('notifications.cartUpdated'), 2000)
 }
 
 const handleRemove = (id: number) => {
   cartStore.removeItem(id)
+  notifications.info(t('notifications.cartItemRemoved'), 2000)
 }
 
 useSeoMeta({
@@ -62,6 +70,7 @@ useSeoMeta({
       <div class="space-y-4">
         <CartItemsList
           :items="cartStore.items"
+          :loading="cartStore.loading"
           @increment="handleIncrement"
           @decrement="handleDecrement"
           @remove="handleRemove"

@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from '#imports'
+import { useI18n } from 'vue-i18n'
 import type { Product } from '~/types/fakestore'
 import { useCartStore } from '~/stores/cart'
 import { useProductsStore } from '~/stores/products'
+import { useNotificationsStore } from '~/stores/notifications'
 
 const route = useRoute()
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
+const notifications = useNotificationsStore()
+const { t } = useI18n()
 
 const product = ref<Product | null>(null)
 const pending = ref(true)
@@ -44,6 +48,9 @@ const addToCart = () => {
     price: product.value.price,
     image: product.value.image,
   })
+  notifications.success(
+    t('notifications.cartAdded', { title: product.value.title }),
+  )
 }
 </script>
 

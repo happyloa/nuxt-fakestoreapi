@@ -26,6 +26,11 @@ A Nuxt 4 + Tailwind CSS showcase that consumes the [Fake Store API](https://fake
 - **Composable UI library** – base button, card, input, select, textarea, badge, alert and section heading components for rapid reuse.
 - **Responsive layout** – sticky header, backdrop blur, Tailwind design tokens and utility classes across the app.
 
+### API playground & UX polish
+- **Interactive API playground** – exercise every Fake Store API endpoint (products, carts, users) with form helpers and live JSON responses.
+- **Toast-driven feedback** – success and info notifications for cart actions, authentication and admin operations.
+- **Loading skeletons & empty states** – shimmering placeholders, graceful empty UIs and improved perceived performance across pages.
+
 ## 🧱 Tech stack
 - [Nuxt 4](https://nuxt.com/) with the latest Nitro runtime.
 - [Tailwind CSS](https://tailwindcss.com/) via `@nuxtjs/tailwindcss` and the `@tailwindcss/forms` plugin.
@@ -79,17 +84,20 @@ password: 83r5^_
 ```
 
 ## 🔌 Fake Store API coverage
-- `GET /products` & `GET /products/:id` – catalogue and detail views.
-- `GET /products/categories` – dynamic filters and creation form options.
-- `POST /products` – product creation form.
+- `GET /products`, `GET /products/:id`, `GET /products?limit=` – catalogue, detail and filtered queries.
+- `GET /products/categories` & `GET /products/category/:category` – dynamic filters and category-specific listings.
+- `POST /products`, `PUT /products/:id`, `DELETE /products/:id` – create, update and delete products.
 - `GET /auth/login` – user authentication and JWT retrieval.
-- `GET /carts/user/:id` & `POST /carts` – cart synchronisation and persistence.
-- `GET /users` – user directory listing.
+- `GET /carts`, `GET /carts/:id`, `GET /carts/user/:id` – cart history browsing and detail inspection.
+- `POST /carts`, `PUT /carts/:id`, `DELETE /carts/:id` – create, update and delete cart payloads.
+- `GET /users`, `GET /users/:id` – user directory and individual profiles.
+- `POST /users`, `PUT /users/:id`, `DELETE /users/:id` – full user management from the playground.
 
 ## 🛠️ Development notes
 - All UI pieces are separated into focused components for easy maintenance.
 - Tailwind CSS is the single source of styling; no legacy CSS resets remain.
 - Pinia stores expose loading and error states to keep pages declarative.
 - Internationalisation strings live in `/i18n/locales` with descriptive namespaces.
+- Toast notifications live in a dedicated Pinia store and render through a global `<ToastContainer />` component.
 
 Feel free to adapt the layout, extend API coverage or plug the UI components into your own projects!

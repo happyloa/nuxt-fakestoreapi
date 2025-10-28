@@ -2,6 +2,14 @@
   "header": {
     "welcome": "Hi, {name}!"
   },
+  "navigation": {
+    "products": "Products",
+    "newProduct": "New product",
+    "cart": "Cart",
+    "users": "Users",
+    "apiPlayground": "API playground",
+    "login": "Login"
+  },
   "products": {
     "hero": {
       "badge": "Powered by Fake Store API",
@@ -100,6 +108,112 @@
       "success": "Welcome back, {name}! Your cart is ready.",
       "logout": "Log out"
     }
+  },
+  "notifications": {
+    "cartAdded": "Added {title} to your cart.",
+    "productCreated": "{title} published successfully.",
+    "cartCleared": "Cart cleared.",
+    "cartUpdated": "Cart updated.",
+    "cartItemRemoved": "Item removed from cart.",
+    "loggedIn": "Signed in as {name}.",
+    "loggedOut": "You signed out.",
+    "productUpdated": "{title} updated.",
+    "productDeleted": "Product #{id} deleted.",
+    "cartCreated": "Created cart #{id}.",
+    "cartPatched": "Cart #{id} updated.",
+    "cartRemoved": "Cart #{id} deleted.",
+    "userCreated": "Created user {username}.",
+    "userUpdated": "Updated user {username}.",
+    "userDeleted": "Deleted user #{id}."
+  },
+  "api": {
+    "title": "API playground",
+    "subtitle": "Try every Fake Store API endpoint without leaving the dashboard.",
+    "actions": {
+      "runQuery": "Run request",
+      "fetch": "Fetch",
+      "update": "Update",
+      "delete": "Delete",
+      "create": "Create"
+    },
+    "fields": {
+      "productId": "Product ID",
+      "cartId": "Cart ID",
+      "userId": "User ID",
+      "payload": "JSON payload"
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "idRequired": "Please enter an ID first.",
+      "invalidJson": "The JSON payload could not be parsed.",
+      "userIdRequired": "Please enter a user ID first."
+    },
+    "results": {
+      "preview": "Response preview",
+      "response": "Response"
+    },
+    "products": {
+      "title": "Products endpoints",
+      "queryTitle": "Query products",
+      "queryDescription": "Combine category, limit and sorting to mirror the /products endpoint.",
+      "querySuccess": "Fetched {count} products.",
+      "singleTitle": "Get product by ID",
+      "singleDescription": "Retrieve a single product directly from /products/:id.",
+      "updateTitle": "Update product",
+      "updateDescription": "Send a PUT request to update any product fields.",
+      "updateSuccess": "Product #{id} updated successfully.",
+      "deleteTitle": "Delete product",
+      "deleteDescription": "Issue a DELETE request to remove a product.",
+      "deleteSuccess": "Product #{id} deleted successfully.",
+      "fields": {
+        "category": "Category",
+        "limit": "Limit",
+        "sort": "Sort"
+      }
+    },
+    "carts": {
+      "title": "Cart endpoints",
+      "queryTitle": "Query carts",
+      "queryDescription": "Filter carts with optional dates, limits and sorting.",
+      "querySuccess": "Fetched {count} carts.",
+      "singleTitle": "Get cart by ID",
+      "singleDescription": "Retrieve a single cart using /carts/:id.",
+      "userTitle": "Get carts by user",
+      "userDescription": "Load the entire cart history for a user via /carts/user/:id.",
+      "createTitle": "Create cart",
+      "createDescription": "Send a POST request with a custom payload.",
+      "createSuccess": "Cart #{id} created successfully.",
+      "updateTitle": "Update cart",
+      "updateDescription": "Update cart contents with PUT /carts/:id.",
+      "updateSuccess": "Cart #{id} updated successfully.",
+      "deleteTitle": "Delete cart",
+      "deleteDescription": "Delete a cart record with DELETE /carts/:id.",
+      "deleteSuccess": "Cart #{id} deleted successfully.",
+      "fields": {
+        "limit": "Limit",
+        "sort": "Sort",
+        "startDate": "Start date",
+        "endDate": "End date"
+      }
+    },
+    "users": {
+      "title": "User endpoints",
+      "singleTitle": "Get user by ID",
+      "singleDescription": "Retrieve a full profile from /users/:id.",
+      "createTitle": "Create user",
+      "createDescription": "POST a new user record with nested address data.",
+      "createSuccess": "User {username} created successfully.",
+      "updateTitle": "Update user",
+      "updateDescription": "PUT changes to any user fields.",
+      "updateSuccess": "User #{id} updated successfully.",
+      "deleteTitle": "Delete user",
+      "deleteDescription": "Remove a user with DELETE /users/:id.",
+      "deleteSuccess": "User #{id} deleted successfully."
+    }
+  },
+  "ui": {
+    "loading": "Loading...",
+    "dismiss": "Dismiss"
   },
   "footer": {
     "title": "About this project",

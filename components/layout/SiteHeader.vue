@@ -11,13 +11,14 @@ const cart = useCartStore()
 const { t } = useI18n()
 const isMenuOpen = ref(false)
 
-const navigation = [
-  { name: 'Products', to: '/' },
-  { name: 'New Product', to: '/products/new' },
-  { name: 'Cart', to: '/cart' },
-  { name: 'Users', to: '/users' },
-  { name: 'Login', to: '/login' },
-]
+const navigation = computed(() => [
+  { name: t('navigation.products'), to: '/' },
+  { name: t('navigation.newProduct'), to: '/products/new' },
+  { name: t('navigation.cart'), to: '/cart' },
+  { name: t('navigation.users'), to: '/users' },
+  { name: t('navigation.apiPlayground'), to: '/api' },
+  { name: t('navigation.login'), to: '/login' },
+])
 
 const cartLabel = computed(() =>
   cart.count ? t('cart.summary.items', { count: cart.count }) : t('cart.title'),

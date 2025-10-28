@@ -15,5 +15,6 @@ useSeoMeta({
       </div>
     </main>
     <SiteFooter />
+    <ToastContainer />
   </div>
 </template>

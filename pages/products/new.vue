@@ -3,9 +3,11 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { CreateProductPayload } from '~/types/fakestore'
 import { useProductsStore } from '~/stores/products'
+import { useNotificationsStore } from '~/stores/notifications'
 
 const productsStore = useProductsStore()
 const { t } = useI18n()
+const notifications = useNotificationsStore()
 const successMessage = ref('')
 const formKey = ref(0)
 
@@ -17,6 +19,9 @@ const handleSubmit = async (payload: CreateProductPayload) => {
     const created = await productsStore.createProduct(payload)
     successMessage.value = `${created.title} ${t('products.form.successSuffix')}`
     formKey.value += 1
+    notifications.success(
+      t('notifications.productCreated', { title: created.title }),
+    )
   } catch (error) {
     // error handled by store
   }
