@@ -67,9 +67,38 @@ const isButton = computed(() => {
 </script>
 
 <template>
-  <!-- 依照傳入的屬性決定渲染元素：自定元件 > NuxtLink > a > button -->
+  <!-- 依照傳入的屬性決定渲染元素：NuxtLink > 自定元件 > a > button -->
+  <NuxtLink
+    v-if="to"
+    :to="to"
+    :class="classes"
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </NuxtLink>
   <component
-    v-if="as"
+    v-else-if="as"
     :is="as"
     :type="isButton ? type : undefined"
     :to="to"
@@ -100,35 +129,6 @@ const isButton = computed(() => {
     </svg>
     <slot />
   </component>
-  <NuxtLink
-    v-else-if="to"
-    :to="to"
-    :class="classes"
-    :aria-disabled="loading || disabled ? 'true' : undefined"
-  >
-    <svg
-      v-if="loading"
-      class="h-4 w-4 animate-spin"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        class="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        stroke-width="4"
-      ></circle>
-      <path
-        class="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      ></path>
-    </svg>
-    <slot />
-  </NuxtLink>
   <a
     v-else-if="href"
     :href="href"
