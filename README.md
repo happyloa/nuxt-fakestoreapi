@@ -1,103 +1,103 @@
-# Fake Store Dashboard
+# 假貨商店儀表板
 
-A Nuxt 4 + Tailwind CSS showcase that consumes the [Fake Store API](https://fakestoreapi.com/) to demonstrate a full e-commerce workflow – product catalogue, product creation, shopping cart synchronisation and user management – with reusable Vue components and multilanguage support.
+一個基於 Nuxt 4 與 Tailwind CSS 的示範專案，串接 [Fake Store API](https://fakestoreapi.com/)，完整展現電子商務流程：商品目錄、商品建立、購物車同步與使用者管理，同時提供可重複使用的 Vue 元件與多語系支援。
 
 ![Fake Store Dashboard preview](https://i.imgur.com/mIOKP43.png)
 
-## ✨ Features
+## ✨ 特色亮點
 
-### Product experience
-- **Rich catalogue UI** – hero banner, analytics cards and a responsive grid styled with Tailwind CSS.
-- **Powerful filters** – combine keyword search, category filtering and sorting with URL-synchronised query parameters.
-- **Product creation** – create items with live POST requests to the Fake Store API.
-- **Detailed view** – dedicated product page with ratings, pricing and quick add-to-cart.
+### 商品體驗
+- **豐富的目錄介面**：具備英雄版面、分析卡片與響應式網格，全部以 Tailwind CSS 呈現。
+- **強大的篩選功能**：結合關鍵字搜尋、分類篩選與排序，並以 URL 參數同步狀態。
+- **商品建立流程**：透過 Fake Store API 的即時 POST 請求建立商品。
+- **詳細頁面**：專屬商品頁提供評價、價格與快速加入購物車的操作。
 
-### Shopping cart
-- **API synchronised cart** – login with the demo credentials to load and persist carts through the Fake Store API.
-- **Quantity management** – increment, decrement and remove line items with instant totals.
-- **Order summary** – responsive sidebar summarising items and totals.
+### 購物車
+- **API 同步的購物車**：使用示範帳號登入即可載入並保存來自 Fake Store API 的購物車資料。
+- **數量管理**：支援增加、減少與刪除品項，立即更新總計。
+- **訂單摘要**：響應式側邊欄整理品項與金額。
 
-### User management
-- **User directory** – browse Fake Store API users with contact details and address information.
-- **Search** – filter users by name, username or email.
+### 使用者管理
+- **使用者通訊錄**：瀏覽 Fake Store API 使用者，並附上聯絡資訊與地址。
+- **搜尋功能**：可依姓名、使用者名稱或電子郵件進行過濾。
 
-### Internationalisation & UI system
-- **Dual language support** – Traditional Chinese and English locales powered by `@nuxtjs/i18n`.
-- **Composable UI library** – base button, card, input, select, textarea, badge, alert and section heading components for rapid reuse.
-- **Responsive layout** – sticky header, backdrop blur, Tailwind design tokens and utility classes across the app.
+### 國際化與 UI 系統
+- **雙語支援**：透過 `@nuxtjs/i18n` 提供繁體中文與英文介面。
+- **可組合的 UI 元件庫**：提供按鈕、卡片、輸入框、下拉選單、文字區塊、徽章、警示與標題等基礎元件。
+- **響應式版面**：黏性標頭、毛玻璃背景，以及遍佈全站的 Tailwind 設計語彙。
 
-### API playground & UX polish
-- **Interactive API playground** – exercise every Fake Store API endpoint (products, carts, users) with form helpers and live JSON responses.
-- **Toast-driven feedback** – success and info notifications for cart actions, authentication and admin operations.
-- **Loading skeletons & empty states** – shimmering placeholders, graceful empty UIs and improved perceived performance across pages.
+### API 操作區與體驗優化
+- **互動式 API 操作區**：涵蓋商品、購物車與使用者等 Fake Store API 端點，搭配表單輔助與即時 JSON 回應。
+- **通知提示**：針對購物車、登入與管理操作提供成功／資訊提示。
+- **載入骨架與空狀態**：以骨架畫面與友善的空狀態改善感知效能。
 
-## 🧱 Tech stack
-- [Nuxt 4](https://nuxt.com/) with the latest Nitro runtime.
-- [Tailwind CSS](https://tailwindcss.com/) via `@nuxtjs/tailwindcss` and the `@tailwindcss/forms` plugin.
-- [Pinia](https://pinia.vuejs.org/) stores for products, cart, authentication and users.
-- [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for localisation.
-- TypeScript across components, stores and composables.
+## 🧱 技術堆疊
+- [Nuxt 4](https://nuxt.com/) 與最新的 Nitro 執行環境。
+- [Tailwind CSS](https://tailwindcss.com/)，結合 `@nuxtjs/tailwindcss` 與 `@tailwindcss/forms` 外掛。
+- 以 [Pinia](https://pinia.vuejs.org/) 建立的商品、購物車、認證與使用者狀態管理。
+- 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化。
+- 元件、狀態與可組合函式全面採用 TypeScript。
 
-## 🚀 Getting started
+## 🚀 快速開始
 
 ```bash
-# Install dependencies
+# 安裝相依套件
 npm install
 
-# Start the development server
+# 啟動開發伺服器
 npm run dev
 
-# Build for production
+# 建置正式版本
 npm run build
 
-# Preview the production build
+# 預覽正式版本
 npm run preview
 ```
 
-Fake Store API provides public demo credentials. The login form is pre-filled with the official example account:
+Fake Store API 提供公開的示範帳號，登入表單已預填官方範例：
 
 ```
 username: mor_2314
 password: 83r5^_
 ```
 
-## 📁 Project structure
+## 📁 專案結構
 
 ```
 .
-├─ app.vue                  # Application shell with header, footer and page container
-├─ assets/css/tailwind.css  # Tailwind layers and base tokens
+├─ app.vue                  # 應用程式外殼，包含標頭、頁尾與容器
+├─ assets/css/tailwind.css  # Tailwind layer 與基礎設計變數
 ├─ components/
-│  ├─ auth/                 # Login form UI
-│  ├─ cart/                 # Cart list and summary components
-│  ├─ layout/               # Header, footer and language switcher
-│  ├─ products/             # Product hero, grid, filters and detail components
-│  ├─ ui/                   # Base UI building blocks (button, input, card, alert...)
-│  └─ users/                # User card and listing components
-├─ i18n/locales/            # zh & en translation files
-├─ pages/                   # Nuxt routes (catalogue, product detail, cart, login, users, create product)
-├─ public/                  # Static assets (hero illustration, favicons, og images)
-├─ stores/                  # Pinia stores for auth, cart, products and users
-├─ tailwind.config.ts       # Tailwind configuration and design tokens
-├─ types/                   # Type definitions for Fake Store API entities
-└─ nuxt.config.ts           # Nuxt configuration (modules, i18n, Tailwind)
+│  ├─ auth/                 # 登入介面元件
+│  ├─ cart/                 # 購物車清單與摘要元件
+│  ├─ layout/               # 標頭、頁尾與語系切換器
+│  ├─ products/             # 商品英雄版、網格、篩選與詳情元件
+│  ├─ ui/                   # 基礎 UI 元件（按鈕、輸入框、卡片、警示等）
+│  └─ users/                # 使用者卡片與列表元件
+├─ i18n/locales/            # zh 與 en 翻譯檔
+├─ pages/                   # Nuxt 路由（目錄、商品詳情、購物車、登入、使用者、建立商品）
+├─ public/                  # 靜態資源（英雄插圖、favicon、Open Graph 圖）
+├─ stores/                  # Pinia 狀態（認證、購物車、商品、使用者）
+├─ tailwind.config.ts       # Tailwind 設定與設計語彙
+├─ types/                   # Fake Store API 型別定義
+└─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind）
 ```
 
-## 🔌 Fake Store API coverage
-- `GET /products`, `GET /products/:id`, `GET /products?limit=` – catalogue, detail and filtered queries.
-- `GET /products/categories` & `GET /products/category/:category` – dynamic filters and category-specific listings.
-- `POST /products`, `PUT /products/:id`, `DELETE /products/:id` – create, update and delete products.
-- `GET /auth/login` – user authentication and JWT retrieval.
-- `GET /carts`, `GET /carts/:id`, `GET /carts/user/:id` – cart history browsing and detail inspection.
-- `POST /carts`, `PUT /carts/:id`, `DELETE /carts/:id` – create, update and delete cart payloads.
-- `GET /users`, `GET /users/:id` – user directory and individual profiles.
-- `POST /users`, `PUT /users/:id`, `DELETE /users/:id` – full user management from the playground.
+## 🔌 Fake Store API 覆蓋範圍
+- `GET /products`、`GET /products/:id`、`GET /products?limit=`：商品目錄、詳情與篩選查詢。
+- `GET /products/categories`、`GET /products/category/:category`：動態篩選與分類頁面。
+- `POST /products`、`PUT /products/:id`、`DELETE /products/:id`：新增、更新與刪除商品。
+- `GET /auth/login`：使用者驗證與 JWT 取得。
+- `GET /carts`、`GET /carts/:id`、`GET /carts/user/:id`：瀏覽購物車歷史與詳情。
+- `POST /carts`、`PUT /carts/:id`、`DELETE /carts/:id`：建立、更新與刪除購物車資料。
+- `GET /users`、`GET /users/:id`：使用者列表與個別檔案。
+- `POST /users`、`PUT /users/:id`、`DELETE /users/:id`：在操作區內完整管理使用者。
 
-## 🛠️ Development notes
-- All UI pieces are separated into focused components for easy maintenance.
-- Tailwind CSS is the single source of styling; no legacy CSS resets remain.
-- Pinia stores expose loading and error states to keep pages declarative.
-- Internationalisation strings live in `/i18n/locales` with descriptive namespaces.
-- Toast notifications live in a dedicated Pinia store and render through a global `<ToastContainer />` component.
+## 🛠️ 開發備註
+- UI 元件皆模組化，方便維護與擴充。
+- Tailwind CSS 為唯一的樣式來源，無需傳統 CSS reset。
+- Pinia store 提供載入與錯誤狀態，讓頁面邏輯保持宣告式。
+- 國際化字串位於 `/i18n/locales`，以語意化命名空間組織。
+- Toast 通知由專用的 Pinia store 管理，並透過全域 `<ToastContainer />` 元件渲染。
 
-Feel free to adapt the layout, extend API coverage or plug the UI components into your own projects!
+歡迎依需求調整版面、擴充 API 覆蓋範圍，或在自己的專案中沿用這些 UI 元件！

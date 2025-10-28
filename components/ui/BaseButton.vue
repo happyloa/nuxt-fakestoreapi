@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed, resolveDynamicComponent } from 'vue'
+import type { Component } from 'vue'
+import { computed } from 'vue'
+import { NuxtLink } from '#components'
 
 type RouteLocation = string | Record<string, any>
 
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
 
-type ComponentTag = string | Record<string, any>
+type ComponentTag = string | Component
 
+// BaseButton 提供統一的樣式與狀態處理，並透過多型支援 button、link 與自定元件。
 const props = withDefaults(
   defineProps<{
     type?: 'button' | 'submit' | 'reset'
@@ -31,7 +34,9 @@ const props = withDefaults(
 )
 
 const classes = computed(() => {
-  const base = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+  // 根據尺寸、樣式與寬度設定組合 Tailwind class。
+  const base =
+    'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
   const sizes: Record<Size, string> = {
     sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2 text-sm sm:text-base',
@@ -51,23 +56,8 @@ const classes = computed(() => {
   return [base, sizes[props.size], variants[props.variant], width].join(' ')
 })
 
-const componentTag = computed<ComponentTag>(() => {
-  if (props.as) {
-    return resolveDynamicComponent(props.as as any) as ComponentTag
-  }
-
-  if (props.to) {
-    return resolveDynamicComponent('NuxtLink') as ComponentTag
-  }
-
-  if (props.href) {
-    return 'a'
-  }
-
-  return 'button'
-})
-
 const isButton = computed(() => {
+  // 判斷當前是否為原生 button，用於控制 type 與 disabled 屬性。
   if (props.as) {
     return props.as === 'button'
   }
@@ -77,8 +67,39 @@ const isButton = computed(() => {
 </script>
 
 <template>
+  <!-- 依照傳入的屬性決定渲染元素：NuxtLink > 自定元件 > a > button -->
+  <NuxtLink
+    v-if="to"
+    :to="to"
+    :class="classes"
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </NuxtLink>
   <component
-    :is="componentTag"
+    v-else-if="as"
+    :is="as"
     :type="isButton ? type : undefined"
     :to="to"
     :href="href"
@@ -108,4 +129,62 @@ const isButton = computed(() => {
     </svg>
     <slot />
   </component>
+  <a
+    v-else-if="href"
+    :href="href"
+    :class="classes"
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </a>
+  <button
+    v-else
+    :type="type"
+    :class="classes"
+    :disabled="disabled || loading"
+  >
+    <svg
+      v-if="loading"
+      class="h-4 w-4 animate-spin"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      ></circle>
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
+    </svg>
+    <slot />
+  </button>
 </template>
