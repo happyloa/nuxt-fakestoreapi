@@ -52,4 +52,43 @@ export default defineNuxtConfig({
 
   // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
   css: ["~/assets/css/tailwind.css"],
+
+  // 安全性強化：為所有路由加入常見的 HTTP 安全標頭，避免 clickjacking、MIME sniffing 等攻擊。
+  nitro: {
+    // 在本地開發與 Nuxt 自身提供的伺服器渲染環境中，同步送出與正式環境一致的安全性標頭。
+    routeRules: {
+      "/**": {
+        headers: {
+          "Content-Security-Policy": [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com data:",
+            "img-src 'self' data: https:",
+            "frame-src 'self' https://vercel.live",
+            "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "object-src 'none'",
+            "upgrade-insecure-requests",
+          ].join("; "),
+          "Cross-Origin-Opener-Policy": "same-origin",
+          "Cross-Origin-Resource-Policy": "cross-origin",
+          "Permissions-Policy": [
+            "camera=()",
+            "microphone=()",
+            "geolocation=()",
+            "fullscreen=()",
+            "payment=()",
+          ].join(", "),
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
+        },
+      },
+    },
+  },
 });
