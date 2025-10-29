@@ -55,6 +55,7 @@ export default defineNuxtConfig({
 
   // 安全性強化：為所有路由加入常見的 HTTP 安全標頭，避免 clickjacking、MIME sniffing 等攻擊。
   nitro: {
+    // 在本地開發與 Nuxt 自身提供的伺服器渲染環境中，同步送出與正式環境一致的安全性標頭。
     routeRules: {
       "/**": {
         headers: {
@@ -85,6 +86,7 @@ export default defineNuxtConfig({
           "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
           "X-Content-Type-Options": "nosniff",
           "X-Frame-Options": "DENY",
+          "X-XSS-Protection": "1; mode=block",
         },
       },
     },
