@@ -52,4 +52,34 @@ export default defineNuxtConfig({
 
   // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
   css: ["~/assets/css/tailwind.css"],
+
+  // 安全性強化：為所有路由加入常見的 HTTP 安全標頭，避免 clickjacking、MIME sniffing 等攻擊。
+  nitro: {
+    routeRules: {
+      "/**": {
+        headers: {
+          "Content-Security-Policy": [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com data:",
+            "img-src 'self' data: https:",
+            "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "object-src 'none'",
+            "upgrade-insecure-requests",
+          ].join("; "),
+          "Cross-Origin-Opener-Policy": "same-origin",
+          "Cross-Origin-Resource-Policy": "cross-origin",
+          "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          "Referrer-Policy": "strict-origin-when-cross-origin",
+          "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+          "X-Content-Type-Options": "nosniff",
+          "X-Frame-Options": "DENY",
+        },
+      },
+    },
+  },
 });
