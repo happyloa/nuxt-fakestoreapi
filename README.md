@@ -36,6 +36,12 @@
 - **通知提示**：針對購物車、登入與管理操作提供成功／資訊提示。
 - **載入骨架與空狀態**：以骨架畫面與友善的空狀態改善感知效能。
 
+### 架構整理亮點
+
+- **`services/` 服務層**：集中管理所有 Fake Store API 呼叫，日後可在單一入口加入攔截器或快取策略。
+- **`composables/` 可組合函式**：例如 `useProductFilters` 將查詢參數與過濾邏輯封裝，維持頁面程式碼純淨。
+- **繁中註解與說明**：核心頁面、Store 與元件皆附上繁體中文註解，方便檢視與展示。
+
 ## 🧱 使用技術
 
 - [Nuxt 4](https://nuxt.com/) 與最新的 Nitro 執行環境。
@@ -77,13 +83,15 @@ password: 83r5^_
 │  ├─ auth/                 # 登入介面元件
 │  ├─ cart/                 # 購物車清單與摘要元件
 │  ├─ layout/               # 標頭、頁尾與語系切換器
-│  ├─ products/             # 商品英雄版、網格、篩選與詳情元件
+│  ├─ products/             # 商品英雄版、網格、篩選、詳情與卡片元件
 │  ├─ ui/                   # 基礎 UI 元件（按鈕、輸入框、卡片、警示等）
 │  └─ users/                # 使用者卡片與列表元件
+├─ composables/             # 可重複使用的業務邏輯（例如商品篩選）
 ├─ i18n/locales/            # zh 與 en 翻譯檔
 ├─ pages/                   # Nuxt 路由（目錄、商品詳情、購物車、登入、使用者、建立商品）
 ├─ public/                  # 靜態資源（英雄插圖、favicon、Open Graph 圖）
-├─ stores/                  # Pinia 狀態（認證、購物車、商品、使用者）
+├─ services/                # Fake Store API 呼叫封裝（products、carts、users、auth）
+├─ stores/                  # Pinia 狀態（認證、購物車、商品、使用者、通知）
 ├─ tailwind.config.ts       # Tailwind 設定與設計語彙
 ├─ types/                   # Fake Store API 型別定義
 └─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind）

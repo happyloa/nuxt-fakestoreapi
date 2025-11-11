@@ -7,6 +7,9 @@ const search = ref('')
 
 await usersStore.fetchUsers()
 
+/**
+ * 提供使用者清單搜尋，展示 Fake Store API 的使用者資料能力。
+ */
 const filteredUsers = computed(() => {
   if (!search.value) {
     return usersStore.users

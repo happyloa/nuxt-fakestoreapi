@@ -16,6 +16,10 @@ import type {
   UpdateUserPayload,
 } from '~/types/fakestore'
 
+/**
+ * API Playground 頁面，集中展示 Fake Store API 的全部操作。
+ * 讓訪客可以實際操作 CRUD，作為作品集的亮點之一。
+ */
 const { t } = useI18n()
 const productsStore = useProductsStore()
 const cartStore = useCartStore()

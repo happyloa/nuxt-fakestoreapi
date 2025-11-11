@@ -17,6 +17,9 @@ const product = ref<Product | null>(null)
 const pending = ref(true)
 const errorMessage = ref('')
 
+/**
+ * 動態載入商品細節並更新 SEO 資訊，保持作品的完整度。
+ */
 const loadProduct = async () => {
   const id = Number(route.params.id)
   pending.value = true
