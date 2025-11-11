@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProductFilters } from '~/composables/useProductFilters'
 import { useCartStore } from '~/stores/cart'
@@ -11,7 +12,33 @@ const cartStore = useCartStore()
 const { t } = useI18n()
 const notifications = useNotificationsStore()
 
-await Promise.all([productsStore.fetchProducts(), productsStore.fetchCategories()])
+const isPageLoading = ref(true)
+const pageError = ref('')
+
+/**
+ * 初始載入首頁所需的商品與分類資料，確保狀態提示正確。
+ */
+const loadHomepageData = async () => {
+  isPageLoading.value = true
+  pageError.value = ''
+  productsStore.error = ''
+  try {
+    await Promise.all([
+      productsStore.fetchProducts(),
+      productsStore.fetchCategories(),
+    ])
+    if (productsStore.error) {
+      pageError.value = productsStore.error
+    }
+  } catch (error: any) {
+    pageError.value =
+      error?.message ?? t('api.errors.generic')
+  } finally {
+    isPageLoading.value = false
+  }
+}
+
+await loadHomepageData()
 
 const {
   selectedCategory,
@@ -57,8 +84,8 @@ useSeoMeta({
     <div class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,2.25fr)_minmax(0,1fr)]">
       <ProductGrid
         :products="filteredProducts"
-        :loading="productsStore.loading"
-        :error="productsStore.error"
+        :loading="isPageLoading"
+        :error="pageError"
         @add-to-cart="handleAddToCart"
       />
       <ProductFilterPanel

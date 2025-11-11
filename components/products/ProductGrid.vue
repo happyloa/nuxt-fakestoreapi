@@ -29,7 +29,12 @@ const handleAddToCart = (product: Product) => emit('add-to-cart', product)
 <template>
   <section class="space-y-6" aria-labelledby="product-results-heading">
     <h2 id="product-results-heading" class="sr-only">{{ $t('products.listingTitle') }}</h2>
-    <ProductGridSkeleton v-if="loading" />
+    <div
+      v-if="loading"
+      class="flex items-center justify-center rounded-lg border border-dashed border-slate-200 py-16 dark:border-slate-700"
+    >
+      <BaseLoader />
+    </div>
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}
     </BaseAlert>
