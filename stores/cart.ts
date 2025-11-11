@@ -1,4 +1,13 @@
 import { defineStore } from 'pinia'
+import {
+  createCart as createCartApi,
+  deleteCart as deleteCartApi,
+  getCartById as getRemoteCartById,
+  getCarts as getRemoteCarts,
+  getCartsByUser as getRemoteCartsByUser,
+  updateCart as updateCartApi,
+} from '~/services/fakestore/carts'
+import { getProductById } from '~/services/fakestore/products'
 import type {
   Cart,
   CartProductItem,
@@ -14,6 +23,10 @@ export interface CartItem {
   quantity: number
 }
 
+/**
+ * 處理購物車與 Fake Store API 互動的 Store。
+ * 將遠端資料轉換為本地可以直接使用的結構，並維持登入使用者的購物車同步。
+ */
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],
@@ -29,7 +42,7 @@ export const useCartStore = defineStore('cart', {
     },
     count(state) {
       return state.items.reduce((sum, item) => sum + item.quantity, 0)
-    }
+    },
   },
   actions: {
     async fetchCart(userId: number) {
@@ -37,23 +50,10 @@ export const useCartStore = defineStore('cart', {
       this.error = ''
       this.userId = userId
       try {
-        const res: any[] = await $fetch(`https://fakestoreapi.com/carts/user/${userId}`)
-        if (res.length) {
-          const latest = res[res.length - 1]
-          const items = await Promise.all(
-            latest.products.map(async (p: any) => {
-              const prod: any = await $fetch(
-                `https://fakestoreapi.com/products/${p.productId}`,
-              )
-              return {
-                id: prod.id,
-                title: prod.title,
-                price: prod.price,
-                image: prod.image,
-                quantity: p.quantity,
-              }
-            }),
-          )
+        const carts = await getRemoteCartsByUser(userId)
+        if (carts.length) {
+          const latest = carts[carts.length - 1]
+          const items = await this.enrichCartItems(latest.products)
           this.items = items
           this.lastFetchedCart = latest
         } else {
@@ -142,24 +142,13 @@ export const useCartStore = defineStore('cart', {
       sort?: 'asc' | 'desc'
       limit?: number
     } = {}) {
-      const query = new URLSearchParams()
-      if (options.startDate) {
-        query.set('startdate', options.startDate)
-      }
-      if (options.endDate) {
-        query.set('enddate', options.endDate)
-      }
-      if (options.sort) {
-        query.set('sort', options.sort)
-      }
-      if (options.limit) {
-        query.set('limit', String(options.limit))
-      }
-      const url = query.toString()
-        ? `https://fakestoreapi.com/carts?${query.toString()}`
-        : 'https://fakestoreapi.com/carts'
       try {
-        const carts = await $fetch<Cart[]>(url)
+        const carts = await getRemoteCarts({
+          limit: options.limit,
+          sort: options.sort,
+          startDate: options.startDate,
+          endDate: options.endDate,
+        })
         this.carts = carts
         return carts
       } catch (error: any) {
@@ -169,7 +158,7 @@ export const useCartStore = defineStore('cart', {
     },
     async fetchCartById(id: number) {
       try {
-        const cart = await $fetch<Cart>(`https://fakestoreapi.com/carts/${id}`)
+        const cart = await getRemoteCartById(id)
         this.lastFetchedCart = cart
         return cart
       } catch (error: any) {
@@ -179,7 +168,7 @@ export const useCartStore = defineStore('cart', {
     },
     async fetchCartsByUser(userId: number) {
       try {
-        const carts = await $fetch<Cart[]>(`https://fakestoreapi.com/carts/user/${userId}`)
+        const carts = await getRemoteCartsByUser(userId)
         this.carts = carts
         return carts
       } catch (error: any) {
@@ -188,18 +177,12 @@ export const useCartStore = defineStore('cart', {
       }
     },
     async createRemoteCart(payload: CreateCartPayload) {
-      const created = await $fetch<Cart>('https://fakestoreapi.com/carts', {
-        method: 'POST',
-        body: payload,
-      })
+      const created = await createCartApi(payload)
       this.carts = [created, ...this.carts]
       return created
     },
     async updateRemoteCart(id: number, payload: UpdateCartPayload) {
-      const updated = await $fetch<Cart>(`https://fakestoreapi.com/carts/${id}`, {
-        method: 'PUT',
-        body: payload,
-      })
+      const updated = await updateCartApi(id, payload)
       this.carts = this.carts.map((cart) => (cart.id === id ? updated : cart))
       if (this.lastFetchedCart?.id === id) {
         this.lastFetchedCart = updated
@@ -207,13 +190,29 @@ export const useCartStore = defineStore('cart', {
       return updated
     },
     async deleteRemoteCart(id: number) {
-      await $fetch(`https://fakestoreapi.com/carts/${id}`, {
-        method: 'DELETE',
-      })
+      await deleteCartApi(id)
       this.carts = this.carts.filter((cart) => cart.id !== id)
       if (this.lastFetchedCart?.id === id) {
         this.lastFetchedCart = null
       }
+    },
+    /**
+     * 將購物車項目補齊詳細商品資料。
+     */
+    async enrichCartItems(products: CartProductItem[]): Promise<CartItem[]> {
+      const items = await Promise.all(
+        products.map(async (product) => {
+          const detail = await getProductById(product.productId)
+          return {
+            id: detail.id,
+            title: detail.title,
+            price: detail.price,
+            image: detail.image,
+            quantity: product.quantity,
+          }
+        }),
+      )
+      return items
     },
   }
 })

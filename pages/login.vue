@@ -9,6 +9,10 @@ const cartStore = useCartStore()
 const notifications = useNotificationsStore()
 const { t } = useI18n()
 
+/**
+ * Fake Store API 僅提供基本的帳密驗證，因此登入後立即同步購物車。
+ */
+
 const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
   await authStore.login(username, password)
   if (authStore.user) {

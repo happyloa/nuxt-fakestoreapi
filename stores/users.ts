@@ -1,4 +1,11 @@
 import { defineStore } from 'pinia'
+import {
+  createUser as createUserApi,
+  deleteUser as deleteUserApi,
+  getUserById as getUserByIdApi,
+  getUsers as getUsersApi,
+  updateUser as updateUserApi,
+} from '~/services/fakestore/users'
 import type {
   CreateUserPayload,
   UpdateUserPayload,
@@ -12,6 +19,10 @@ interface State {
   selectedUser: User | null
 }
 
+/**
+ * 使用者資料維護的 Store。
+ * 將所有 Fake Store API 的互動封裝起來，保持元件的簡潔度。
+ */
 export const useUsersStore = defineStore('users', {
   state: (): State => ({
     users: [],
@@ -27,7 +38,7 @@ export const useUsersStore = defineStore('users', {
       this.loading = true
       this.error = ''
       try {
-        const users = await $fetch<User[]>('https://fakestoreapi.com/users')
+        const users = await getUsersApi()
         this.users = users
       } catch (error: any) {
         this.error = error?.message ?? 'Failed to load users.'
@@ -39,7 +50,7 @@ export const useUsersStore = defineStore('users', {
       this.loading = true
       this.error = ''
       try {
-        const user = await $fetch<User>(`https://fakestoreapi.com/users/${id}`)
+        const user = await getUserByIdApi(id)
         this.selectedUser = user
         const exists = this.users.find((entry) => entry.id === user.id)
         if (!exists) {
@@ -57,10 +68,7 @@ export const useUsersStore = defineStore('users', {
       this.loading = true
       this.error = ''
       try {
-        const created = await $fetch<User>('https://fakestoreapi.com/users', {
-          method: 'POST',
-          body: payload,
-        })
+        const created = await createUserApi(payload)
         this.users.push(created)
         return created
       } catch (error: any) {
@@ -74,10 +82,7 @@ export const useUsersStore = defineStore('users', {
       this.loading = true
       this.error = ''
       try {
-        const updated = await $fetch<User>(`https://fakestoreapi.com/users/${id}`, {
-          method: 'PUT',
-          body: payload,
-        })
+        const updated = await updateUserApi(id, payload)
         this.users = this.users.map((user) =>
           user.id === id ? { ...user, ...updated } : user,
         )
@@ -94,9 +99,7 @@ export const useUsersStore = defineStore('users', {
       this.loading = true
       this.error = ''
       try {
-        await $fetch(`https://fakestoreapi.com/users/${id}`, {
-          method: 'DELETE',
-        })
+        await deleteUserApi(id)
         this.users = this.users.filter((user) => user.id !== id)
         if (this.selectedUser?.id === id) {
           this.selectedUser = null

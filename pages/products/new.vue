@@ -11,6 +11,10 @@ const notifications = useNotificationsStore()
 const successMessage = ref('')
 const formKey = ref(0)
 
+/**
+ * 建立商品頁面，將表單流程包裝成可重複利用的組件。
+ */
+
 await productsStore.fetchCategories()
 
 const handleSubmit = async (payload: CreateProductPayload) => {

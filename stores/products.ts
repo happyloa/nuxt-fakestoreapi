@@ -1,4 +1,13 @@
 import { defineStore } from 'pinia'
+import {
+  createProduct as createProductApi,
+  deleteProduct as deleteProductApi,
+  getAllProducts,
+  getProductById,
+  getProductCategories,
+  queryProducts as queryProductsApi,
+  updateProduct as updateProductApi,
+} from '~/services/fakestore/products'
 import type {
   CreateProductPayload,
   Product,
@@ -12,6 +21,11 @@ interface State {
   error: string
 }
 
+/**
+ * 商品資料的集中管理 Store。
+ * 透過結合 services 層的 API 呼叫，讓元件只需要關注狀態與畫面呈現，
+ * 也方便在未來接軌快取或離線體驗。
+ */
 export const useProductsStore = defineStore('products', {
   state: (): State => ({
     products: [],
@@ -37,7 +51,7 @@ export const useProductsStore = defineStore('products', {
       this.loading = true
       this.error = ''
       try {
-        const products = await $fetch<Product[]>('https://fakestoreapi.com/products')
+        const products = await getAllProducts()
         this.products = products
       } catch (error: any) {
         this.error = error?.message ?? 'Failed to load products.'
@@ -50,9 +64,7 @@ export const useProductsStore = defineStore('products', {
         return
       }
       try {
-        const categories = await $fetch<string[]>(
-          'https://fakestoreapi.com/products/categories',
-        )
+        const categories = await getProductCategories()
         this.categories = categories
       } catch (error: any) {
         this.error = error?.message ?? 'Failed to load categories.'
@@ -64,7 +76,7 @@ export const useProductsStore = defineStore('products', {
         return existing
       }
       try {
-        const product = await $fetch<Product>(`https://fakestoreapi.com/products/${id}`)
+        const product = await getProductById(id)
         this.products.push(product)
         return product
       } catch (error: any) {
@@ -76,10 +88,7 @@ export const useProductsStore = defineStore('products', {
       this.loading = true
       this.error = ''
       try {
-        const created = await $fetch<Product>('https://fakestoreapi.com/products', {
-          method: 'POST',
-          body: payload,
-        })
+        const created = await createProductApi(payload)
         this.products = [created, ...this.products]
         if (!this.categories.includes(created.category)) {
           this.categories.push(created.category)
@@ -96,10 +105,7 @@ export const useProductsStore = defineStore('products', {
       this.loading = true
       this.error = ''
       try {
-        const updated = await $fetch<Product>(`https://fakestoreapi.com/products/${id}`, {
-          method: 'PUT',
-          body: payload,
-        })
+        const updated = await updateProductApi(id, payload)
         this.products = this.products.map((product) =>
           product.id === id ? { ...product, ...updated } : product,
         )
@@ -115,9 +121,7 @@ export const useProductsStore = defineStore('products', {
       this.loading = true
       this.error = ''
       try {
-        await $fetch(`https://fakestoreapi.com/products/${id}`, {
-          method: 'DELETE',
-        })
+        await deleteProductApi(id)
         this.products = this.products.filter((product) => product.id !== id)
       } catch (error: any) {
         this.error = error?.message ?? 'Failed to delete product.'
@@ -131,18 +135,11 @@ export const useProductsStore = defineStore('products', {
       sort?: 'asc' | 'desc'
       category?: string
     }) {
-      const query = new URLSearchParams()
-      if (options.limit) {
-        query.set('limit', String(options.limit))
-      }
-      if (options.sort) {
-        query.set('sort', options.sort)
-      }
-      const baseUrl = options.category && options.category !== 'all'
-        ? `https://fakestoreapi.com/products/category/${encodeURIComponent(options.category)}`
-        : 'https://fakestoreapi.com/products'
-      const url = query.toString() ? `${baseUrl}?${query.toString()}` : baseUrl
-      return await $fetch<Product[]>(url)
+      return await queryProductsApi({
+        limit: options.limit,
+        sort: options.sort,
+        category: options.category,
+      })
     },
   },
 })

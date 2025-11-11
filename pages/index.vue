@@ -1,54 +1,57 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useRouter, useRoute } from '#imports'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProductFilters } from '~/composables/useProductFilters'
 import { useCartStore } from '~/stores/cart'
 import { useProductsStore } from '~/stores/products'
 import { useNotificationsStore } from '~/stores/notifications'
+import type { Product } from '~/types/fakestore'
 
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
-const route = useRoute()
-const router = useRouter()
 const { t } = useI18n()
 const notifications = useNotificationsStore()
 
-await Promise.all([productsStore.fetchProducts(), productsStore.fetchCategories()])
+const isPageLoading = ref(true)
+const pageError = ref('')
 
-const selectedCategory = ref((route.query.category as string) ?? 'all')
-const sortOrder = ref(((route.query.sort as string) ?? 'asc') === 'desc' ? 'desc' : 'asc')
-const searchQuery = ref((route.query.q as string) ?? '')
-
-const filteredProducts = computed(() => {
-  let items = [...productsStore.products]
-  if (selectedCategory.value !== 'all') {
-    items = items.filter((product) => product.category === selectedCategory.value)
+/**
+ * 初始載入首頁所需的商品與分類資料，確保狀態提示正確。
+ */
+const loadHomepageData = async () => {
+  isPageLoading.value = true
+  pageError.value = ''
+  productsStore.error = ''
+  try {
+    await Promise.all([
+      productsStore.fetchProducts(),
+      productsStore.fetchCategories(),
+    ])
+    if (productsStore.error) {
+      pageError.value = productsStore.error
+    }
+  } catch (error: any) {
+    pageError.value =
+      error?.message ?? t('api.errors.generic')
+  } finally {
+    isPageLoading.value = false
   }
-  if (searchQuery.value) {
-    const keyword = searchQuery.value.toLowerCase()
-    items = items.filter((product) =>
-      product.title.toLowerCase().includes(keyword) ||
-      product.description.toLowerCase().includes(keyword),
-    )
-  }
-  return items.sort((a, b) =>
-    sortOrder.value === 'asc' ? a.id - b.id : b.id - a.id,
-  )
-})
-
-const updateQuery = () => {
-  router.replace({
-    query: {
-      category: selectedCategory.value !== 'all' ? selectedCategory.value : undefined,
-      sort: sortOrder.value === 'desc' ? 'desc' : undefined,
-      q: searchQuery.value ? searchQuery.value : undefined,
-    },
-  })
 }
 
-watch([selectedCategory, sortOrder, searchQuery], updateQuery)
+await loadHomepageData()
 
-const handleAddToCart = (product: (typeof productsStore.products)[number]) => {
+const {
+  selectedCategory,
+  sortOrder,
+  searchQuery,
+  filteredProducts,
+  resetFilters,
+} = useProductFilters(() => productsStore.products)
+
+/**
+ * 將商品加入購物車並顯示提示訊息。
+ */
+const handleAddToCart = (product: Product) => {
   cartStore.addItem({
     id: product.id,
     title: product.title,
@@ -58,12 +61,6 @@ const handleAddToCart = (product: (typeof productsStore.products)[number]) => {
   notifications.success(
     t('notifications.cartAdded', { title: product.title }),
   )
-}
-
-const resetFilters = () => {
-  selectedCategory.value = 'all'
-  sortOrder.value = 'asc'
-  searchQuery.value = ''
 }
 
 useSeoMeta({
@@ -87,8 +84,8 @@ useSeoMeta({
     <div class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,2.25fr)_minmax(0,1fr)]">
       <ProductGrid
         :products="filteredProducts"
-        :loading="productsStore.loading"
-        :error="productsStore.error"
+        :loading="isPageLoading"
+        :error="pageError"
         @add-to-cart="handleAddToCart"
       />
       <ProductFilterPanel

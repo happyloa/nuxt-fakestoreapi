@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { findUserByUsername, login as loginApi } from '~/services/fakestore/auth'
 import { useCartStore } from './cart'
 
 export interface User {
@@ -7,27 +8,27 @@ export interface User {
   token: string
 }
 
+/**
+ * 管理 Fake Store API 登入狀態的 Store。
+ * 由於官方 API 沒有完整的登入流程，這裡會先取得 token 再補齊使用者資料。
+ */
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null as User | null,
     loading: false,
-    error: ''
+    error: '',
   }),
   actions: {
     async login(username: string, password: string) {
       this.loading = true
       this.error = ''
       try {
-        const res = await $fetch('https://fakestoreapi.com/auth/login', {
-          method: 'POST',
-          body: { username, password }
-        })
-        const users: any[] = await $fetch('https://fakestoreapi.com/users')
-        const found = users.find((u) => u.username === username)
+        const response = await loginApi(username, password)
+        const found = await findUserByUsername(username)
         this.user = {
           id: found?.id ?? 1,
           username,
-          token: (res as any).token
+          token: response.token,
         }
       } catch (e: any) {
         this.error = e?.message || 'Login failed'
@@ -39,6 +40,6 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       const cart = useCartStore()
       cart.clear()
-    }
+    },
   }
 })

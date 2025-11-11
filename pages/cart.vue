@@ -11,6 +11,10 @@ const notifications = useNotificationsStore()
 const { t } = useI18n()
 const checkoutLoading = ref(false)
 
+/**
+ * 監聽登入狀態以同步購物車，提供與 Fake Store API 對應的體驗。
+ */
+
 onMounted(() => {
   if (authStore.user) {
     cartStore.fetchCart(authStore.user.id)
