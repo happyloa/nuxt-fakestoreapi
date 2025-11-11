@@ -2,13 +2,6 @@
 useSeoMeta({
   ogImage: '/og-image.webp',
 })
-
-useHead({
-  htmlAttrs: {
-    class: 'dark',
-    'data-theme': 'dark',
-  },
-})
 </script>
 
 <template>
