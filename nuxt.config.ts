@@ -6,7 +6,11 @@ export default defineNuxtConfig({
   // 開啟開發工具（devtools），便於在開發過程中除錯和查看應用的狀態。
   devtools: { enabled: true },
 
-  // 加入 @nuxtjs/google-fonts 模組，便於從 Google Fonts 取得字型。
+  // 加入所需的模組
+  // @nuxtjs/google-fonts: 處理 Google Fonts 字型
+  // @nuxtjs/i18n: 處理多語系
+  // @pinia/nuxt: 狀態管理
+  // @nuxtjs/tailwindcss: CSS 框架
   modules: [
     "@nuxtjs/google-fonts",
     "@nuxtjs/i18n",
@@ -14,8 +18,8 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
   ],
 
-  // 自動載入 components 資料夾下的元件，並移除資料夾前綴，確保
-  // <SiteHeader />、<ProductGrid /> 等命名在伺服器與瀏覽器兩端一致，避免水合錯誤。
+  // 自動載入 components 資料夾下的元件，並移除資料夾前綴
+  // 例如 components/api/ProductsSection.vue 可以直接使用 <ProductsSection />
   components: [
     {
       path: "~/components",
@@ -26,39 +30,48 @@ export default defineNuxtConfig({
   // Google Fonts 的相關配置
   googleFonts: {
     families: {
-      // 定義要使用的字型 'Noto Sans TC'，包含不同的字重（100, 300, 400, 500, 700, 900）。
+      // 定義要使用的字型 'Noto Sans TC'，包含不同的字重
       "Noto+Sans+TC": [100, 300, 400, 500, 700, 900],
     },
-    // 啟用字型下載功能，將 Google Fonts 的字型下載到本地，減少依賴 Google 服務，提升載入速度。
+    // 關閉下載功能，直接使用 CDN
     download: false,
-    // 自動將字型注入到應用中，無需手動在頁面中引用。
+    // 自動注入 CSS
     inject: true,
-    // 設置字型顯示屬性為 'swap'，這樣可以在字型下載期間先顯示後備字型，提升用戶體驗。
+    // 使用 swap 策略，避免文字隱形
     display: "swap",
   },
 
   // i18n 多語言設定
   i18n: {
+    // 設定基礎 URL，用於 SEO 標籤
+    baseUrl: 'http://localhost:3000',
+    // 定義支援的語系
     locales: [
-      { code: "zh", name: "中文", iso: "zh-TW", file: "zh.json" },
-      { code: "en", name: "English", iso: "en-US", file: "en.json" },
+      { code: "zh", name: "中文", language: "zh-TW", file: "zh.json" },
+      { code: "en", name: "English", language: "en-US", file: "en.json" },
     ],
     defaultLocale: "zh", // 預設語言
-    lazy: true, // 按需加載語言文件
-    langDir: "locales", // 語言文件的存放資料夾（位於 i18n/locales）
-    strategy: "prefix_except_default", // URL 前綴策略
-    vueI18n: "./i18n.config.ts",
+    // lazy: true, // 按需加載語言文件 (目前註解掉)
+    langDir: "locales", // 語言文件的存放資料夾
+    strategy: "prefix_except_default", // URL 前綴策略 (預設語言不加前綴)
+    // 瀏覽器語言偵測設定
+    detectBrowserLanguage: {
+      useCookie: true, // 使用 Cookie 紀錄使用者選擇
+      cookieKey: 'i18n_redirected', // Cookie 名稱
+      redirectOn: 'root', // 僅在根路徑進行重定向
+    },
+    vueI18n: "./i18n.config.ts", // Vue I18n 詳細設定檔
   },
 
-  // 引入自定義的 CSS 檔案，用於設定字型的樣式與重置 CSS。
+  // 引入全域 CSS 檔案
   css: ["~/assets/css/tailwind.css"],
 
-  // 安全性強化：為所有路由加入常見的 HTTP 安全標頭，避免 clickjacking、MIME sniffing 等攻擊。
+  // Nitro 伺服器設定 (安全性標頭)
   nitro: {
-    // 在本地開發與 Nuxt 自身提供的伺服器渲染環境中，同步送出與正式環境一致的安全性標頭。
     routeRules: {
       "/**": {
         headers: {
+          // 設定 Content-Security-Policy 防止 XSS 等攻擊
           "Content-Security-Policy": [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",

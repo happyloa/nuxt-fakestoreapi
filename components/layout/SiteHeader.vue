@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 網站頁首元件 (Site Header)
+ * 包含 Logo、導覽選單、語系切換、主題切換與使用者歡迎訊息
+ * 支援響應式設計 (Mobile Menu)
+ */
 import { useRoute } from '#imports'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -11,21 +16,26 @@ const cart = useCartStore()
 const { t } = useI18n()
 const isMenuOpen = ref(false)
 
+const localePath = useLocalePath()
+
+// 定義導覽連結
 const navigation = computed(() => [
-  { name: t('navigation.products'), to: '/' },
-  { name: t('navigation.newProduct'), to: '/products/new' },
-  { name: t('navigation.cart'), to: '/cart' },
-  { name: t('navigation.users'), to: '/users' },
-  { name: t('navigation.apiPlayground'), to: '/api' },
-  { name: t('navigation.login'), to: '/login' },
+  { name: t('navigation.products'), to: localePath('/') },
+  { name: t('navigation.newProduct'), to: localePath('/products/new') },
+  { name: t('navigation.cart'), to: localePath('/cart') },
+  { name: t('navigation.users'), to: localePath('/users') },
+  { name: t('navigation.apiPlayground'), to: localePath('/api') },
+  { name: t('navigation.login'), to: localePath('/login') },
 ])
 
+// 購物車連結文字 (若有商品則顯示數量)
 const cartLabel = computed(() =>
   cart.count ? t('cart.summary.items', { count: cart.count }) : t('cart.title'),
 )
 
 const isActive = (path: string) => route.path === path
 
+// 監聽路由變化，切換頁面時自動關閉手機版選單
 watch(
   () => route.path,
   () => {
@@ -33,12 +43,14 @@ watch(
   },
 )
 
+// 處理 ESC 鍵關閉選單
 const handleEscape = (event: KeyboardEvent) => {
   if (event.key === 'Escape') {
     isMenuOpen.value = false
   }
 }
 
+// 處理視窗大小調整，寬螢幕時自動關閉手機版選單
 const handleResize = () => {
   if (window.innerWidth >= 768) {
     isMenuOpen.value = false
@@ -46,13 +58,13 @@ const handleResize = () => {
 }
 
 onMounted(() => {
-  if (!process.client) return
+  if (!import.meta.client) return
   window.addEventListener('keyup', handleEscape)
   window.addEventListener('resize', handleResize)
 })
 
 onBeforeUnmount(() => {
-  if (!process.client) return
+  if (!import.meta.client) return
   window.removeEventListener('keyup', handleEscape)
   window.removeEventListener('resize', handleResize)
 })
@@ -61,7 +73,7 @@ onBeforeUnmount(() => {
 <template>
   <header class="sticky top-0 z-50 border-b border-slate-200/40 bg-white/80 backdrop-blur transition-colors duration-200 dark:border-slate-800/60 dark:bg-slate-950/80">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8 xl:px-10">
-      <NuxtLink to="/" class="flex items-center gap-2 text-lg font-bold text-brand dark:text-brand-light">
+      <NuxtLink :to="localePath('/')" class="flex items-center gap-2 text-lg font-bold text-brand dark:text-brand-light">
         <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand text-white shadow-lg shadow-brand/30">FS</span>
         <span>Fake Store Dashboard</span>
       </NuxtLink>

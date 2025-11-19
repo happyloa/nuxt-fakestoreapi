@@ -31,6 +31,10 @@ export const useUsersStore = defineStore('users', {
     selectedUser: null as User | null,
   }),
   actions: {
+    /**
+     * 取得所有使用者列表
+     * @param force 是否強制重新抓取
+     */
     async fetchUsers(force = false) {
       if (this.users.length && !force) {
         return
@@ -40,12 +44,16 @@ export const useUsersStore = defineStore('users', {
       try {
         const users = await getUsersApi()
         this.users = users
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to load users.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to load users.'
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 取得單一使用者詳細資料
+     * @param id 使用者 ID
+     */
     async fetchUserById(id: number) {
       this.loading = true
       this.error = ''
@@ -57,13 +65,17 @@ export const useUsersStore = defineStore('users', {
           this.users.push(user)
         }
         return user
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to load user.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to load user.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 建立新使用者
+     * @param payload 使用者資料
+     */
     async createUser(payload: CreateUserPayload) {
       this.loading = true
       this.error = ''
@@ -71,13 +83,18 @@ export const useUsersStore = defineStore('users', {
         const created = await createUserApi(payload)
         this.users.push(created)
         return created
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to create user.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to create user.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 更新使用者資訊
+     * @param id 使用者 ID
+     * @param payload 更新內容
+     */
     async updateUser(id: number, payload: UpdateUserPayload) {
       this.loading = true
       this.error = ''
@@ -88,13 +105,17 @@ export const useUsersStore = defineStore('users', {
         )
         this.selectedUser = updated
         return updated
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to update user.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to update user.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 刪除使用者
+     * @param id 使用者 ID
+     */
     async deleteUser(id: number) {
       this.loading = true
       this.error = ''
@@ -104,8 +125,8 @@ export const useUsersStore = defineStore('users', {
         if (this.selectedUser?.id === id) {
           this.selectedUser = null
         }
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to delete user.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to delete user.'
         throw error
       } finally {
         this.loading = false
