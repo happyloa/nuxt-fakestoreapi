@@ -1,45 +1,48 @@
 import { defineStore } from 'pinia'
-import { findUserByUsername, login as loginApi } from '~/services/fakestore/auth'
-import { useCartStore } from './cart'
-
-export interface User {
-  id: number
-  username: string
-  token: string
-}
+import { login } from '~/services/fakestore/auth'
 
 /**
- * 管理 Fake Store API 登入狀態的 Store。
- * 由於官方 API 沒有完整的登入流程，這裡會先取得 token 再補齊使用者資料。
+ * 認證狀態管理 Store
+ * 負責處理登入、登出以及 JWT Token 的保存
  */
-export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    user: null as User | null,
-    loading: false,
-    error: '',
-  }),
-  actions: {
-    async login(username: string, password: string) {
-      this.loading = true
-      this.error = ''
-      try {
-        const response = await loginApi(username, password)
-        const found = await findUserByUsername(username)
-        this.user = {
-          id: found?.id ?? 1,
-          username,
-          token: response.token,
-        }
-      } catch (e: any) {
-        this.error = e?.message || 'Login failed'
-      } finally {
-        this.loading = false
-      }
-    },
-    logout() {
-      this.user = null
-      const cart = useCartStore()
-      cart.clear()
-    },
+export const useAuthStore = defineStore('auth', () => {
+  // 使用 useCookie 來持久化保存 token，設定過期時間為 7 天
+  const token = useCookie<string | null>('auth_token', {
+    maxAge: 60 * 60 * 24 * 7,
+  })
+
+  // 登入狀態：只要有 token 就視為已登入
+  const isAuthenticated = computed(() => !!token.value)
+
+  /**
+   * 登入函式
+   * @param username 使用者名稱
+   * @param password 密碼
+   */
+  const loginUser = async (username: string, password: string) => {
+    try {
+      const { token: jwt } = await login(username, password)
+      token.value = jwt
+      return true
+    } catch (error) {
+      console.error('Login failed:', error)
+      return false
+    }
+  }
+
+  /**
+   * 登出函式
+   * 清除 token 並導回首頁
+   */
+  const logoutUser = () => {
+    token.value = null
+    navigateTo('/')
+  }
+
+  return {
+    token,
+    isAuthenticated,
+    loginUser,
+    logoutUser,
   }
 })

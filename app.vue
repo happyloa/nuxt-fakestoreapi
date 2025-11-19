@@ -1,20 +1,23 @@
 <script setup lang="ts">
+// 設定 SEO Meta 標籤
 useSeoMeta({
   ogImage: '/og-image.webp',
 })
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+  <div>
+    <!-- Nuxt 載入進度條 -->
     <NuxtLoadingIndicator color="#2563eb" :height="3" />
+    <!-- 路由變更通知 (無障礙功能) -->
     <NuxtRouteAnnouncer />
-    <SiteHeader />
-    <main class="flex-1">
-      <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 xl:px-10">
-        <NuxtPage />
-      </div>
-    </main>
-    <SiteFooter />
-    <ToastContainer />
+    <!-- 應用程式主要佈局 -->
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <!-- 全域 Toast 通知容器 (僅在客戶端渲染) -->
+    <ClientOnly>
+      <ToastContainer />
+    </ClientOnly>
   </div>
 </template>

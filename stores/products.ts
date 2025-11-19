@@ -34,7 +34,9 @@ export const useProductsStore = defineStore('products', {
     error: '',
   }),
   getters: {
+    // 計算商品總數
     total: (state) => state.products.length,
+    // 計算商品平均價格
     averagePrice: (state) => {
       if (!state.products.length) {
         return 0
@@ -44,6 +46,10 @@ export const useProductsStore = defineStore('products', {
     },
   },
   actions: {
+    /**
+     * 取得所有商品列表
+     * @param force 是否強制重新抓取 (忽略快取)
+     */
     async fetchProducts(force = false) {
       if (this.products.length && !force) {
         return
@@ -53,12 +59,16 @@ export const useProductsStore = defineStore('products', {
       try {
         const products = await getAllProducts()
         this.products = products
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to load products.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to load products.'
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 取得商品分類列表
+     * @param force 是否強制重新抓取
+     */
     async fetchCategories(force = false) {
       if (this.categories.length && !force) {
         return
@@ -66,10 +76,15 @@ export const useProductsStore = defineStore('products', {
       try {
         const categories = await getProductCategories()
         this.categories = categories
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to load categories.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to load categories.'
       }
     },
+    /**
+     * 取得單一商品詳細資料
+     * 如果本地已有資料則直接回傳，否則發送 API 請求
+     * @param id 商品 ID
+     */
     async fetchProductById(id: number) {
       const existing = this.products.find((product) => product.id === id)
       if (existing) {
@@ -79,11 +94,16 @@ export const useProductsStore = defineStore('products', {
         const product = await getProductById(id)
         this.products.push(product)
         return product
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to load product.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to load product.'
         throw error
       }
     },
+    /**
+     * 建立新商品
+     * 成功後會自動更新本地商品列表與分類
+     * @param payload 商品資料
+     */
     async createProduct(payload: CreateProductPayload) {
       this.loading = true
       this.error = ''
@@ -94,13 +114,18 @@ export const useProductsStore = defineStore('products', {
           this.categories.push(created.category)
         }
         return created
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to create product.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to create product.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 更新商品資訊
+     * @param id 商品 ID
+     * @param payload 更新內容
+     */
     async updateProduct(id: number, payload: UpdateProductPayload) {
       this.loading = true
       this.error = ''
@@ -110,26 +135,34 @@ export const useProductsStore = defineStore('products', {
           product.id === id ? { ...product, ...updated } : product,
         )
         return updated
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to update product.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to update product.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 刪除商品
+     * @param id 商品 ID
+     */
     async deleteProduct(id: number) {
       this.loading = true
       this.error = ''
       try {
         await deleteProductApi(id)
         this.products = this.products.filter((product) => product.id !== id)
-      } catch (error: any) {
-        this.error = error?.message ?? 'Failed to delete product.'
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to delete product.'
         throw error
       } finally {
         this.loading = false
       }
     },
+    /**
+     * 根據條件查詢商品
+     * @param options 查詢選項 (limit, sort, category)
+     */
     async queryProducts(options: {
       limit?: number
       sort?: 'asc' | 'desc'
