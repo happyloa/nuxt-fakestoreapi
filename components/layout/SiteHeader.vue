@@ -130,13 +130,15 @@ onBeforeUnmount(() => {
         </svg>
       </button>
     </div>
-    <Teleport to="body">
-      <div
-        v-if="isMenuOpen"
-        class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity md:hidden"
-        @click="isMenuOpen = false"
-      />
-    </Teleport>
+    <ClientOnly>
+      <Teleport to="body">
+        <div
+          v-if="isMenuOpen"
+          class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity md:hidden"
+          @click="isMenuOpen = false"
+        />
+      </Teleport>
+    </ClientOnly>
     <Transition name="slide-down">
       <div
         v-if="isMenuOpen"
