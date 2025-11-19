@@ -14,7 +14,7 @@ const { t } = useI18n()
  */
 
 const handleSubmit = async ({ username, password }: { username: string; password: string }) => {
-  await authStore.login(username, password)
+  await authStore.loginUser(username, password)
   if (authStore.user) {
     cartStore.fetchCart(authStore.user.id)
     notifications.success(
@@ -24,7 +24,7 @@ const handleSubmit = async ({ username, password }: { username: string; password
 }
 
 const handleLogout = () => {
-  authStore.logout()
+  authStore.logoutUser()
   notifications.info(t('notifications.loggedOut'), 2000)
 }
 

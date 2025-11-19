@@ -53,7 +53,7 @@ const handleRemove = (id: number) => {
 }
 
 const handleCheckout = async () => {
-  if (!authStore.user) {
+  if (!authStore.isAuthenticated) {
     notifications.info(t('notifications.checkoutLogin'), 2500)
     return
   }
@@ -93,7 +93,7 @@ useSeoMeta({
       :description="$t('cart.subtitle')"
     />
 
-    <BaseAlert v-if="!authStore.user" variant="info">
+    <BaseAlert v-if="!authStore.isAuthenticated" variant="info">
       {{ $t('cart.loginPrompt') }}
     </BaseAlert>
 

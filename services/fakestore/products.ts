@@ -29,7 +29,7 @@ export const queryProducts = (options: {
 }) => {
   let url = '/products'
   if (options.category && options.category !== 'all') {
-    url += `/category/${options.category}`
+    url += `/category/${encodeURIComponent(options.category)}`
   }
   const query = createQueryString({ limit: options.limit, sort: options.sort })
   if (query) {
