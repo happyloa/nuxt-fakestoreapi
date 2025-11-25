@@ -89,7 +89,7 @@ password: 83r5^_
 │  ├─ types/                # Fake Store API 型別定義
 │  └─ i18n/                 # zh 與 en 翻譯檔與 i18n 設定
 ├─ public/                  # 靜態資源（英雄插圖、favicon、Open Graph 圖）
-├─ tailwind.config.ts       # Tailwind 設定與設計語彙
+├─ app/assets/css/tailwind.css # Tailwind 設定與設計語彙（內嵌 @theme 與 @plugin）
 └─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind、srcDir）
 ```
 

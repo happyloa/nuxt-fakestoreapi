@@ -14,13 +14,7 @@ export default defineNuxtConfig({
   // @nuxtjs/google-fonts: 處理 Google Fonts 字型
   // @nuxtjs/i18n: 處理多語系
   // @pinia/nuxt: 狀態管理
-  // @nuxtjs/tailwindcss: CSS 框架
-  modules: [
-    "@nuxtjs/google-fonts",
-    "@nuxtjs/i18n",
-    "@pinia/nuxt",
-    "@nuxtjs/tailwindcss",
-  ],
+  modules: ["@nuxtjs/google-fonts", "@nuxtjs/i18n", "@pinia/nuxt"],
 
   // 自動載入 components 資料夾下的元件，並移除資料夾前綴
   // 例如 components/api/ProductsSection.vue 可以直接使用 <ProductsSection />
@@ -72,6 +66,13 @@ export default defineNuxtConfig({
   // 引入全域 CSS 檔案
   css: ["~/assets/css/tailwind.css"],
 
+  postcss: {
+    plugins: {
+      "@tailwindcss/postcss": {},
+      autoprefixer: {},
+    },
+  },
+
   // Nitro 伺服器設定 (安全性標頭)
   nitro: {
     routeRules: {
@@ -80,11 +81,11 @@ export default defineNuxtConfig({
           // 設定 Content-Security-Policy 防止 XSS 等攻擊
           "Content-Security-Policy": [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
             "font-src 'self' https://fonts.gstatic.com data:",
             "img-src 'self' data: https:",
-            "frame-src 'self' https://vercel.live",
+            "frame-src 'self'",
             "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
             "base-uri 'self'",
             "form-action 'self'",
