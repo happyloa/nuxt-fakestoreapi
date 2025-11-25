@@ -1,9 +1,6 @@
 import { ofetch } from 'ofetch'
 
 /**
-import { ofetch } from 'ofetch'
-
-/**
  * 建立 Fake Store API 的基礎客戶端
  * 設定了 baseURL 與預設的攔截器
  */
