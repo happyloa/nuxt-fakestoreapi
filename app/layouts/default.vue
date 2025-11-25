@@ -28,6 +28,13 @@ const head = useLocaleHead({
         </main>
         <!-- 網站頁尾 -->
         <SiteFooter />
+        <ClientOnly>
+          <Teleport to="body">
+            <div class="fixed bottom-6 right-6 z-[60]">
+              <ThemeToggle variant="floating" />
+            </div>
+          </Teleport>
+        </ClientOnly>
       </div>
     </Body>
   </Html>
