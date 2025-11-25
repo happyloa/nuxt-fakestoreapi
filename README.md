@@ -47,7 +47,7 @@
 - [Nuxt 4](https://nuxt.com/) 與最新的 Nitro 執行環境。
 - [Tailwind CSS](https://tailwindcss.com/)，結合 `@nuxtjs/tailwindcss` 與 `@tailwindcss/forms` 外掛。
 - 以 [Pinia](https://pinia.vuejs.org/) 建立的商品、購物車、認證與使用者狀態管理。
-- 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化，並依瀏覽器語系自動切換；非中文環境預設英文。
+- 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化，根路徑預設中文介面（無 /zh），英文頁面才以 `/en` 呈現，且非中文瀏覽器自動顯示英文。
 - 元件、狀態與可組合函式全面採用 TypeScript。
 
 ## 🚀 快速開始

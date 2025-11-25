@@ -50,7 +50,7 @@ export default defineNuxtConfig({
       { code: "zh", name: "中文", language: "zh-TW", file: "zh.json" },
       { code: "en", name: "English", language: "en-US", file: "en.json" },
     ],
-    defaultLocale: "en", // 預設語言改為英文，非中文環境也有正確預設
+    defaultLocale: "zh", // 預設為中文介面（不出現 /zh 前綴），英語路徑才使用 /en
     // lazy: true, // 按需加載語言文件 (目前註解掉)
     langDir: "locales", // 語言文件的存放資料夾
     strategy: "prefix_except_default", // URL 前綴策略 (預設語言不加前綴)
