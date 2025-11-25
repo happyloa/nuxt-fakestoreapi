@@ -77,24 +77,20 @@ password: 83r5^_
 
 ```
 .
-├─ app.vue                  # 應用程式外殼，包含標頭、頁尾與容器
-├─ assets/css/tailwind.css  # Tailwind layer 與基礎設計變數
-├─ components/
-│  ├─ auth/                 # 登入介面元件
-│  ├─ cart/                 # 購物車清單與摘要元件
-│  ├─ layout/               # 標頭、頁尾與語系切換器
-│  ├─ products/             # 商品英雄版、網格、篩選、詳情與卡片元件
-│  ├─ ui/                   # 基礎 UI 元件（按鈕、輸入框、卡片、警示等）
-│  └─ users/                # 使用者卡片與列表元件
-├─ composables/             # 可重複使用的業務邏輯（例如商品篩選）
-├─ i18n/locales/            # zh 與 en 翻譯檔
-├─ pages/                   # Nuxt 路由（目錄、商品詳情、購物車、登入、使用者、建立商品）
+├─ app/                     # Nuxt 4 app router 根目錄
+│  ├─ app.vue               # 應用程式外殼，包含標頭、頁尾與容器
+│  ├─ assets/css/tailwind.css  # Tailwind layer 與基礎設計變數
+│  ├─ components/           # UI 模組：auth、cart、layout、products、ui、users 等
+│  ├─ composables/          # 可重複使用的業務邏輯（例如商品篩選）
+│  ├─ layouts/              # Nuxt 版型（預設/子版型）
+│  ├─ routes/               # 新 app router 路由（目錄、商品詳情、購物車、登入、使用者、建立商品）
+│  ├─ services/             # Fake Store API 呼叫封裝（products、carts、users、auth）
+│  ├─ stores/               # Pinia 狀態（認證、購物車、商品、使用者、通知）
+│  ├─ types/                # Fake Store API 型別定義
+│  └─ i18n/                 # zh 與 en 翻譯檔與 i18n 設定
 ├─ public/                  # 靜態資源（英雄插圖、favicon、Open Graph 圖）
-├─ services/                # Fake Store API 呼叫封裝（products、carts、users、auth）
-├─ stores/                  # Pinia 狀態（認證、購物車、商品、使用者、通知）
 ├─ tailwind.config.ts       # Tailwind 設定與設計語彙
-├─ types/                   # Fake Store API 型別定義
-└─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind）
+└─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind、srcDir）
 ```
 
 ## 🔌 Fake Store API 覆蓋範圍
@@ -113,7 +109,7 @@ password: 83r5^_
 - UI 元件皆模組化，方便維護與擴充。
 - Tailwind CSS 為唯一的樣式來源，無需傳統 CSS reset，並客製化高對比的品牌色彩。
 - Pinia store 提供載入與錯誤狀態，讓頁面邏輯保持宣告式。
-- 國際化字串位於 `/i18n/locales`，以語意化命名空間組織。
+- 國際化字串位於 `/app/i18n/locales`，以語意化命名空間組織。
 - Toast 通知由專用的 Pinia store 管理，並透過全域 `<ToastContainer />` 元件渲染。
 
 歡迎依需求調整版面、擴充 API 覆蓋範圍，或在自己的專案中沿用這些 UI 元件！

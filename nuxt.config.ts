@@ -1,5 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  srcDir: "app",
+  dir: {
+    pages: "routes",
+  },
   // 設定兼容性日期，這將影響 Nuxt 在此日期之後可用的功能。
   compatibilityDate: "2024-04-03",
 
@@ -52,7 +56,7 @@ export default defineNuxtConfig({
     ],
     defaultLocale: "zh", // 預設為中文介面（不出現 /zh 前綴），英語路徑才使用 /en
     // lazy: true, // 按需加載語言文件 (目前註解掉)
-    langDir: "locales", // 語言文件的存放資料夾
+    langDir: "../app/i18n/locales", // 語言文件的存放資料夾（相對於專案根目錄的 i18n 基底）
     strategy: "prefix_except_default", // URL 前綴策略 (預設語言不加前綴)
     // 瀏覽器語言偵測設定
     detectBrowserLanguage: {
@@ -62,7 +66,7 @@ export default defineNuxtConfig({
       // 非中文語系一律退回英文，以符合「中文顯示中文，其他顯示英文」需求
       fallbackLocale: 'en',
     },
-    vueI18n: "./i18n.config.ts", // Vue I18n 詳細設定檔
+    vueI18n: "~/i18n.config.ts", // Vue I18n 詳細設定檔
   },
 
   // 引入全域 CSS 檔案
