@@ -14,12 +14,6 @@ const getStorage = () => {
   }
 }
 
-const getSystemPreference = (): ThemePreference => {
-  if (!process.client) return 'dark'
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ?? false
-  return prefersDark ? 'dark' : 'light'
-}
-
 export const useThemeStore = defineStore('theme', {
   state: () => ({
     preference: 'dark' as ThemePreference,
@@ -44,7 +38,7 @@ export const useThemeStore = defineStore('theme', {
 
       const storage = getStorage()
       const stored = storage?.getItem(STORAGE_KEY) as ThemePreference | null
-      const resolved = stored === 'light' || stored === 'dark' ? stored : getSystemPreference()
+      const resolved = stored === 'light' || stored === 'dark' ? stored : 'dark'
 
       this.preference = resolved
       this.hydrated = true
