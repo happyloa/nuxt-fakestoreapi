@@ -12,9 +12,9 @@ const props = withDefaults(
   {
     as: 'article',
     padding: 'p-6',
-    background: 'bg-white dark:bg-slate-900',
+    background: 'bg-white/90 backdrop-blur dark:bg-slate-900/80',
     shadow: 'shadow-card dark:shadow-black/40',
-    border: 'border border-slate-100 dark:border-slate-700/80',
+    border: 'border border-slate-200/70 dark:border-slate-800/70',
   },
 )
 
