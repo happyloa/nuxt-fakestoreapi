@@ -31,9 +31,10 @@ const handleAddToCart = (product: Product) => emit('add-to-cart', product)
     <h2 id="product-results-heading" class="sr-only">{{ $t('products.listingTitle') }}</h2>
     <div
       v-if="loading"
-      class="flex items-center justify-center rounded-lg border border-dashed border-slate-200 py-16 dark:border-slate-700"
+      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
     >
-      <BaseLoader />
+      <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
+      <ProductGridSkeleton :count="6" />
     </div>
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}

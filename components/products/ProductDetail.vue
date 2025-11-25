@@ -33,7 +33,8 @@ defineProps({
       </div>
     </div>
     <div class="flex flex-col items-center justify-center">
-      <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-white via-slate-100 to-brand/20 p-6 transition-colors duration-200 dark:from-slate-900 dark:via-slate-800 dark:to-brand/30">
+      <!-- 以漸層包裹商品圖片，讓新版品牌色有更明顯的層次與對比 -->
+      <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand/10 via-white to-accent/15 p-6 transition-colors duration-200 dark:from-slate-900 dark:via-brand/20 dark:to-accent/25">
         <img :src="product.image" :alt="product.title" class="mx-auto h-72 w-auto object-contain" />
       </div>
     </div>

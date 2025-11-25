@@ -34,7 +34,7 @@
 
 - **互動式 API 操作區**：涵蓋商品、購物車與使用者等 Fake Store API 端點，搭配表單輔助與即時 JSON 回應。
 - **通知提示**：針對購物車、登入與管理操作提供成功／資訊提示。
-- **載入骨架與空狀態**：以骨架畫面與友善的空狀態改善感知效能。
+- **載入骨架與空狀態**：以骨架畫面與友善的空狀態改善感知效能，首頁串接時也會優先顯示 Skeleton。
 
 ### 架構整理亮點
 
@@ -47,7 +47,7 @@
 - [Nuxt 4](https://nuxt.com/) 與最新的 Nitro 執行環境。
 - [Tailwind CSS](https://tailwindcss.com/)，結合 `@nuxtjs/tailwindcss` 與 `@tailwindcss/forms` 外掛。
 - 以 [Pinia](https://pinia.vuejs.org/) 建立的商品、購物車、認證與使用者狀態管理。
-- 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化。
+- 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化，根路徑預設中文介面（無 /zh），英文頁面才以 `/en` 呈現，且非中文瀏覽器自動顯示英文。
 - 元件、狀態與可組合函式全面採用 TypeScript。
 
 ## 🚀 快速開始
@@ -111,7 +111,7 @@ password: 83r5^_
 ## 🛠️ 開發備註
 
 - UI 元件皆模組化，方便維護與擴充。
-- Tailwind CSS 為唯一的樣式來源，無需傳統 CSS reset。
+- Tailwind CSS 為唯一的樣式來源，無需傳統 CSS reset，並客製化高對比的品牌色彩。
 - Pinia store 提供載入與錯誤狀態，讓頁面邏輯保持宣告式。
 - 國際化字串位於 `/i18n/locales`，以語意化命名空間組織。
 - Toast 通知由專用的 Pinia store 管理，並透過全域 `<ToastContainer />` 元件渲染。
