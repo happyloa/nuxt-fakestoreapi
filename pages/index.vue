@@ -23,11 +23,19 @@ const loadHomepageData = async () => {
   pageError.value = ''
   productsStore.error = ''
   try {
-    await Promise.all([
+    // 以 allSettled 確認兩個請求都完成後再決定是否顯示錯誤，避免載入過程就提前跳出錯誤訊息
+    const results = await Promise.allSettled([
       productsStore.fetchProducts(),
       productsStore.fetchCategories(),
     ])
-    if (productsStore.error) {
+
+    const rejected = results.find(
+      (result) => result.status === 'rejected',
+    ) as PromiseRejectedResult | undefined
+
+    if (rejected) {
+      pageError.value = rejected.reason?.message ?? t('api.errors.generic')
+    } else if (productsStore.error) {
       pageError.value = productsStore.error
     }
   } catch (error: any) {

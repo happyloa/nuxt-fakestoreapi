@@ -1,8 +1,9 @@
 <template>
   <section
     id="dashboard-hero"
-    class="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-brand/10 via-white to-accent/10 p-8 transition-colors duration-200 sm:p-12 dark:border-slate-800 dark:from-brand/20 dark:via-slate-900 dark:to-slate-900"
+    class="overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-brand/15 via-white to-accent/15 p-8 transition-colors duration-200 sm:p-12 dark:border-slate-800 dark:from-brand/30 dark:via-slate-900 dark:to-slate-950"
   >
+    <!-- 首屏 Hero 區塊：採用新版高對比漸層，凸顯品牌色 -->
     <div class="grid gap-8 md:grid-cols-2 md:items-center">
       <div class="space-y-6">
         <p class="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-brand shadow-sm dark:bg-slate-800/80 dark:text-brand-light">

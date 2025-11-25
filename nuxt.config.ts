@@ -50,7 +50,7 @@ export default defineNuxtConfig({
       { code: "zh", name: "中文", language: "zh-TW", file: "zh.json" },
       { code: "en", name: "English", language: "en-US", file: "en.json" },
     ],
-    defaultLocale: "zh", // 預設語言
+    defaultLocale: "en", // 預設語言改為英文，非中文環境也有正確預設
     // lazy: true, // 按需加載語言文件 (目前註解掉)
     langDir: "locales", // 語言文件的存放資料夾
     strategy: "prefix_except_default", // URL 前綴策略 (預設語言不加前綴)
@@ -59,6 +59,8 @@ export default defineNuxtConfig({
       useCookie: true, // 使用 Cookie 紀錄使用者選擇
       cookieKey: 'i18n_redirected', // Cookie 名稱
       redirectOn: 'root', // 僅在根路徑進行重定向
+      // 非中文語系一律退回英文，以符合「中文顯示中文，其他顯示英文」需求
+      fallbackLocale: 'en',
     },
     vueI18n: "./i18n.config.ts", // Vue I18n 詳細設定檔
   },

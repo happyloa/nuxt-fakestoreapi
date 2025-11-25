@@ -17,21 +17,22 @@ export default {
         sans: ['"Noto Sans TC"', 'ui-sans-serif', 'system-ui'],
       },
       colors: {
+        // 提升深淺對比的品牌色與強調色，搭配暗色模式也能保持辨識度
         brand: {
-          DEFAULT: '#2563eb',
+          DEFAULT: '#1e3a8a',
           foreground: '#ffffff',
-          dark: '#1d4ed8',
-          light: '#dbeafe',
+          dark: '#162f6a',
+          light: '#e2e8ff',
         },
         accent: {
-          DEFAULT: '#f97316',
+          DEFAULT: '#f43f5e',
           foreground: '#ffffff',
-          dark: '#ea580c',
-          light: '#ffedd5',
+          dark: '#be123c',
+          light: '#ffe4e6',
         },
       },
       boxShadow: {
-        card: '0 10px 25px -10px rgba(30, 64, 175, 0.35)',
+        card: '0 12px 32px -14px rgba(30, 58, 138, 0.45)',
       },
     },
   },
