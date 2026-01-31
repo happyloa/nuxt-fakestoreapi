@@ -1,6 +1,6 @@
 # Fake Store API | 假商店資料串接練習
 
-一個基於 Nuxt 4 與 Tailwind CSS 的示範專案，串接 [Fake Store API](https://fakestoreapi.com/)，完整展現電子商務流程：商品目錄、商品建立、購物車同步與使用者管理，同時提供可重複使用的 Vue 元件與多語系支援。
+一個基於 Nuxt 4 與 Tailwind CSS v4 的示範專案，串接 [Fake Store API](https://fakestoreapi.com/)，完整展現電子商務流程：商品目錄、商品建立、購物車同步與使用者管理，同時提供可重複使用的 Vue 元件與多語系支援。
 
 ![縮圖](https://github.com/happyloa/nuxt-fakestoreapi/blob/main/public/thumb.webp?raw=true)
 
@@ -44,8 +44,8 @@
 
 ## 🧱 使用技術
 
-- [Nuxt 4](https://nuxt.com/) 與最新的 Nitro 執行環境。
-- [Tailwind CSS](https://tailwindcss.com/)，結合 `@nuxtjs/tailwindcss` 與 `@tailwindcss/forms` 外掛。
+- [Nuxt 4.3](https://nuxt.com/) 與最新的 Nitro 執行環境。
+- [Tailwind CSS v4](https://tailwindcss.com/)，採用 CSS-first 配置方式，透過 `@tailwindcss/vite` 整合。
 - 以 [Pinia](https://pinia.vuejs.org/) 建立的商品、購物車、認證與使用者狀態管理。
 - 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化，根路徑預設中文介面（無 /zh），英文頁面才以 `/en` 呈現，且非中文瀏覽器自動顯示英文。
 - 元件、狀態與可組合函式全面採用 TypeScript。
@@ -79,7 +79,7 @@ password: 83r5^_
 .
 ├─ app/                     # Nuxt 4 app router 根目錄
 │  ├─ app.vue               # 應用程式外殼，包含標頭、頁尾與容器
-│  ├─ assets/css/tailwind.css  # Tailwind layer 與基礎設計變數
+│  ├─ assets/css/tailwind.css  # Tailwind v4 CSS-first 配置
 │  ├─ components/           # UI 模組：auth、cart、layout、products、ui、users 等
 │  ├─ composables/          # 可重複使用的業務邏輯（例如商品篩選）
 │  ├─ layouts/              # Nuxt 版型（預設/子版型）
@@ -89,8 +89,7 @@ password: 83r5^_
 │  ├─ types/                # Fake Store API 型別定義
 │  └─ i18n/                 # zh 與 en 翻譯檔與 i18n 設定
 ├─ public/                  # 靜態資源（英雄插圖、favicon、Open Graph 圖）
-├─ tailwind.config.ts       # Tailwind 設定與設計語彙
-└─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Tailwind、srcDir）
+└─ nuxt.config.ts           # Nuxt 設定（模組、i18n、Vite + Tailwind v4）
 ```
 
 ## 🔌 Fake Store API 覆蓋範圍
@@ -107,7 +106,7 @@ password: 83r5^_
 ## 🛠️ 開發備註
 
 - UI 元件皆模組化，方便維護與擴充。
-- Tailwind CSS 為唯一的樣式來源，無需傳統 CSS reset，並客製化高對比的品牌色彩。
+- Tailwind CSS v4 採用 CSS-first 配置方式，自訂主題定義於 `app/assets/css/tailwind.css` 的 `@theme` 區塊中。
 - Pinia store 提供載入與錯誤狀態，讓頁面邏輯保持宣告式。
 - 國際化字串位於 `/app/i18n/locales`，以語意化命名空間組織。
 - Toast 通知由專用的 Pinia store 管理，並透過全域 `<ToastContainer />` 元件渲染。
