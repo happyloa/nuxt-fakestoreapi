@@ -22,6 +22,9 @@
   --shadow-card: 0 12px 32px -14px rgba(30, 58, 138, 0.45);
 }
 
+/* 啟用基於 .dark class 的 dark mode */
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     color-scheme: dark light;
@@ -31,7 +34,7 @@
     @apply bg-slate-50 text-slate-900 antialiased font-sans transition-colors duration-200;
   }
 
-  html.dark body {
+  .dark body {
     @apply bg-slate-950 text-slate-100;
   }
 }
