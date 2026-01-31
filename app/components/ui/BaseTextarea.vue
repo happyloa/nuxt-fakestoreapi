@@ -1,33 +1,33 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue'
+import { useAttrs } from "vue";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string
-    label?: string
-    placeholder?: string
-    hint?: string
-    rows?: number
-    required?: boolean
+    modelValue: string;
+    label?: string;
+    placeholder?: string;
+    hint?: string;
+    rows?: number;
+    required?: boolean;
   }>(),
   {
-    placeholder: '',
-    hint: '',
+    placeholder: "",
+    hint: "",
     rows: 4,
     required: false,
   },
-)
+);
 
-const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>()
+const emit = defineEmits<{ (e: "update:modelValue", value: string): void }>();
 
 const inputValue = computed({
   get: () => props.modelValue,
-  set: (value: string) => emit('update:modelValue', value),
-})
+  set: (value: string) => emit("update:modelValue", value),
+});
 </script>
 
 <template>
@@ -39,8 +39,11 @@ const inputValue = computed({
       :rows="rows"
       :required="required"
       :placeholder="placeholder"
-      class="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
-    />
-    <span v-if="hint" class="mt-1 block text-xs text-slate-500 dark:text-slate-400">{{ hint }}</span>
+      class="w-full rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100" />
+    <span
+      v-if="hint"
+      class="mt-1 block text-xs text-slate-500 dark:text-slate-400"
+      >{{ hint }}</span
+    >
   </label>
 </template>

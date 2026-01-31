@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from "vue";
 import type { CreateProductPayload } from "~/types/fakestore";
 
 interface Props {

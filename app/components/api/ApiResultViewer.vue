@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
-
 interface Props {
   value?: object | unknown[] | string | number | boolean | null;
   label?: string;

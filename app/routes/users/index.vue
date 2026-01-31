@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useUsersStore } from '~/stores/users'
+import { useUsersStore } from "~/stores/users";
 
-const usersStore = useUsersStore()
-const search = ref('')
+const usersStore = useUsersStore();
+const search = ref("");
 
-await usersStore.fetchUsers()
+await usersStore.fetchUsers();
 
 /**
  * 提供使用者清單搜尋，展示 Fake Store API 的使用者資料能力。
  */
 const filteredUsers = computed(() => {
   if (!search.value) {
-    return usersStore.users
+    return usersStore.users;
   }
-  const term = search.value.toLowerCase()
+  const term = search.value.toLowerCase();
   return usersStore.users.filter((user) => {
     return (
       user.username.toLowerCase().includes(term) ||
       user.email.toLowerCase().includes(term) ||
       user.name.firstname.toLowerCase().includes(term) ||
       user.name.lastname.toLowerCase().includes(term)
-    )
-  })
-})
+    );
+  });
+});
 
 useSeoMeta({
-  title: 'Users | Fake Store Dashboard',
-  description: 'Explore Fake Store API users with contact and address details.',
-  ogTitle: 'Users | Fake Store Dashboard',
-  ogDescription: 'Explore Fake Store API users with contact and address details.',
-})
+  title: "Users | Fake Store Dashboard",
+  description: "Explore Fake Store API users with contact and address details.",
+  ogTitle: "Users | Fake Store Dashboard",
+  ogDescription:
+    "Explore Fake Store API users with contact and address details.",
+});
 </script>
 
 <template>
@@ -40,7 +40,6 @@ useSeoMeta({
       :loading="usersStore.loading"
       :error="usersStore.error"
       :search="search"
-      @update:search="search = $event"
-    />
+      @update:search="search = $event" />
   </div>
 </template>

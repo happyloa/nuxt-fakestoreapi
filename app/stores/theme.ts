@@ -1,52 +1,99 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export type ThemePreference = 'light' | 'dark'
+export type ThemePreference = "light" | "dark" | "system";
+export type ThemeResolved = "light" | "dark";
 
-const STORAGE_KEY = 'fakestore-theme'
+const STORAGE_KEY = "fakestore-theme";
 
-const getStorage = () => {
-  if (!process.client) return null
-  try {
-    return window.localStorage
-  } catch (error) {
-    console.warn('Local storage is unavailable', error)
-    return null
+/**
+ * 取得瀏覽器偏好
+ */
+const getSystemTheme = (): ThemeResolved => {
+  if (typeof window === "undefined") return "dark";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+/**
+ * 解析主題偏好為實際顯示的主題
+ */
+const resolveTheme = (preference: ThemePreference): ThemeResolved => {
+  if (preference === "system") {
+    return getSystemTheme();
   }
-}
+  return preference;
+};
 
-export const useThemeStore = defineStore('theme', {
+export const useThemeStore = defineStore("theme", {
   state: () => ({
-    preference: 'dark' as ThemePreference,
+    preference: "system" as ThemePreference,
+    resolved: "dark" as ThemeResolved,
     hydrated: false,
   }),
   actions: {
     setTheme(theme: ThemePreference) {
-      this.preference = theme
+      this.preference = theme;
+      this.resolved = resolveTheme(theme);
+      this.applyTheme();
+      this.persist();
     },
     toggle() {
-      this.setTheme(this.preference === 'dark' ? 'light' : 'dark')
+      // 在 light/dark 之間切換，不包含 system
+      const next = this.resolved === "dark" ? "light" : "dark";
+      this.setTheme(next);
+    },
+    applyTheme() {
+      if (typeof document === "undefined") return;
+      document.documentElement.classList.toggle(
+        "dark",
+        this.resolved === "dark",
+      );
+      document.documentElement.setAttribute("data-theme", this.resolved);
     },
     hydrate() {
-      if (this.hydrated) {
-        return this.preference
+      if (this.hydrated) return;
+
+      if (typeof window === "undefined") {
+        this.hydrated = true;
+        return;
       }
 
-      if (!process.client) {
-        this.hydrated = true
-        return this.preference
+      // 讀取 localStorage
+      try {
+        const stored = localStorage.getItem(
+          STORAGE_KEY,
+        ) as ThemePreference | null;
+        if (stored === "light" || stored === "dark" || stored === "system") {
+          this.preference = stored;
+        } else {
+          this.preference = "system";
+        }
+      } catch {
+        this.preference = "system";
       }
 
-      const storage = getStorage()
-      const stored = storage?.getItem(STORAGE_KEY) as ThemePreference | null
-      const resolved = stored === 'light' || stored === 'dark' ? stored : 'dark'
+      this.resolved = resolveTheme(this.preference);
+      this.applyTheme();
+      this.hydrated = true;
 
-      this.preference = resolved
-      this.hydrated = true
-      return this.preference
+      // 監聽系統主題變更
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (e) => {
+          if (this.preference === "system") {
+            this.resolved = e.matches ? "dark" : "light";
+            this.applyTheme();
+          }
+        });
     },
-    persist(theme: ThemePreference) {
-      const storage = getStorage()
-      storage?.setItem(STORAGE_KEY, theme)
+    persist() {
+      if (typeof localStorage === "undefined") return;
+      try {
+        localStorage.setItem(STORAGE_KEY, this.preference);
+      } catch {
+        // 忽略 localStorage 錯誤
+      }
     },
   },
-})
+});

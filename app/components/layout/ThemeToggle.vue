@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useThemeStore } from "~/stores/theme";
 
@@ -10,7 +9,7 @@ const props = withDefaults(defineProps<{ variant?: "inline" | "floating" }>(), {
 const themeStore = useThemeStore();
 const { t } = useI18n();
 
-const isDark = computed(() => themeStore.preference === "dark");
+const isDark = computed(() => themeStore.resolved === "dark");
 
 const toggleTheme = () => {
   themeStore.toggle();
