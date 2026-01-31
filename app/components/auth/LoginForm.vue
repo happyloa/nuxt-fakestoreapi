@@ -1,27 +1,28 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
-const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  error: {
-    type: String,
-    default: '',
-  },
-})
+interface Props {
+  loading?: boolean;
+  error?: string;
+}
 
-const emit = defineEmits<{ (e: 'submit', credentials: { username: string; password: string }): void }>()
+const props = withDefaults(defineProps<Props>(), {
+  loading: false,
+  error: "",
+});
+
+const emit = defineEmits<{
+  (e: "submit", credentials: { username: string; password: string }): void;
+}>();
 
 const form = reactive({
-  username: 'mor_2314',
-  password: '83r5^_',
-})
+  username: "mor_2314",
+  password: "83r5^_",
+});
 
 const submit = () => {
-  emit('submit', { ...form })
-}
+  emit("submit", { ...form });
+};
 </script>
 
 <template>
@@ -29,13 +30,19 @@ const submit = () => {
     <BaseSectionHeading
       :title="$t('auth.login.title')"
       :description="$t('auth.login.subtitle')"
-      align="center"
-    />
+      align="center" />
     <form class="space-y-4" @submit.prevent="submit">
-      <BaseInput v-model="form.username" :label="$t('auth.login.username')" required />
-      <BaseInput v-model="form.password" type="password" :label="$t('auth.login.password')" required />
+      <BaseInput
+        v-model="form.username"
+        :label="$t('auth.login.username')"
+        required />
+      <BaseInput
+        v-model="form.password"
+        type="password"
+        :label="$t('auth.login.password')"
+        required />
       <BaseButton type="submit" :loading="loading" block>
-        {{ $t('auth.login.submit') }}
+        {{ $t("auth.login.submit") }}
       </BaseButton>
     </form>
     <BaseAlert v-if="error" variant="error">

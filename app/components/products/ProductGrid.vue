@@ -1,38 +1,36 @@
 <script setup lang="ts">
-import type { Product } from '~/types/fakestore'
+import type { Product } from "~/types/fakestore";
 
 const emit = defineEmits<{
-  (e: 'add-to-cart', product: Product): void
-}>()
+  (e: "add-to-cart", product: Product): void;
+}>();
 
-const props = defineProps({
-  products: {
-    type: Array as () => Product[],
-    default: () => [],
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  error: {
-    type: String,
-    default: '',
-  },
-})
+interface Props {
+  products?: Product[];
+  loading?: boolean;
+  error?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  products: () => [],
+  loading: false,
+  error: "",
+});
 
 /**
  * 負責統整商品列表的不同顯示狀態：載入中、空狀態與實際資料。
  */
-const handleAddToCart = (product: Product) => emit('add-to-cart', product)
+const handleAddToCart = (product: Product) => emit("add-to-cart", product);
 </script>
 
 <template>
   <section class="space-y-6" aria-labelledby="product-results-heading">
-    <h2 id="product-results-heading" class="sr-only">{{ $t('products.listingTitle') }}</h2>
+    <h2 id="product-results-heading" class="sr-only">
+      {{ $t("products.listingTitle") }}
+    </h2>
     <div
       v-if="loading"
-      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
-    >
+      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700">
       <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
       <ProductGridSkeleton :count="6" />
     </div>
@@ -40,10 +38,7 @@ const handleAddToCart = (product: Product) => emit('add-to-cart', product)
       {{ error }}
     </BaseAlert>
     <ProductEmptyState v-else-if="!products.length" />
-    <ul
-      v-else
-      class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
-    >
+    <ul v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="product in products" :key="product.id" class="h-full">
         <ProductCard :product="product" @add-to-cart="handleAddToCart" />
       </li>

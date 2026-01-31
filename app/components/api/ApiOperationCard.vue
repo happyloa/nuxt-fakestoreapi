@@ -1,26 +1,18 @@
 <script setup lang="ts">
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    default: '',
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  error: {
-    type: String,
-    default: '',
-  },
-  successMessage: {
-    type: String,
-    default: '',
-  },
-})
+interface Props {
+  title: string;
+  description?: string;
+  loading?: boolean;
+  error?: string;
+  successMessage?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  description: "",
+  loading: false,
+  error: "",
+  successMessage: "",
+});
 </script>
 
 <template>
