@@ -1,6 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+/* 自訂主題配置 - Tailwind CSS v4 CSS-first 配置方式 */
+@theme {
+  /* 字型設定 */
+  --font-sans: "Noto Sans TC", ui-sans-serif, system-ui;
+
+  /* Brand 品牌色 */
+  --color-brand: #1e3a8a;
+  --color-brand-foreground: #ffffff;
+  --color-brand-dark: #162f6a;
+  --color-brand-light: #e2e8ff;
+
+  /* Accent 強調色 */
+  --color-accent: #f43f5e;
+  --color-accent-foreground: #ffffff;
+  --color-accent-dark: #be123c;
+  --color-accent-light: #ffe4e6;
+
+  /* 自訂陰影 */
+  --shadow-card: 0 12px 32px -14px rgba(30, 58, 138, 0.45);
+}
 
 @layer base {
   :root {
