@@ -3,9 +3,6 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   srcDir: "app",
-  dir: {
-    pages: "routes",
-  },
   // 設定兼容性日期，這將影響 Nuxt 在此日期之後可用的功能。
   compatibilityDate: "2024-04-03",
 
