@@ -30,7 +30,8 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
     </h2>
     <div
       v-if="loading"
-      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700">
+      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
+      aria-busy="true">
       <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
       <ProductGridSkeleton :count="6" />
     </div>

@@ -6,18 +6,17 @@
 </script>
 
 <template>
-  <article
+  <section
     class="rounded-2xl border border-dashed border-slate-300 bg-white px-8 py-16 text-center transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900"
-    aria-live="polite"
-  >
+    aria-live="polite">
     <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
-      {{ $t('products.empty.title') }}
+      {{ $t("products.empty.title") }}
     </h3>
     <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
-      {{ $t('products.empty.description') }}
+      {{ $t("products.empty.description") }}
     </p>
     <BaseButton as="NuxtLink" to="/products/new" class="mt-6">
-      {{ $t('products.empty.cta') }}
+      {{ $t("products.empty.cta") }}
     </BaseButton>
-  </article>
+  </section>
 </template>

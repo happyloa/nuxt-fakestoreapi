@@ -15,7 +15,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <BaseCard v-if="product" class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
+  <BaseCard
+    v-if="product"
+    as="article"
+    class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
     <div class="space-y-4">
       <div class="flex items-center gap-3 text-slate-500 dark:text-slate-300">
         <BaseBadge variant="brand">{{ product.category }}</BaseBadge>
@@ -41,8 +44,7 @@ const props = withDefaults(defineProps<Props>(), {
         </BaseButton>
       </div>
     </div>
-    <div class="flex flex-col items-center justify-center">
-      <!-- 以漸層包裹商品圖片，讓新版品牌色有更明顯的層次與對比 -->
+    <figure class="flex flex-col items-center justify-center">
       <div
         class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand/10 via-white to-accent/15 p-6 transition-colors duration-200 dark:from-slate-900 dark:via-brand/20 dark:to-accent/25">
         <img
@@ -50,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
           :alt="product.title"
           class="mx-auto h-72 w-auto object-contain" />
       </div>
-    </div>
+    </figure>
   </BaseCard>
   <BaseAlert v-else variant="warning">
     {{ $t("products.details.missing") }}

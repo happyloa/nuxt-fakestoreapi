@@ -19,10 +19,11 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
 </script>
 
 <template>
-  <div class="space-y-6">
+  <section class="space-y-6" aria-labelledby="user-list-heading">
     <div
       class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <BaseSectionHeading
+        id="user-list-heading"
         :title="$t('users.list.title')"
         :description="$t('users.list.description')" />
       <BaseInput
@@ -32,7 +33,7 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
         :placeholder="$t('users.list.searchPlaceholder')"
         @update:model-value="emit('update:search', $event as string)" />
     </div>
-    <div v-if="loading" class="grid gap-4 sm:grid-cols-2">
+    <div v-if="loading" class="grid gap-4 sm:grid-cols-2" aria-busy="true">
       <BaseCard
         v-for="index in 4"
         :key="index"
@@ -41,15 +42,15 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}
     </BaseAlert>
-    <div
+    <p
       v-else-if="!users.length"
-      class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900">
-      <p class="text-sm text-slate-600 dark:text-slate-300">
-        {{ $t("users.list.empty") }}
-      </p>
-    </div>
-    <div v-else class="grid gap-6 sm:grid-cols-2">
-      <UserCard v-for="user in users" :key="user.id" :user="user" />
-    </div>
-  </div>
+      class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-600 transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+      {{ $t("users.list.empty") }}
+    </p>
+    <ul v-else class="grid gap-6 sm:grid-cols-2">
+      <li v-for="user in users" :key="user.id">
+        <UserCard :user="user" />
+      </li>
+    </ul>
+  </section>
 </template>

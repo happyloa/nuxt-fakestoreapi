@@ -17,15 +17,15 @@ const formatted = computed(() =>
 </script>
 
 <template>
-  <div class="space-y-2">
-    <p
+  <figure class="space-y-2">
+    <figcaption
       v-if="label"
       class="text-xs font-semibold uppercase tracking-wide text-slate-500">
       {{ label }}
-    </p>
+    </figcaption>
     <pre
       class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100">
       <code>{{ formatted }}</code>
     </pre>
-  </div>
+  </figure>
 </template>
