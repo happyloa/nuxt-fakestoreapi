@@ -39,7 +39,12 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
     </BaseAlert>
     <ProductEmptyState v-else-if="!products.length" />
     <ul v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <li v-for="product in products" :key="product.id" class="h-full">
+      <li
+        v-for="(product, index) in products"
+        :key="product.id"
+        class="h-full"
+        data-aos="fade-up"
+        :data-aos-delay="(index % 6) * 80">
         <ProductCard :product="product" @add-to-cart="handleAddToCart" />
       </li>
     </ul>

@@ -57,7 +57,7 @@ const addToCart = () => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6" data-aos="fade-up">
     <NuxtLink
       to="/"
       class="inline-flex items-center gap-2 text-sm font-medium text-brand">

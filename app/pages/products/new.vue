@@ -39,7 +39,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-8" data-aos="fade-up">
     <NuxtLink
       to="/"
       class="inline-flex items-center gap-2 text-sm font-medium text-brand">

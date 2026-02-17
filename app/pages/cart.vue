@@ -88,7 +88,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <section class="space-y-8" aria-labelledby="cart-heading">
+  <section class="space-y-8" aria-labelledby="cart-heading" data-aos="fade-up">
     <BaseSectionHeading
       id="cart-heading"
       :title="$t('cart.title')"

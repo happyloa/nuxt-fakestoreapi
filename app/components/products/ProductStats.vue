@@ -21,12 +21,21 @@ const props = withDefaults(defineProps<Props>(), {
     </h2>
     <BaseStatCard
       :label="$t('products.stats.totalProducts')"
-      :value="totalProducts" />
+      :value="totalProducts"
+      accent-color="from-brand to-blue-500"
+      data-aos="fade-up"
+      data-aos-delay="0" />
     <BaseStatCard
       :label="$t('products.stats.averagePrice')"
-      :value="`$${averagePrice.toFixed(2)}`" />
+      :value="`$${averagePrice.toFixed(2)}`"
+      accent-color="from-emerald-500 to-teal-500"
+      data-aos="fade-up"
+      data-aos-delay="100" />
     <BaseStatCard
       :label="$t('products.stats.categories')"
-      :value="categoriesCount" />
+      :value="categoriesCount"
+      accent-color="from-accent to-pink-500"
+      data-aos="fade-up"
+      data-aos-delay="200" />
   </section>
 </template>

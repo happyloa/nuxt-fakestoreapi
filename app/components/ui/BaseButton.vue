@@ -35,19 +35,19 @@ const props = withDefaults(
 const classes = computed(() => {
   // 根據尺寸、樣式與寬度設定組合 Tailwind class。
   const base =
-    "cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+    "cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
   const sizes: Record<Size, string> = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-sm sm:text-base",
-    lg: "px-6 py-3 text-base sm:text-lg",
+    sm: "px-3.5 py-1.5 text-sm",
+    md: "px-5 py-2.5 text-sm sm:text-base",
+    lg: "px-7 py-3.5 text-base sm:text-lg",
   };
   const variants: Record<Variant, string> = {
     primary:
-      "bg-brand text-brand-foreground shadow hover:bg-brand-dark focus-visible:outline-brand dark:bg-brand-dark dark:hover:bg-brand dark:text-white",
+      "bg-gradient-to-r from-brand to-brand-dark text-white shadow-md shadow-brand/20 hover:shadow-lg hover:shadow-brand/30 hover:brightness-110 focus-visible:outline-brand",
     secondary:
-      "bg-slate-200 text-slate-900 hover:bg-slate-300 focus-visible:outline-slate-400 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600 dark:focus-visible:outline-slate-500",
+      "bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:outline-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:outline-slate-500",
     outline:
-      "border border-slate-300 bg-white text-slate-900 hover:bg-slate-100 focus-visible:outline-brand dark:border-slate-600 dark:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800/60",
+      "border border-slate-200/60 bg-white text-slate-900 hover:bg-slate-50 hover:border-slate-300 focus-visible:outline-brand dark:border-slate-600/60 dark:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800/60 dark:hover:border-slate-500",
     ghost:
       "text-slate-600 hover:bg-slate-100 focus-visible:outline-brand dark:text-slate-300 dark:hover:bg-slate-800/60 dark:focus-visible:outline-brand",
   };

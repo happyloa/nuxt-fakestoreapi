@@ -11,28 +11,28 @@ const product = computed(() => props.product);
 
 /**
  * 單一商品卡片，負責呈現封面、分類與價格資訊。
- * 透過組件拆分可以讓網格、骨架與空狀態更加專注於各自的職責。
+ * 加入 group hover 效果：圖片放大、標題變色。
  */
 const handleAddToCart = () => emit("add-to-cart", product.value);
 </script>
 
 <template>
-  <BaseCard class="flex h-full flex-col space-y-4">
+  <BaseCard class="group flex h-full flex-col space-y-4">
     <NuxtLink :to="`/product/${product.id}`" class="flex flex-col space-y-3">
       <figure
-        class="relative overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
+        class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50">
         <img
           :src="product.image"
           :alt="product.title"
-          class="mx-auto h-48 w-auto object-contain" />
+          class="mx-auto h-48 w-auto object-contain p-4 transition-transform duration-500 group-hover:scale-110" />
       </figure>
       <div>
         <p
-          class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          class="inline-flex items-center rounded-full bg-brand/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand dark:bg-brand/10 dark:text-brand-light">
           {{ product.category }}
         </p>
         <h3
-          class="mt-2 line-clamp-2 text-lg font-semibold text-slate-900 dark:text-white">
+          class="mt-2 line-clamp-2 text-lg font-semibold text-slate-900 transition-colors duration-200 group-hover:text-brand dark:text-white dark:group-hover:text-brand-light">
           {{ product.title }}
         </h3>
       </div>

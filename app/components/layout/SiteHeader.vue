@@ -2,7 +2,7 @@
 /**
  * 網站頁首元件 (Site Header)
  * 包含 Logo、導覽選單、語系切換、主題切換與使用者歡迎訊息
- * 支援響應式設計 (Mobile Menu)
+ * 支援響應式設計 (Mobile Menu) + 滾動縮小效果
  */
 import { useRoute } from "#imports";
 import { useI18n } from "vue-i18n";
@@ -14,6 +14,7 @@ const auth = useAuthStore();
 const cart = useCartStore();
 const { t } = useI18n();
 const isMenuOpen = ref(false);
+const isScrolled = ref(false);
 
 const localePath = useLocalePath();
 
@@ -56,134 +57,226 @@ const handleResize = () => {
   }
 };
 
+// 滾動偵測
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20;
+};
+
 onMounted(() => {
   if (!import.meta.client) return;
   window.addEventListener("keyup", handleEscape);
   window.addEventListener("resize", handleResize);
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
 });
 
 onBeforeUnmount(() => {
   if (!import.meta.client) return;
   window.removeEventListener("keyup", handleEscape);
   window.removeEventListener("resize", handleResize);
+  window.removeEventListener("scroll", handleScroll);
 });
 </script>
 
 <template>
   <header
-    class="sticky top-0 z-50 border-b border-slate-200/40 bg-white/80 backdrop-blur transition-colors duration-200 dark:border-slate-800/60 dark:bg-slate-950/80">
+    class="sticky top-0 z-50 border-b transition-all duration-300"
+    :class="[
+      isScrolled
+        ? 'border-slate-200/60 bg-white/85 py-0 shadow-sm backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-950/85'
+        : 'border-transparent bg-white/70 py-1 backdrop-blur-md dark:bg-slate-950/70',
+    ]">
     <div
       class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8 xl:px-10">
       <NuxtLink
         :to="localePath('/')"
-        class="flex items-center gap-2 text-lg font-bold text-brand dark:text-brand-light">
+        class="group flex items-center gap-2.5 text-lg font-bold transition-all duration-300 hover:scale-[1.02]">
         <span
-          class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand text-white shadow-lg shadow-brand/30"
+          class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-dark text-sm font-bold text-white shadow-lg shadow-brand/25 transition-transform duration-300 group-hover:scale-110 group-hover:shadow-brand/40"
           >FS</span
         >
-        <span>Fake Store Dashboard</span>
+        <span class="gradient-brand-text font-extrabold">Fake Store</span>
       </NuxtLink>
       <nav
         aria-label="Primary navigation"
-        class="hidden items-center gap-2 text-sm font-medium text-slate-600 transition-colors duration-200 md:flex md:flex-wrap md:justify-end md:gap-4 lg:gap-6 dark:text-slate-200">
+        class="hidden items-center gap-1.5 text-sm font-medium text-slate-600 md:flex md:flex-wrap md:justify-end lg:gap-2 dark:text-slate-200">
         <NuxtLink
           v-for="item in navigation"
           :key="item.to"
           :to="item.to"
+          class="relative rounded-lg px-3 py-2 transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
           :class="[
-            'transition hover:text-brand dark:hover:text-brand-light',
             isActive(item.to)
-              ? 'text-brand dark:text-brand-light'
-              : 'text-slate-600 dark:text-slate-200',
+              ? 'text-brand dark:text-brand-light font-semibold'
+              : 'text-slate-600 dark:text-slate-300',
           ]">
           <span
-            v-if="item.to === '/cart' && cart.count"
+            v-if="item.to === localePath('/cart') && cart.count"
             class="flex items-center gap-2">
             {{ t("cart.title") }}
             <span
-              class="rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand dark:bg-brand/20 dark:text-brand-foreground"
+              class="rounded-full bg-brand/10 px-2 py-0.5 text-xs font-bold text-brand dark:bg-brand/20 dark:text-brand-foreground"
               >{{ cart.count }}</span
             >
           </span>
           <template v-else>
-            {{ item.to === "/cart" ? cartLabel : item.name }}
+            {{ item.to === localePath("/cart") ? cartLabel : item.name }}
           </template>
+          <!-- Active indicator -->
+          <span
+            v-if="isActive(item.to)"
+            class="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-brand transition-all dark:bg-brand-light" />
         </NuxtLink>
-        <LanguageSwitcher />
+        <div class="ml-2">
+          <LanguageSwitcher />
+        </div>
         <span
           v-if="auth.user"
-          class="rounded-full bg-slate-100 px-4 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-200">
+          class="ml-2 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-600 dark:bg-slate-800/80 dark:text-slate-200">
           {{ $t("header.welcome", { name: auth.user.username }) }}
         </span>
       </nav>
       <button
-        class="inline-flex items-center rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 md:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        class="inline-flex items-center rounded-xl border border-slate-200/60 p-2.5 text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:shadow-sm md:hidden dark:border-slate-700/60 dark:text-slate-200 dark:hover:bg-slate-800"
         type="button"
         :aria-expanded="isMenuOpen"
         aria-controls="site-navigation-mobile"
         @click="isMenuOpen = !isMenuOpen">
         <span class="sr-only">Toggle navigation</span>
-        <svg
-          class="h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        <Transition name="menu-icon" mode="out-in">
+          <svg
+            v-if="!isMenuOpen"
+            key="menu"
+            class="h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg
+            v-else
+            key="close"
+            class="h-5 w-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </Transition>
       </button>
     </div>
+    <!-- Mobile overlay -->
     <ClientOnly>
       <Teleport to="body">
-        <div
-          v-if="isMenuOpen"
-          class="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm transition-opacity md:hidden"
-          @click="isMenuOpen = false" />
+        <Transition name="overlay">
+          <div
+            v-if="isMenuOpen"
+            class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm md:hidden"
+            @click="isMenuOpen = false" />
+        </Transition>
       </Teleport>
     </ClientOnly>
+    <!-- Mobile slide-in panel -->
     <ClientOnly>
-      <Transition name="slide-down">
-        <div v-if="isMenuOpen" id="site-navigation-mobile" class="md:hidden">
-          <nav
-            aria-label="Primary navigation"
-            class="absolute inset-x-0 top-full z-50 border-b border-slate-200 bg-white/95 px-4 py-4 text-sm font-medium text-slate-600 shadow-lg shadow-slate-900/5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95 dark:text-slate-200">
-            <NuxtLink
-              v-for="item in navigation"
-              :key="item.to"
-              :to="item.to"
-              class="block rounded-lg px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800">
-              {{ item.to === "/cart" ? cartLabel : item.name }}
-            </NuxtLink>
-            <div class="flex items-center justify-between gap-3 px-3 py-2">
-              <LanguageSwitcher />
-            </div>
-            <span
-              v-if="auth.user"
-              class="block px-3 text-xs text-slate-500 dark:text-slate-300">
-              {{ $t("header.welcome", { name: auth.user.username }) }}
-            </span>
-          </nav>
-        </div>
-      </Transition>
+      <Teleport to="body">
+        <Transition name="slide-right">
+          <div
+            v-if="isMenuOpen"
+            id="site-navigation-mobile"
+            class="fixed inset-y-0 right-0 z-50 w-72 md:hidden">
+            <nav
+              aria-label="Primary navigation"
+              class="flex h-full flex-col bg-white/95 px-5 py-6 shadow-2xl backdrop-blur-xl dark:bg-slate-900/95">
+              <div class="mb-6 flex items-center justify-between">
+                <span class="gradient-brand-text text-lg font-bold">選單</span>
+                <button
+                  type="button"
+                  class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                  @click="isMenuOpen = false">
+                  <svg
+                    class="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-1 space-y-1">
+                <NuxtLink
+                  v-for="item in navigation"
+                  :key="item.to"
+                  :to="item.to"
+                  class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
+                  :class="[
+                    isActive(item.to)
+                      ? 'bg-brand/5 text-brand dark:bg-brand/10 dark:text-brand-light'
+                      : 'text-slate-700 dark:text-slate-200',
+                  ]">
+                  {{ item.to === localePath("/cart") ? cartLabel : item.name }}
+                </NuxtLink>
+              </div>
+              <div
+                class="mt-6 flex items-center gap-3 border-t border-slate-200/60 pt-6 dark:border-slate-700/60">
+                <LanguageSwitcher />
+              </div>
+              <span
+                v-if="auth.user"
+                class="mt-4 block text-xs text-slate-500 dark:text-slate-400">
+                {{ $t("header.welcome", { name: auth.user.username }) }}
+              </span>
+            </nav>
+          </div>
+        </Transition>
+      </Teleport>
     </ClientOnly>
   </header>
 </template>
 
 <style scoped>
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+/* Menu icon transition */
+.menu-icon-enter-active,
+.menu-icon-leave-active {
+  transition: all 0.2s ease;
+}
+.menu-icon-enter-from,
+.menu-icon-leave-to {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
 }
 
-.slide-down-enter-from,
-.slide-down-leave-to {
+/* Overlay */
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+.overlay-enter-from,
+.overlay-leave-to {
   opacity: 0;
-  transform: translateY(-10%);
+}
+
+/* Slide-right panel */
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(100%);
 }
 </style>
