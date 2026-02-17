@@ -7,19 +7,55 @@
   --font-sans: "Noto Sans TC", ui-sans-serif, system-ui;
 
   /* Brand 品牌色 */
-  --color-brand: #1e3a8a;
+  --color-brand: #2563eb;
   --color-brand-foreground: #ffffff;
-  --color-brand-dark: #162f6a;
-  --color-brand-light: #e2e8ff;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-light: #93c5fd;
 
   /* Accent 強調色 */
   --color-accent: #f43f5e;
   --color-accent-foreground: #ffffff;
   --color-accent-dark: #be123c;
-  --color-accent-light: #ffe4e6;
+  --color-accent-light: #fda4af;
 
   /* 自訂陰影 */
-  --shadow-card: 0 12px 32px -14px rgba(30, 58, 138, 0.45);
+  --shadow-card: 0 4px 24px -6px rgba(37, 99, 235, 0.12);
+  --shadow-card-hover: 0 12px 40px -8px rgba(37, 99, 235, 0.25);
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
+
+  /* 自訂動畫 */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+    }
+  }
 }
 
 /* 啟用基於 .dark class 的 dark mode */
@@ -31,10 +67,51 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 antialiased font-sans transition-colors duration-200;
+    @apply bg-slate-50 text-slate-900 antialiased font-sans;
   }
 
   .dark body {
     @apply bg-slate-950 text-slate-100;
+  }
+
+  /* 防止首次載入的 transition 閃爍 */
+  html:not(.transition-ready) * {
+    transition: none !important;
+  }
+
+  /* 啟用 transition 後才生效 */
+  html.transition-ready body {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism 玻璃效果 */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+  }
+
+  .dark .glass {
+    background: rgba(15, 23, 42, 0.75);
+  }
+
+  /* 漸層背景 */
+  .gradient-brand {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, #f43f5e, #ec4899);
+  }
+
+  .gradient-brand-text {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

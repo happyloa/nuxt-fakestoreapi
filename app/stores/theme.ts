@@ -50,6 +50,11 @@ export const useThemeStore = defineStore("theme", {
         this.resolved === "dark",
       );
       document.documentElement.setAttribute("data-theme", this.resolved);
+      document.documentElement.style.setProperty("color-scheme", this.resolved);
+      // 延遲啟用 transition，避免初次載入的 FOUC
+      requestAnimationFrame(() => {
+        document.documentElement.classList.add("transition-ready");
+      });
     },
     hydrate() {
       if (this.hydrated) return;
