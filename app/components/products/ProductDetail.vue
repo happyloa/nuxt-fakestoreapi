@@ -22,10 +22,10 @@ const props = withDefaults(defineProps<Props>(), {
     <div class="space-y-4">
       <div class="flex items-center gap-3 text-slate-500 dark:text-slate-300">
         <BaseBadge variant="brand">{{ product.category }}</BaseBadge>
-        <BaseBadge variant="accent">{{
+        <BaseBadge v-if="product.rating" variant="accent">{{
           $t("products.details.rating", { rate: product.rating.rate })
         }}</BaseBadge>
-        <span class="text-xs">
+        <span v-if="product.rating" class="text-xs">
           {{ $t("products.details.reviews", { count: product.rating.count }) }}
         </span>
       </div>
@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
       </p>
       <div class="flex items-center gap-6">
         <span class="text-3xl font-semibold text-brand dark:text-brand-light"
-          >${{ product.price.toFixed(2) }}</span
+          >${{ Number(product.price).toFixed(2) }}</span
         >
         <BaseButton @click="$emit('add-to-cart', product)">
           {{ $t("products.actions.addToCart") }}

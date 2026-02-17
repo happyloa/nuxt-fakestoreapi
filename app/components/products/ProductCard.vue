@@ -39,7 +39,9 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
     </NuxtLink>
     <footer
       class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-      <BaseBadge variant="brand">${{ product.price.toFixed(2) }}</BaseBadge>
+      <BaseBadge variant="brand"
+        >${{ Number(product.price).toFixed(2) }}</BaseBadge
+      >
       <div class="flex items-center gap-1 text-xs font-medium">
         <svg
           class="h-4 w-4 text-amber-400"
@@ -50,7 +52,11 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
           <path
             d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
         </svg>
-        <span>{{ product.rating.rate }} ({{ product.rating.count }})</span>
+        <span
+          >{{ product.rating?.rate ?? 0 }} ({{
+            product.rating?.count ?? 0
+          }})</span
+        >
       </div>
     </footer>
     <BaseButton class="mt-auto" block @click="handleAddToCart">
