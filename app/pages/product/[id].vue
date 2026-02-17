@@ -85,6 +85,9 @@ const addToCart = () => {
       {{ errorMessage }}
     </BaseAlert>
 
-    <ProductDetail v-else :product="product" @add-to-cart="addToCart" />
+    <ProductDetail
+      v-else-if="product"
+      :product="product"
+      @add-to-cart="addToCart" />
   </div>
 </template>

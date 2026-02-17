@@ -56,8 +56,8 @@ const links = [
               <a
                 :href="item.href"
                 target="_blank"
-                rel="noopener"
-                class="inline-flex items-center gap-1.5 transition-all duration-200 hover:text-brand hover:translate-x-0.5 dark:hover:text-brand-light">
+                rel="noopener noreferrer"
+                class="group inline-flex items-center gap-1.5 transition-all duration-200 hover:text-brand hover:translate-x-0.5 dark:hover:text-brand-light">
                 {{ item.label }}
                 <svg
                   class="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100"
@@ -85,21 +85,21 @@ const links = [
           <a
             href="https://twitter.com"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
             >Twitter</a
           >
           <a
             href="https://github.com"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
             >GitHub</a
           >
           <a
             href="https://www.linkedin.com"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
             >LinkedIn</a
           >

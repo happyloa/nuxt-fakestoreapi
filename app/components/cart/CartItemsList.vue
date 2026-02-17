@@ -59,7 +59,11 @@ const props = withDefaults(defineProps<Props>(), {
                   {{ item.title }}
                 </h3>
                 <p class="mt-1 text-sm text-slate-500 dark:text-slate-300">
-                  {{ $t("cart.itemPrice", { price: item.price.toFixed(2) }) }}
+                  {{
+                    $t("cart.itemPrice", {
+                      price: Number(item.price).toFixed(2),
+                    })
+                  }}
                 </p>
               </div>
             </div>

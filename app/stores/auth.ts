@@ -27,7 +27,9 @@ export const useAuthStore = defineStore("auth", () => {
    */
   const getUserIdFromToken = (token: string): number | null => {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const parts = token.split(".");
+      if (parts.length < 2 || !parts[1]) return null;
+      const payload = JSON.parse(atob(parts[1]));
       return payload.sub || null;
     } catch (e) {
       console.error("Failed to parse token:", e);

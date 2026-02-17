@@ -20,7 +20,10 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <BaseCard as="aside" class="space-y-4" aria-labelledby="cart-summary-heading">
+  <BaseCard
+    as="section"
+    class="space-y-4"
+    aria-labelledby="cart-summary-heading">
     <BaseSectionHeading
       id="cart-summary-heading"
       :title="$t('cart.summary.title')"
