@@ -52,7 +52,7 @@ const handleEscape = (event: KeyboardEvent) => {
 
 // 處理視窗大小調整，寬螢幕時自動關閉手機版選單
 const handleResize = () => {
-  if (window.innerWidth >= 768) {
+  if (window.innerWidth >= 1024) {
     isMenuOpen.value = false;
   }
 };
@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
       </NuxtLink>
       <nav
         aria-label="Primary navigation"
-        class="hidden items-center gap-1.5 text-sm font-medium text-slate-600 md:flex md:flex-wrap md:justify-end lg:gap-2 dark:text-slate-200">
+        class="hidden items-center gap-1.5 text-sm font-medium text-slate-600 lg:flex lg:flex-wrap lg:justify-end lg:gap-2 dark:text-slate-200">
         <NuxtLink
           v-for="item in navigation"
           :key="item.to"
@@ -137,7 +137,7 @@ onBeforeUnmount(() => {
         </span>
       </nav>
       <button
-        class="inline-flex items-center rounded-xl border border-slate-200/60 p-2.5 text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:shadow-sm md:hidden dark:border-slate-700/60 dark:text-slate-200 dark:hover:bg-slate-800"
+        class="inline-flex items-center rounded-xl border border-slate-200/60 p-2.5 text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:shadow-sm lg:hidden dark:border-slate-700/60 dark:text-slate-200 dark:hover:bg-slate-800"
         type="button"
         :aria-expanded="isMenuOpen"
         aria-controls="site-navigation-mobile"
@@ -181,7 +181,7 @@ onBeforeUnmount(() => {
         <Transition name="overlay">
           <div
             v-if="isMenuOpen"
-            class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm md:hidden"
+            class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden"
             @click="isMenuOpen = false" />
         </Transition>
       </Teleport>
@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
           <div
             v-if="isMenuOpen"
             id="site-navigation-mobile"
-            class="fixed inset-y-0 right-0 z-50 w-72 md:hidden">
+            class="fixed inset-y-0 right-0 z-50 w-72 lg:hidden">
             <nav
               aria-label="Primary navigation"
               class="flex h-full flex-col bg-white/95 px-5 py-6 shadow-2xl backdrop-blur-xl dark:bg-slate-900/95">
