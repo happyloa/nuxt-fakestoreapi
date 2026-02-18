@@ -234,5 +234,35 @@
     "title": "專案說明",
     "description": "以 Nuxt 4、Tailwind CSS 與 Fake Store API 打造的示範作品。",
     "copyright": "© {year} Fake Store Dashboard. 版權所有。"
+  },
+  "seo": {
+    "home": {
+      "title": "Fake Store Dashboard",
+      "description": "瀏覽與管理 Fake Store API 商品，支援篩選、分析與快速操作。"
+    },
+    "cart": {
+      "title": "購物車 | Fake Store Dashboard",
+      "description": "查看並管理您的 Fake Store API 購物車。"
+    },
+    "login": {
+      "title": "會員登入 | Fake Store Dashboard",
+      "description": "使用 Fake Store API 帳號登入以同步購物車。"
+    },
+    "api": {
+      "title": "API 操作台 | Fake Store Dashboard",
+      "description": "直接在儀表板中測試 Fake Store API 的所有端點。"
+    },
+    "newProduct": {
+      "title": "建立新商品 | Fake Store Dashboard",
+      "description": "透過 Fake Store API 建立一項包含完整資訊的新商品。"
+    },
+    "productDetail": {
+      "title": "{name} | Fake Store Dashboard",
+      "description": "查看 Fake Store API 商品詳情。"
+    },
+    "users": {
+      "title": "會員列表 | Fake Store Dashboard",
+      "description": "瀏覽 Fake Store API 會員的聯絡與地址資訊。"
+    }
   }
 }

@@ -34,14 +34,14 @@ const handleLogout = () => {
   notifications.info(t("notifications.loggedOut"), 2000);
 };
 
-useSeoMeta({
-  title: "Login | Fake Store Dashboard",
-  description:
-    "Authenticate with the Fake Store API to sync your shopping cart.",
-  ogTitle: "Login | Fake Store Dashboard",
-  ogDescription:
-    "Authenticate with the Fake Store API to sync your shopping cart.",
-});
+useHead(() => ({
+  title: t("seo.login.title"),
+  meta: [
+    { name: "description", content: t("seo.login.description") },
+    { property: "og:title", content: t("seo.login.title") },
+    { property: "og:description", content: t("seo.login.description") },
+  ],
+}));
 </script>
 
 <template>

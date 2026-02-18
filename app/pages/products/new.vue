@@ -30,12 +30,14 @@ const handleSubmit = async (payload: CreateProductPayload) => {
   }
 };
 
-useSeoMeta({
-  title: "Create Product | Fake Store Dashboard",
-  description: "Create a new Fake Store API product with full metadata.",
-  ogTitle: "Create Product | Fake Store Dashboard",
-  ogDescription: "Create a new Fake Store API product with full metadata.",
-});
+useHead(() => ({
+  title: t("seo.newProduct.title"),
+  meta: [
+    { name: "description", content: t("seo.newProduct.description") },
+    { property: "og:title", content: t("seo.newProduct.title") },
+    { property: "og:description", content: t("seo.newProduct.description") },
+  ],
+}));
 </script>
 
 <template>

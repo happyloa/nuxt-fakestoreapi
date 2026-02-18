@@ -67,14 +67,14 @@ const handleAddToCart = (product: Product) => {
   notifications.success(t("notifications.cartAdded", { title: product.title }));
 };
 
-useSeoMeta({
-  title: "Fake Store Dashboard",
-  description:
-    "Explore and manage Fake Store API products with filters, analytics and quick actions.",
-  ogTitle: "Fake Store Dashboard",
-  ogDescription:
-    "Explore and manage Fake Store API products with filters, analytics and quick actions.",
-});
+useHead(() => ({
+  title: t("seo.home.title"),
+  meta: [
+    { name: "description", content: t("seo.home.description") },
+    { property: "og:title", content: t("seo.home.title") },
+    { property: "og:description", content: t("seo.home.description") },
+  ],
+}));
 </script>
 
 <template>

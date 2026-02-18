@@ -25,12 +25,29 @@ const loadProduct = async () => {
   errorMessage.value = "";
   try {
     product.value = await productsStore.fetchProductById(id);
-    useSeoMeta({
-      title: `${product.value?.title ?? "Product"} | Fake Store Dashboard`,
-      description: product.value?.description ?? "Fake Store product details",
-      ogTitle: `${product.value?.title ?? "Product"} | Fake Store Dashboard`,
-      ogDescription: product.value?.description ?? "Fake Store product details",
-    });
+    useHead(() => ({
+      title: t("seo.productDetail.title", {
+        name: product.value?.title ?? "Product",
+      }),
+      meta: [
+        {
+          name: "description",
+          content:
+            product.value?.description ?? t("seo.productDetail.description"),
+        },
+        {
+          property: "og:title",
+          content: t("seo.productDetail.title", {
+            name: product.value?.title ?? "Product",
+          }),
+        },
+        {
+          property: "og:description",
+          content:
+            product.value?.description ?? t("seo.productDetail.description"),
+        },
+      ],
+    }));
   } catch (error: any) {
     errorMessage.value = error?.message ?? "Unable to load product details.";
   } finally {

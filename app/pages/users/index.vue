@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { useUsersStore } from "~/stores/users";
 
 const usersStore = useUsersStore();
 const search = ref("");
+const { t } = useI18n();
 
 await usersStore.fetchUsers();
 
@@ -24,13 +26,14 @@ const filteredUsers = computed(() => {
   });
 });
 
-useSeoMeta({
-  title: "Users | Fake Store Dashboard",
-  description: "Explore Fake Store API users with contact and address details.",
-  ogTitle: "Users | Fake Store Dashboard",
-  ogDescription:
-    "Explore Fake Store API users with contact and address details.",
-});
+useHead(() => ({
+  title: t("seo.users.title"),
+  meta: [
+    { name: "description", content: t("seo.users.description") },
+    { property: "og:title", content: t("seo.users.title") },
+    { property: "og:description", content: t("seo.users.description") },
+  ],
+}));
 </script>
 
 <template>

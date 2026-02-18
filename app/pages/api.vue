@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { useProductsStore } from "~/stores/products";
 import ProductsSection from "~/components/api/ProductsSection.vue";
 import CartsSection from "~/components/api/CartsSection.vue";
@@ -11,18 +12,20 @@ import UsersSection from "~/components/api/UsersSection.vue";
  */
 const productsStore = useProductsStore();
 
+const { t } = useI18n();
+
 // 預先抓取商品分類，供 ProductsSection 的下拉選單使用
 await productsStore.fetchCategories();
 
 // 設定 SEO Meta 標籤
-useSeoMeta({
-  title: "API Playground | Fake Store Dashboard",
-  description:
-    "Experiment with every Fake Store API endpoint directly from the dashboard.",
-  ogTitle: "API Playground | Fake Store Dashboard",
-  ogDescription:
-    "Experiment with every Fake Store API endpoint directly from the dashboard.",
-});
+useHead(() => ({
+  title: t("seo.api.title"),
+  meta: [
+    { name: "description", content: t("seo.api.description") },
+    { property: "og:title", content: t("seo.api.title") },
+    { property: "og:description", content: t("seo.api.description") },
+  ],
+}));
 </script>
 
 <template>

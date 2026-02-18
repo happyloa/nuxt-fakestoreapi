@@ -234,5 +234,35 @@
     "title": "About this project",
     "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
     "copyright": "© {year} Fake Store Dashboard. All rights reserved."
+  },
+  "seo": {
+    "home": {
+      "title": "Fake Store Dashboard",
+      "description": "Explore and manage Fake Store API products with filters, analytics and quick actions."
+    },
+    "cart": {
+      "title": "Shopping Cart | Fake Store Dashboard",
+      "description": "View and manage your Fake Store API shopping cart."
+    },
+    "login": {
+      "title": "Login | Fake Store Dashboard",
+      "description": "Authenticate with the Fake Store API to sync your shopping cart."
+    },
+    "api": {
+      "title": "API Playground | Fake Store Dashboard",
+      "description": "Experiment with every Fake Store API endpoint directly from the dashboard."
+    },
+    "newProduct": {
+      "title": "Create Product | Fake Store Dashboard",
+      "description": "Create a new Fake Store API product with full metadata."
+    },
+    "productDetail": {
+      "title": "{name} | Fake Store Dashboard",
+      "description": "Fake Store product details."
+    },
+    "users": {
+      "title": "Users | Fake Store Dashboard",
+      "description": "Explore Fake Store API users with contact and address details."
+    }
   }
 }

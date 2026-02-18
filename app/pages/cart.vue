@@ -79,12 +79,14 @@ const handleCheckout = async () => {
   }
 };
 
-useSeoMeta({
-  title: "Cart | Fake Store Dashboard",
-  description: "View and manage your Fake Store API shopping cart.",
-  ogTitle: "Cart | Fake Store Dashboard",
-  ogDescription: "View and manage your Fake Store API shopping cart.",
-});
+useHead(() => ({
+  title: t("seo.cart.title"),
+  meta: [
+    { name: "description", content: t("seo.cart.description") },
+    { property: "og:title", content: t("seo.cart.title") },
+    { property: "og:description", content: t("seo.cart.description") },
+  ],
+}));
 </script>
 
 <template>
