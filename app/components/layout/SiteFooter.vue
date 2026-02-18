@@ -22,10 +22,7 @@ const links = [
 
 <template>
   <footer
-    class="relative mt-16 border-t border-slate-200/60 bg-white transition-colors duration-300 dark:border-slate-800/60 dark:bg-slate-950"
-    data-aos="fade-up"
-    data-aos-offset="0"
-    data-aos-delay="0">
+    class="relative mt-16 border-t border-slate-200/60 bg-white transition-colors duration-300 dark:border-slate-800/60 dark:bg-slate-950">
     <!-- 頂部漸層裝飾線 -->
     <div
       class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />

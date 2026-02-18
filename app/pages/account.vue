@@ -31,6 +31,11 @@ const initials = computed(() => {
   return (f + l).toUpperCase();
 });
 
+// 訂單項目：優先顯示當前購物車，否則顯示上次結帳的紀錄
+const orderItems = computed(() =>
+  cartStore.items.length ? cartStore.items : cartStore.lastOrderItems,
+);
+
 useHead(() => ({
   title: t("seo.account.title"),
   meta: [
@@ -237,9 +242,9 @@ useHead(() => ({
             </svg>
             {{ $t("account.sections.recentOrders") }}
           </h2>
-          <div v-if="cartStore.items.length" class="space-y-3">
+          <div v-if="orderItems.length" class="space-y-3">
             <div
-              v-for="item in cartStore.items.slice(0, 3)"
+              v-for="item in orderItems.slice(0, 3)"
               :key="item.id"
               class="flex items-center gap-3 rounded-lg border border-slate-100 p-3 dark:border-slate-800">
               <img
@@ -257,9 +262,9 @@ useHead(() => ({
               </div>
             </div>
             <p
-              v-if="cartStore.items.length > 3"
+              v-if="orderItems.length > 3"
               class="text-center text-xs text-slate-400 dark:text-slate-500">
-              {{ $t("account.orderItems", { count: cartStore.items.length }) }}
+              {{ $t("account.orderItems", { count: orderItems.length }) }}
             </p>
           </div>
           <div
