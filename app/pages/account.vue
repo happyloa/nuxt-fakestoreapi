@@ -247,8 +247,7 @@ useHead(() => ({
                 :alt="item.title"
                 class="h-10 w-10 shrink-0 rounded-lg bg-white object-contain p-1" />
               <div class="min-w-0 flex-1">
-                <p
-                  class="truncate text-sm font-medium text-slate-900 dark:text-white">
+                <p class="text-sm font-medium text-slate-900 dark:text-white">
                   {{ item.title }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
