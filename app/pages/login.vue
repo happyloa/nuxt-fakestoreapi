@@ -49,7 +49,7 @@ useHead(() => ({
     <LoginForm
       v-if="!authStore.user"
       :loading="authStore.loading"
-      :error="authStore.error"
+      :error="authStore.error ?? undefined"
       @submit="handleSubmit" />
     <!-- 登入成功卡片 -->
     <div

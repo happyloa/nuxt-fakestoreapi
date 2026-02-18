@@ -10,7 +10,7 @@ export const useProductFilters = (productsSource: () => Product[]) => {
   const router = useRouter();
 
   const selectedCategory = ref((route.query.category as string) ?? "all");
-  const sortOrder = ref(
+  const sortOrder = ref<"asc" | "desc">(
     ((route.query.sort as string) ?? "asc") === "desc" ? "desc" : "asc",
   );
   const searchQuery = ref((route.query.q as string) ?? "");
