@@ -25,7 +25,9 @@ const navigation = computed(() => [
   { name: t("navigation.cart"), to: localePath("/cart") },
   { name: t("navigation.users"), to: localePath("/users") },
   { name: t("navigation.apiPlayground"), to: localePath("/api") },
-  { name: t("navigation.login"), to: localePath("/login") },
+  auth.user
+    ? { name: t("navigation.account"), to: localePath("/account") }
+    : { name: t("navigation.login"), to: localePath("/login") },
 ]);
 
 // 購物車連結文字 (若有商品則顯示數量)
@@ -130,11 +132,6 @@ onBeforeUnmount(() => {
         <div class="ml-2">
           <LanguageSwitcher />
         </div>
-        <span
-          v-if="auth.user"
-          class="ml-2 rounded-full bg-slate-100/80 px-4 py-1.5 text-xs font-semibold text-slate-600 dark:bg-slate-800/80 dark:text-slate-200">
-          {{ $t("header.welcome", { name: auth.user.username }) }}
-        </span>
       </nav>
       <button
         class="inline-flex items-center rounded-xl border border-slate-200/60 p-2.5 text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:shadow-sm lg:hidden dark:border-slate-700/60 dark:text-slate-200 dark:hover:bg-slate-800"
@@ -235,11 +232,6 @@ onBeforeUnmount(() => {
                 class="mt-6 flex items-center gap-3 border-t border-slate-200/60 pt-6 dark:border-slate-700/60">
                 <LanguageSwitcher />
               </div>
-              <span
-                v-if="auth.user"
-                class="mt-4 block text-xs text-slate-500 dark:text-slate-400">
-                {{ $t("header.welcome", { name: auth.user.username }) }}
-              </span>
             </nav>
           </div>
         </Transition>

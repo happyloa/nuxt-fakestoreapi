@@ -16,7 +16,8 @@
     "cart": "Cart",
     "users": "Users",
     "apiPlayground": "API playground",
-    "login": "Login"
+    "login": "Login",
+    "account": "My Account"
   },
   "products": {
     "hero": {
@@ -119,6 +120,29 @@
       "success": "Welcome back, {name}! Your cart is ready.",
       "logout": "Log out"
     }
+  },
+  "account": {
+    "title": "My Account",
+    "subtitle": "Manage your profile and account settings.",
+    "loginPrompt": "Please log in to view your account details.",
+    "loginCta": "Go to Login",
+    "sections": {
+      "profile": "Profile",
+      "address": "Address",
+      "recentOrders": "Recent Orders"
+    },
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "phone": "Phone",
+      "fullName": "Full Name",
+      "city": "City",
+      "street": "Street",
+      "zipcode": "Zip Code"
+    },
+    "noOrders": "No order history yet.",
+    "orderItems": "{count} items",
+    "logout": "Sign Out"
   },
   "notifications": {
     "cartAdded": "Added {title} to your cart.",
@@ -263,6 +287,10 @@
     "users": {
       "title": "Users | Fake Store Dashboard",
       "description": "Explore Fake Store API users with contact and address details."
+    },
+    "account": {
+      "title": "My Account | Fake Store Dashboard",
+      "description": "View and manage your account information and order history."
     }
   }
 }
