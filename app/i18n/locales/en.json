@@ -252,7 +252,8 @@
   },
   "ui": {
     "loading": "Loading...",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "backToTop": "Back to top"
   },
   "footer": {
     "title": "About this project",

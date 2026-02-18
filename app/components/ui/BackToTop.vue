@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
         v-if="isVisible"
         type="button"
         class="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-slate-200/60 bg-white/80 text-slate-600 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand/30 hover:text-brand hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 dark:border-slate-600/60 dark:bg-slate-800/90 dark:text-slate-300 dark:hover:border-brand-light/30 dark:hover:text-brand-light dark:focus-visible:ring-offset-slate-900"
-        :aria-label="$t('backToTop') || 'Back to top'"
+        :aria-label="$t('ui.backToTop') || 'Back to top'"
         @click="scrollToTop">
         <svg
           class="h-5 w-5"

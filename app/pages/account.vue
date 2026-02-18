@@ -107,7 +107,7 @@ useHead(() => ({
       </div>
 
       <!-- 資訊卡片網格 -->
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-6 md:grid-cols-2">
         <!-- 個人資料卡片 -->
         <BaseCard class="space-y-4" data-aos="fade-up" data-aos-delay="100">
           <h2

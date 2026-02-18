@@ -25,9 +25,6 @@ const navigation = computed(() => [
   { name: t("navigation.cart"), to: localePath("/cart") },
   { name: t("navigation.users"), to: localePath("/users") },
   { name: t("navigation.apiPlayground"), to: localePath("/api") },
-  auth.user
-    ? { name: t("navigation.account"), to: localePath("/account") }
-    : { name: t("navigation.login"), to: localePath("/login") },
 ]);
 
 // 購物車連結文字 (若有商品則顯示數量)
@@ -129,6 +126,35 @@ onBeforeUnmount(() => {
             v-if="isActive(item.to)"
             class="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-brand transition-all dark:bg-brand-light" />
         </NuxtLink>
+        <!-- 登入/帳號連結（ClientOnly 避免 hydration mismatch） -->
+        <ClientOnly>
+          <NuxtLink
+            :to="auth.user ? localePath('/account') : localePath('/login')"
+            class="relative rounded-lg px-3 py-2 transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
+            :class="[
+              isActive(
+                auth.user ? localePath('/account') : localePath('/login'),
+              )
+                ? 'text-brand dark:text-brand-light font-semibold'
+                : 'text-slate-600 dark:text-slate-300',
+            ]">
+            {{ auth.user ? t("navigation.account") : t("navigation.login") }}
+            <span
+              v-if="
+                isActive(
+                  auth.user ? localePath('/account') : localePath('/login'),
+                )
+              "
+              class="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-brand transition-all dark:bg-brand-light" />
+          </NuxtLink>
+          <template #fallback>
+            <NuxtLink
+              :to="localePath('/login')"
+              class="relative rounded-lg px-3 py-2 text-slate-600 transition-all duration-200 hover:bg-slate-100/80 dark:text-slate-300 dark:hover:bg-slate-800/60">
+              {{ t("navigation.login") }}
+            </NuxtLink>
+          </template>
+        </ClientOnly>
         <div class="ml-2">
           <LanguageSwitcher />
         </div>
@@ -227,6 +253,36 @@ onBeforeUnmount(() => {
                   ]">
                   {{ item.to === localePath("/cart") ? cartLabel : item.name }}
                 </NuxtLink>
+                <!-- 登入/帳號連結（ClientOnly 避免 hydration mismatch） -->
+                <ClientOnly>
+                  <NuxtLink
+                    :to="
+                      auth.user ? localePath('/account') : localePath('/login')
+                    "
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
+                    :class="[
+                      isActive(
+                        auth.user
+                          ? localePath('/account')
+                          : localePath('/login'),
+                      )
+                        ? 'bg-brand/5 text-brand dark:bg-brand/10 dark:text-brand-light'
+                        : 'text-slate-700 dark:text-slate-200',
+                    ]">
+                    {{
+                      auth.user
+                        ? t("navigation.account")
+                        : t("navigation.login")
+                    }}
+                  </NuxtLink>
+                  <template #fallback>
+                    <NuxtLink
+                      :to="localePath('/login')"
+                      class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-all duration-200 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-slate-800/60">
+                      {{ t("navigation.login") }}
+                    </NuxtLink>
+                  </template>
+                </ClientOnly>
               </div>
               <div
                 class="mt-6 flex items-center gap-3 border-t border-slate-200/60 pt-6 dark:border-slate-700/60">
