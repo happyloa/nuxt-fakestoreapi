@@ -46,7 +46,7 @@ export default defineNuxtConfig({
   // i18n 多語言設定
   i18n: {
     // 設定基礎 URL，用於 SEO 標籤
-    baseUrl: "http://localhost:3000",
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000",
     // 定義支援的語系
     locales: [
       { code: "zh", name: "中文", language: "zh-TW", file: "zh.json" },
