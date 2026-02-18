@@ -18,7 +18,7 @@ const props = withDefaults(
 
 const classes = computed(() =>
   [
-    "rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover dark:hover:shadow-brand/5",
+    "rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-card-hover dark:hover:shadow-brand/5",
     props.background,
     props.border,
     props.shadow,

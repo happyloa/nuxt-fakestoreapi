@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
     class="group relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white px-5 py-6 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-700/60 dark:bg-slate-900 dark:hover:border-slate-600/60">
     <!-- 頂部漸層色條 -->
     <div
-      class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r transition-all duration-300 group-hover:h-1.5"
+      class="absolute inset-x-0 top-0 h-1 bg-[length:200%_100%] bg-gradient-to-r transition-all duration-500 group-hover:h-1.5 group-hover:bg-right"
       :class="accentColor" />
     <p
       class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">

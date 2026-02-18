@@ -6,11 +6,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.hooks.hook("app:mounted", () => {
     AOS.init({
-      duration: 700,
-      easing: "ease-out-cubic",
+      duration: 800,
+      easing: "ease-out-quart",
       once: true,
-      offset: 50,
+      offset: 60,
       delay: 0,
+      disable: "mobile",
     });
   });
 
