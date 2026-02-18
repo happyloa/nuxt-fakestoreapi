@@ -103,8 +103,8 @@ password: 83r5^_
 │  ├─ composables/             # 可重複使用的業務邏輯（例如商品篩選）
 │  ├─ layouts/                 # Nuxt 版型（預設版型含頁面過渡動畫）
 │  ├─ pages/                   # 頁面路由（首頁、商品詳情、購物車、登入、使用者、新增商品、API 操作區）
-│  ├─ plugins/                 # 客戶端插件（theme、i18n-session、aos）
-│  ├─ server/                  # 伺服器端中介層與路由
+│  ├─ plugins/                 # 客戶端插件（theme、i18n-locale、aos）
+│  ├─ server/                  # Nuxt 伺服器設定
 │  ├─ services/                # Fake Store API 呼叫封裝（products、carts、users、auth）
 │  ├─ stores/                  # Pinia 狀態（認證、購物車、商品、使用者、通知、主題）
 │  ├─ types/                   # TypeScript 型別定義（Fake Store API、AOS）
@@ -118,7 +118,7 @@ password: 83r5^_
 - `GET /products`、`GET /products/:id`、`GET /products?limit=`：商品目錄、詳情與篩選查詢。
 - `GET /products/categories`、`GET /products/category/:category`：動態篩選與分類頁面。
 - `POST /products`、`PUT /products/:id`、`DELETE /products/:id`：新增、更新與刪除商品。
-- `GET /auth/login`：使用者驗證與 JWT 取得。
+- `POST /auth/login`：使用者驗證與 JWT 取得。
 - `GET /carts`、`GET /carts/:id`、`GET /carts/user/:id`：瀏覽購物車歷史與詳情。
 - `POST /carts`、`PUT /carts/:id`、`DELETE /carts/:id`：建立、更新與刪除購物車資料。
 - `GET /users`、`GET /users/:id`：使用者列表與個別檔案。
