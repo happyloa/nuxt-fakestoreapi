@@ -1,4 +1,4 @@
-const STORAGE_KEY = "fakestore-locale";
+const STORAGE_KEY = "locale";
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   if (!process.client) return;
@@ -12,18 +12,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
   const readLocale = () => {
     try {
-      return window.sessionStorage.getItem(STORAGE_KEY);
+      return window.localStorage.getItem(STORAGE_KEY);
     } catch (error) {
-      console.warn("Session storage is unavailable", error);
+      console.warn("Local storage is unavailable", error);
       return null;
     }
   };
 
   const writeLocale = (value: string) => {
     try {
-      window.sessionStorage.setItem(STORAGE_KEY, value);
+      window.localStorage.setItem(STORAGE_KEY, value);
     } catch (error) {
-      console.warn("Session storage is unavailable", error);
+      console.warn("Local storage is unavailable", error);
     }
   };
 

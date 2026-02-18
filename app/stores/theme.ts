@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export type ThemePreference = "light" | "dark" | "system";
 export type ThemeResolved = "light" | "dark";
 
-const STORAGE_KEY = "fakestore-theme";
+const STORAGE_KEY = "theme";
 
 /**
  * 取得瀏覽器偏好
