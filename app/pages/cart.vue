@@ -15,17 +15,20 @@ const checkoutLoading = ref(false);
  */
 
 onMounted(() => {
-  if (authStore.user) {
+  // 只在本地購物車為空時才從 API 初始載入，避免覆蓋使用者在其他頁面加入的商品
+  // （Fake Store API 是模擬 API，POST 不會真的持久化，GET 永遠回傳原始資料）
+  if (authStore.user && !cartStore.items.length) {
     cartStore.fetchCart(authStore.user.id);
   }
 });
 
 watch(
   () => authStore.user?.id,
-  (userId) => {
-    if (userId) {
+  (userId, oldUserId) => {
+    if (userId && userId !== oldUserId) {
+      // 切換使用者時才重新載入
       cartStore.fetchCart(userId);
-    } else {
+    } else if (!userId) {
       cartStore.clear();
     }
   },
