@@ -25,29 +25,6 @@ const loadProduct = async () => {
   errorMessage.value = "";
   try {
     product.value = await productsStore.fetchProductById(id);
-    useHead(() => ({
-      title: t("seo.productDetail.title", {
-        name: product.value?.title ?? "Product",
-      }),
-      meta: [
-        {
-          name: "description",
-          content:
-            product.value?.description ?? t("seo.productDetail.description"),
-        },
-        {
-          property: "og:title",
-          content: t("seo.productDetail.title", {
-            name: product.value?.title ?? "Product",
-          }),
-        },
-        {
-          property: "og:description",
-          content:
-            product.value?.description ?? t("seo.productDetail.description"),
-        },
-      ],
-    }));
   } catch (error: any) {
     errorMessage.value = error?.message ?? "Unable to load product details.";
   } finally {
@@ -56,6 +33,28 @@ const loadProduct = async () => {
 };
 
 await loadProduct();
+
+useHead(() => ({
+  title: t("seo.productDetail.title", {
+    name: product.value?.title ?? "Product",
+  }),
+  meta: [
+    {
+      name: "description",
+      content: product.value?.description ?? t("seo.productDetail.description"),
+    },
+    {
+      property: "og:title",
+      content: t("seo.productDetail.title", {
+        name: product.value?.title ?? "Product",
+      }),
+    },
+    {
+      property: "og:description",
+      content: product.value?.description ?? t("seo.productDetail.description"),
+    },
+  ],
+}));
 
 const addToCart = () => {
   if (!product.value) {
