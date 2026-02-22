@@ -13,7 +13,18 @@ export default defineNuxtConfig({
   // @nuxtjs/google-fonts: 處理 Google Fonts 字型
   // @nuxtjs/i18n: 處理多語系
   // @pinia/nuxt: 狀態管理
-  modules: ["@nuxtjs/google-fonts", "@nuxtjs/i18n", "@pinia/nuxt"],
+  // @nuxt/image: 圖片最佳化
+  modules: [
+    "@nuxtjs/google-fonts",
+    "@nuxtjs/i18n",
+    "@pinia/nuxt",
+    "@nuxt/image",
+  ],
+
+  // Nuxt Image 相關配置
+  image: {
+    domains: ["nuxt-fakestoreapi.worksbyaaron.com"],
+  },
 
   // Vite 配置：整合 Tailwind CSS v4
   vite: {

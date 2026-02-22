@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
     <figure class="flex flex-col items-center justify-center">
       <div
         class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand/10 via-white to-accent/15 p-6 transition-colors duration-200 dark:from-slate-900 dark:via-brand/20 dark:to-accent/25">
-        <img
+        <NuxtImg
           :src="product.image"
           :alt="product.title"
           class="mx-auto h-72 w-auto object-contain" />

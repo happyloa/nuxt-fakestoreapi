@@ -21,7 +21,7 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
     <NuxtLink :to="`/product/${product.id}`" class="flex flex-col space-y-3">
       <figure
         class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50">
-        <img
+        <NuxtImg
           :src="product.image"
           :alt="product.title"
           class="mx-auto h-48 w-auto object-contain p-4 transition-transform duration-500 group-hover:scale-110" />

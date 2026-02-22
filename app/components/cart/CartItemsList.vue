@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
           <BaseCard
             class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-4">
-              <img
+              <NuxtImg
                 :src="item.image"
                 :alt="item.title"
                 class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800" />

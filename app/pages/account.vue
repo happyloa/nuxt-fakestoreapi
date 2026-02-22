@@ -247,7 +247,7 @@ useHead(() => ({
               v-for="item in orderItems.slice(0, 3)"
               :key="item.id"
               class="flex items-center gap-3 rounded-lg border border-slate-100 p-3 dark:border-slate-800">
-              <img
+              <NuxtImg
                 :src="item.image"
                 :alt="item.title"
                 class="h-10 w-10 shrink-0 rounded-lg bg-white object-contain p-1" />
