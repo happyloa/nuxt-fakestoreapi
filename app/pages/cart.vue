@@ -41,12 +41,10 @@ const handleClear = () => {
 
 const handleIncrement = (id: number) => {
   cartStore.increment(id);
-  notifications.info(t("notifications.cartUpdated"), 2000);
 };
 
 const handleDecrement = (id: number) => {
   cartStore.decrement(id);
-  notifications.info(t("notifications.cartUpdated"), 2000);
 };
 
 const handleRemove = (id: number) => {

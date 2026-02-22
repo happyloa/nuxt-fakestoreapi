@@ -148,7 +148,6 @@
     "cartAdded": "Added {title} to your cart.",
     "productCreated": "{title} published successfully.",
     "cartCleared": "Cart cleared.",
-    "cartUpdated": "Cart updated.",
     "cartItemRemoved": "Item removed from cart.",
     "loggedIn": "Signed in as {name}.",
     "loggedOut": "You signed out.",

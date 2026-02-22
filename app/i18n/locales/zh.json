@@ -153,7 +153,6 @@
     "cartAdded": "已將 {title} 加入購物車。",
     "productCreated": "{title} 已成功發佈。",
     "cartCleared": "購物車已清空。",
-    "cartUpdated": "購物車已更新。",
     "cartItemRemoved": "已移除購物車商品。",
     "loggedIn": "已登入帳號 {name}。",
     "loggedOut": "您已登出。",
