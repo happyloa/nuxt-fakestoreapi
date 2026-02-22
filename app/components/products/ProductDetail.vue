@@ -20,7 +20,8 @@ const props = withDefaults(defineProps<Props>(), {
     as="article"
     class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
     <div class="space-y-4">
-      <div class="flex items-center gap-3 text-slate-500 dark:text-slate-300">
+      <div
+        class="flex items-center flex-wrap gap-3 text-slate-500 dark:text-slate-300">
         <BaseBadge variant="brand">{{ product.category }}</BaseBadge>
         <BaseBadge v-if="product.rating" variant="accent">{{
           $t("products.details.rating", { rate: product.rating.rate })
