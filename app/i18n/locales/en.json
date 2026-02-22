@@ -254,6 +254,13 @@
     "dismiss": "Dismiss",
     "backToTop": "Back to top"
   },
+  "error": {
+    "title404": "404",
+    "titleGeneric": "Oops! Something went wrong",
+    "desc404": "The page you are looking for does not exist, might have been removed, or the URL is incorrect.",
+    "descGeneric": "An unexpected error occurred on the server. Please try again later.",
+    "backToHome": "Back to Home"
+  },
   "footer": {
     "title": "About this project",
     "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",

@@ -149,6 +149,13 @@
     "dismiss": "關閉提示",
     "backToTop": "回到頂部"
   },
+  "error": {
+    "title404": "404",
+    "titleGeneric": "哎呀！出錯了",
+    "desc404": "找不到您想訪問的頁面，它可能已被移除或網址輸入錯誤。",
+    "descGeneric": "伺服器發生未預期的狀況，請稍後再試。",
+    "backToHome": "返回首頁"
+  },
   "notifications": {
     "cartAdded": "已將 {title} 加入購物車。",
     "productCreated": "{title} 已成功發佈。",
