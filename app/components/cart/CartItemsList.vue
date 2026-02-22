@@ -74,9 +74,27 @@ const props = withDefaults(defineProps<Props>(), {
               <BaseButton
                 variant="outline"
                 size="sm"
-                @click="$emit('decrement', item.id)"
-                >-</BaseButton
-              >
+                class="w-8 h-8 !p-0 shrink-0"
+                @click="
+                  item.quantity === 1
+                    ? $emit('remove', item.id)
+                    : $emit('decrement', item.id)
+                ">
+                <svg
+                  v-if="item.quantity === 1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 text-red-500 dark:text-red-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span v-else>-</span>
+              </BaseButton>
               <span
                 class="w-8 text-center text-sm font-semibold text-slate-700 dark:text-slate-200"
                 >{{ item.quantity }}</span
@@ -84,6 +102,7 @@ const props = withDefaults(defineProps<Props>(), {
               <BaseButton
                 variant="outline"
                 size="sm"
+                class="w-8 h-8 !p-0 shrink-0"
                 @click="$emit('increment', item.id)"
                 >+</BaseButton
               >
