@@ -11,18 +11,14 @@ const cartStore = useCartStore();
 const { t } = useI18n();
 const notifications = useNotificationsStore();
 
-const isPageLoading = ref(true);
-const pageError = ref("");
-
 /**
- * 初始載入首頁所需的商品與分類資料，確保狀態提示正確。
+ * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
  */
-const loadHomepageData = async () => {
-  isPageLoading.value = true;
-  pageError.value = "";
-  productsStore.error = "";
-  try {
-    // 以 allSettled 確認兩個請求都完成後再決定是否顯示錯誤，避免載入過程就提前跳出錯誤訊息
+const { pending: isPageLoading, error: asyncError } = await useAsyncData(
+  "homepageData",
+  async () => {
+    productsStore.error = "";
+    // 以 allSettled 確認兩個請求都完成後再決定是否拋出錯誤
     const results = await Promise.allSettled([
       productsStore.fetchProducts(),
       productsStore.fetchCategories(),
@@ -33,18 +29,19 @@ const loadHomepageData = async () => {
       | undefined;
 
     if (rejected) {
-      pageError.value = rejected.reason?.message ?? t("api.errors.generic");
+      throw new Error(rejected.reason?.message || "Failed to load data");
     } else if (productsStore.error) {
-      pageError.value = productsStore.error;
+      throw new Error(productsStore.error);
     }
-  } catch (error: any) {
-    pageError.value = error?.message ?? t("api.errors.generic");
-  } finally {
-    isPageLoading.value = false;
-  }
-};
+    return true;
+  },
+);
 
-await loadHomepageData();
+const pageError = computed(() => {
+  if (asyncError.value)
+    return asyncError.value.message || t("api.errors.generic");
+  return "";
+});
 
 const {
   selectedCategory,
