@@ -35,7 +35,7 @@ const props = withDefaults(
 const classes = computed(() => {
   // 根據尺寸、樣式與寬度設定組合 Tailwind class。
   const base =
-    "cursor-pointer inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
+    "cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
   const sizes: Record<Size, string> = {
     sm: "px-3.5 py-1.5 text-sm",
     md: "px-5 py-2.5 text-sm sm:text-base",
