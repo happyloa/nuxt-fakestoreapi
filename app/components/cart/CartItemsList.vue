@@ -55,7 +55,7 @@ const props = withDefaults(defineProps<Props>(), {
               <img
                 :src="item.image"
                 :alt="item.title"
-                class="h-20 w-20 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800" />
+                class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800" />
               <div>
                 <h3
                   class="text-sm font-semibold text-slate-900 dark:text-white sm:text-base">
