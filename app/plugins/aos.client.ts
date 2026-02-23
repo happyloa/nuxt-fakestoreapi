@@ -13,7 +13,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       once: true,
       offset: 60,
       delay: 0,
-      disable: "mobile",
     });
   });
 
@@ -27,7 +26,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   // 路由切換後重新整理 AOS
   nuxtApp.hook("page:finish", () => {
     setTimeout(() => {
-      AOS.refresh();
+      AOS.refreshHard();
     }, 300);
   });
 });
