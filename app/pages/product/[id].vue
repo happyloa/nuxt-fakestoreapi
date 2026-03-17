@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useRoute } from "#imports";
 import { useI18n } from "vue-i18n";
 import type { Product } from "~/types/fakestore";
 import { useCartStore } from "~/stores/cart";
