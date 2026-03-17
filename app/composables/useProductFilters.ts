@@ -1,4 +1,3 @@
-import { useRoute, useRouter } from "#imports";
 import type { Product } from "~/types/fakestore";
 
 /**
