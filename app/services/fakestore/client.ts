@@ -25,5 +25,5 @@ export const createQueryString = (params: Record<string, any>) => {
     }
   })
   const queryString = searchParams.toString()
-  return queryString ? `${queryString}` : ''
+  return queryString
 }
