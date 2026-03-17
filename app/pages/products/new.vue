@@ -7,7 +7,6 @@ import { useNotificationsStore } from "~/stores/notifications";
 const productsStore = useProductsStore();
 const { t } = useI18n();
 const notifications = useNotificationsStore();
-const successMessage = ref("");
 const formKey = ref(0);
 
 /**
@@ -17,10 +16,8 @@ const formKey = ref(0);
 await productsStore.fetchCategories();
 
 const handleSubmit = async (payload: CreateProductPayload) => {
-  successMessage.value = "";
   try {
     const created = await productsStore.createProduct(payload);
-    successMessage.value = `${created.title} ${t("products.form.successSuffix")}`;
     formKey.value += 1;
     notifications.success(
       t("notifications.productCreated", { title: created.title }),
@@ -72,10 +69,6 @@ useHead(() => ({
 
     <BaseAlert v-if="productsStore.error" variant="error">
       {{ productsStore.error }}
-    </BaseAlert>
-
-    <BaseAlert v-else-if="successMessage" variant="success">
-      {{ successMessage }}
     </BaseAlert>
   </div>
 </template>
