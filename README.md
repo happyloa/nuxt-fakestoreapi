@@ -43,15 +43,17 @@
 - **AOS 滾動動畫**：全站整合 Animate On Scroll，透過 `aos.client.ts` 插件統一設定，所有頁面與元件均具備進場動畫。
 - **回到頂端按鈕**：偵測捲動位置，自動顯示的 `BackToTop` 浮動按鈕，搭配淡入縮放過渡動畫。
 - **頁面過渡**：Nuxt 路由切換時具備滑入淡出的 page transition 效果。
-- **互動微動畫**：按鈕 hover 發光、卡片 hover 上浮、圖片 hover 放大、Logo 漸層色彩、浮動裝飾圓形動畫等。
+- **互動微動畫**：按鈕 hover 發光、卡片 hover 上浮、圖片 hover 放大、Logo 漸層色彩。
+- **Mesh Gradient 與視覺層次**：Hero 區塊採用動態 Mesh Gradient 背景，提升視覺現代感與層次感。
+- **骨架屏體驗**：整合 `BaseSkeleton` 組件，在資料載入時提供流暢的佔位視覺。
 - **防閃爍機制**：透過 `transition-ready` class 延遲套用過渡效果，避免主題或語言切換時的 FOUC 問題。
 - **自訂錯誤頁面**：`error.vue` 提供友善的 404／通用錯誤畫面並支援返回首頁。
 
 ### API 操作區
 
-- **互動式 API 操作區**：涵蓋商品、購物車與使用者等 Fake Store API 端點，搭配表單輔助與即時 JSON 回應。
+- **互動式 API 操作區**：涵蓋商品、購物車與使用者等 Fake Store API 端點，支援 PUT 與 PATCH 方法切換、分類列表預覽與分頁/排序查詢。
 - **通知提示**：針對購物車、登入與管理操作提供成功／資訊提示（Toast 通知由 `useNotificationsStore` 管理）。
-- **載入骨架與空狀態**：以骨架畫面（`ProductGridSkeleton`）與友善的空狀態（`ProductEmptyState`）改善感知效能。
+- **進階載入骨架**：資料載入時以更精緻的骨架畫面提升感知效能。
 
 ### 架構整理亮點
 
@@ -141,12 +143,12 @@ password: 83r5^_
 
 - `GET /products`、`GET /products/:id`、`GET /products?limit=`：商品目錄、詳情與篩選查詢。
 - `GET /products/categories`、`GET /products/category/:category`：動態篩選與分類頁面。
-- `POST /products`、`PUT /products/:id`、`DELETE /products/:id`：新增、更新與刪除商品。
+- `POST /products`、`PUT /products/:id`、`PATCH /products/:id`、`DELETE /products/:id`：完整資源更新生命週期。
 - `POST /auth/login`：使用者驗證與 JWT 取得。
 - `GET /carts`、`GET /carts/:id`、`GET /carts/user/:id`：瀏覽購物車歷史與詳情。
-- `POST /carts`、`PUT /carts/:id`、`DELETE /carts/:id`：建立、更新與刪除購物車資料。
-- `GET /users`、`GET /users/:id`：使用者列表與個別檔案。
-- `POST /users`、`PUT /users/:id`、`DELETE /users/:id`：在操作區內完整管理使用者。
+- `POST /carts`、`PUT /carts/:id`、`PATCH /carts/:id`、`DELETE /carts/:id`：同步本地與遠端購物車。
+- `GET /users`、`GET /users/:id`、`GET /users?limit=5&sort=desc`：列表查詢與個別檔案。
+- `POST /users`、`PUT /users/:id`、`PATCH /users/:id`、`DELETE /users/:id`：在操作區內完整管理使用者。
 
 ## 🛡️ 安全性
 
