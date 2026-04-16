@@ -40,7 +40,7 @@ const categoryOptions = computed(() => [
     as="aside"
     class="space-y-6 lg:sticky lg:top-28"
     aria-labelledby="smart-filter-heading"
-    data-aos="fade-left"
+    data-aos="fade-up"
     data-aos-delay="200">
     <BaseSectionHeading
       id="smart-filter-heading"
