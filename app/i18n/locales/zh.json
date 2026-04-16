@@ -218,8 +218,11 @@
       "fields": {
         "category": "分類",
         "limit": "筆數",
-        "sort": "排序"
-      }
+        "sort": "排序",
+        "method": "方法"
+      },
+      "categoriesTitle": "取得產品分類",
+      "categoriesDescription": "調用 /products/categories 取得所有可用的類別清單。"
     },
     "carts": {
       "title": "購物車相關端點",
@@ -256,9 +259,15 @@
       "updateTitle": "更新會員",
       "updateDescription": "使用 PUT 請求更新會員欄位。",
       "updateSuccess": "會員 #{id} 更新成功。",
-      "deleteTitle": "刪除會員",
       "deleteDescription": "對 /users/:id 發送 DELETE 移除會員。",
-      "deleteSuccess": "會員 #{id} 已刪除。"
+      "deleteSuccess": "會員 #{id} 已刪除。",
+      "queryTitle": "查詢會員列表",
+      "queryDescription": "依照筆數與排序模擬 /users 端點。",
+      "querySuccess": "共取得 {count} 位會員。",
+      "fields": {
+        "limit": "筆數",
+        "sort": "排序"
+      }
     }
   },
   "footer": {

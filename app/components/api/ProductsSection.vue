@@ -73,9 +73,30 @@ const handleProductById = async () => {
   }
 };
 
+// 取得全部分類 (Fetch All Categories)
+const productCategoriesState = reactive({
+  loading: false,
+  error: "",
+  result: [] as string[],
+});
+const handleFetchCategories = async () => {
+  productCategoriesState.loading = true;
+  productCategoriesState.error = "";
+  try {
+    const result = await productsStore.fetchCategories(true);
+    // Since fetchCategories updates the store, we can also return it or access store.categories
+    productCategoriesState.result = productsStore.categories;
+  } catch (error: any) {
+    productCategoriesState.error = error?.message ?? t("api.errors.generic");
+  } finally {
+    productCategoriesState.loading = false;
+  }
+};
+
 // 更新產品 (Update Product)
 const productUpdateForm = reactive({
   id: "" as string | number,
+  method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "title": "Updated title"\n}',
 });
 const productUpdateState = reactive({
@@ -100,10 +121,13 @@ const handleProductUpdate = async () => {
   productUpdateState.error = "";
   productUpdateState.success = "";
   try {
-    const updated = await productsStore.updateProduct(
-      Number(productUpdateForm.id),
-      parsed,
-    );
+    const updated =
+      productUpdateForm.method === "PATCH"
+        ? await productsStore.patchProduct(Number(productUpdateForm.id), parsed)
+        : await productsStore.updateProduct(
+            Number(productUpdateForm.id),
+            parsed,
+          );
     productUpdateState.result = updated;
     productUpdateState.success = t("api.products.updateSuccess", {
       id: updated.id,
@@ -225,18 +249,46 @@ const handleProductDelete = async () => {
       </ApiOperationCard>
 
       <ApiOperationCard
+        :title="$t('api.products.categoriesTitle')"
+        :description="$t('api.products.categoriesDescription')"
+        :loading="productCategoriesState.loading"
+        :error="productCategoriesState.error">
+        <BaseButton
+          type="button"
+          :loading="productCategoriesState.loading"
+          @click="handleFetchCategories">
+          {{ $t("api.actions.fetch") }}
+        </BaseButton>
+        <template #footer>
+          <ApiResultViewer
+            v-if="productCategoriesState.result.length"
+            :label="$t('api.results.response')"
+            :value="productCategoriesState.result" />
+        </template>
+      </ApiOperationCard>
+
+      <ApiOperationCard
         :title="$t('api.products.updateTitle')"
         :description="$t('api.products.updateDescription')"
         :loading="productUpdateState.loading"
         :error="productUpdateState.error"
         :success-message="productUpdateState.success">
         <form class="space-y-4" @submit.prevent="handleProductUpdate">
-          <BaseInput
-            v-model="productUpdateForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.productId')"
-            required />
+          <div class="grid gap-4 sm:grid-cols-2">
+            <BaseInput
+              v-model="productUpdateForm.id"
+              type="number"
+              min="1"
+              :label="$t('api.fields.productId')"
+              required />
+            <BaseSelect
+              v-model="productUpdateForm.method"
+              :label="$t('api.products.fields.method')"
+              :options="[
+                { label: 'PUT', value: 'PUT' },
+                { label: 'PATCH', value: 'PATCH' },
+              ]" />
+          </div>
           <BaseTextarea
             v-model="productUpdateForm.payload"
             :label="$t('api.fields.payload')"

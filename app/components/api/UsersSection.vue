@@ -17,6 +17,37 @@ const { t } = useI18n();
 const usersStore = useUsersStore();
 const notifications = useNotificationsStore();
 
+// 查詢會員列表 (Query Users)
+const userQueryForm = reactive({
+  limit: 5,
+  sort: "desc" as "asc" | "desc",
+});
+const userQueryState = reactive({
+  loading: false,
+  error: "",
+  success: "",
+  result: [] as User[],
+});
+const handleUserQuery = async () => {
+  userQueryState.loading = true;
+  userQueryState.error = "";
+  userQueryState.success = "";
+  try {
+    const result = await usersStore.queryUsers({
+      limit: userQueryForm.limit || undefined,
+      sort: userQueryForm.sort,
+    });
+    userQueryState.result = result;
+    userQueryState.success = t("api.users.querySuccess", {
+      count: result.length,
+    });
+  } catch (error: any) {
+    userQueryState.error = error?.message ?? t("api.errors.generic");
+  } finally {
+    userQueryState.loading = false;
+  }
+};
+
 // 取得單一使用者 (Get User By ID)
 const userByIdForm = reactive({ id: "" as string | number });
 const userByIdState = reactive({
@@ -99,6 +130,7 @@ const handleUserCreate = async () => {
 // 更新使用者 (Update User)
 const userUpdateForm = reactive({
   id: "" as string | number,
+  method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "phone": "02-8888888"\n}',
 });
 const userUpdateState = reactive({
@@ -123,10 +155,10 @@ const handleUserUpdate = async () => {
   userUpdateState.error = "";
   userUpdateState.success = "";
   try {
-    const updated = await usersStore.updateUser(
-      Number(userUpdateForm.id),
-      payload,
-    );
+    const updated =
+      userUpdateForm.method === "PATCH"
+        ? await usersStore.patchUser(Number(userUpdateForm.id), payload)
+        : await usersStore.updateUser(Number(userUpdateForm.id), payload);
     userUpdateState.result = updated;
     userUpdateState.success = t("api.users.updateSuccess", { id: updated.id });
     notifications.info(
@@ -224,18 +256,61 @@ const handleUserDelete = async () => {
       </ApiOperationCard>
 
       <ApiOperationCard
+        :title="$t('api.users.queryTitle')"
+        :description="$t('api.users.queryDescription')"
+        :loading="userQueryState.loading"
+        :error="userQueryState.error"
+        :success-message="userQueryState.success">
+        <form class="space-y-4" @submit.prevent="handleUserQuery">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <BaseInput
+              v-model.number="userQueryForm.limit"
+              type="number"
+              min="1"
+              :label="$t('api.users.fields.limit')"
+              required />
+            <BaseSelect
+              v-model="userQueryForm.sort"
+              :label="$t('api.users.fields.sort')"
+              :options="[
+                { label: 'ASC', value: 'asc' },
+                { label: 'DESC', value: 'desc' },
+              ]" />
+          </div>
+          <BaseButton type="submit" :loading="userQueryState.loading">
+            {{ $t("api.actions.runQuery") }}
+          </BaseButton>
+        </form>
+        <template #footer>
+          <ApiResultViewer
+            v-if="userQueryState.result.length"
+            :label="$t('api.results.preview')"
+            :value="userQueryState.result" />
+        </template>
+      </ApiOperationCard>
+
+      <ApiOperationCard
         :title="$t('api.users.updateTitle')"
         :description="$t('api.users.updateDescription')"
         :loading="userUpdateState.loading"
         :error="userUpdateState.error"
         :success-message="userUpdateState.success">
         <form class="space-y-4" @submit.prevent="handleUserUpdate">
-          <BaseInput
-            v-model="userUpdateForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.userId')"
-            required />
+          <div class="grid gap-4 sm:grid-cols-2">
+            <BaseInput
+              v-model="userUpdateForm.id"
+              type="number"
+              min="1"
+              :label="$t('api.fields.userId')"
+              required />
+            <BaseSelect
+              v-model="userUpdateForm.method"
+              :label="$t('api.products.fields.method')"
+              :options="[
+                { label: 'PUT', value: 'PUT' },
+                { label: 'PATCH', value: 'PATCH' },
+              ]" />
+          </div>
           <BaseTextarea
             v-model="userUpdateForm.payload"
             :label="$t('api.fields.payload')"

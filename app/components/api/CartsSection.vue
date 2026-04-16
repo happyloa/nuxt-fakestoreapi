@@ -148,6 +148,7 @@ const handleCartCreate = async () => {
 // 更新購物車 (Update Cart)
 const cartUpdateForm = reactive({
   id: "" as string | number,
+  method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "products": [{ "productId": 1, "quantity": 2 }]\n}',
 });
 const cartUpdateState = reactive({
@@ -172,10 +173,10 @@ const handleCartUpdate = async () => {
   cartUpdateState.error = "";
   cartUpdateState.success = "";
   try {
-    const updated = await cartStore.updateRemoteCart(
-      Number(cartUpdateForm.id),
-      payload,
-    );
+    const updated =
+      cartUpdateForm.method === "PATCH"
+        ? await cartStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
+        : await cartStore.updateRemoteCart(Number(cartUpdateForm.id), payload);
     cartUpdateState.result = updated;
     cartUpdateState.success = t("api.carts.updateSuccess", { id: updated.id });
     notifications.info(t("notifications.cartPatched", { id: updated.id }));
@@ -345,12 +346,21 @@ const handleCartDelete = async () => {
         :error="cartUpdateState.error"
         :success-message="cartUpdateState.success">
         <form class="space-y-4" @submit.prevent="handleCartUpdate">
-          <BaseInput
-            v-model="cartUpdateForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.cartId')"
-            required />
+          <div class="grid gap-4 sm:grid-cols-2">
+            <BaseInput
+              v-model="cartUpdateForm.id"
+              type="number"
+              min="1"
+              :label="$t('api.fields.cartId')"
+              required />
+            <BaseSelect
+              v-model="cartUpdateForm.method"
+              :label="$t('api.products.fields.method')"
+              :options="[
+                { label: 'PUT', value: 'PUT' },
+                { label: 'PATCH', value: 'PATCH' },
+              ]" />
+          </div>
           <BaseTextarea
             v-model="cartUpdateForm.payload"
             :label="$t('api.fields.payload')"

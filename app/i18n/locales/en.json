@@ -206,8 +206,11 @@
       "fields": {
         "category": "Category",
         "limit": "Limit",
-        "sort": "Sort"
-      }
+        "sort": "Sort",
+        "method": "Method"
+      },
+      "categoriesTitle": "Fetch product categories",
+      "categoriesDescription": "Call /products/categories to retrieve all available category names."
     },
     "carts": {
       "title": "Cart endpoints",
@@ -244,9 +247,15 @@
       "updateTitle": "Update user",
       "updateDescription": "PUT changes to any user fields.",
       "updateSuccess": "User #{id} updated successfully.",
-      "deleteTitle": "Delete user",
       "deleteDescription": "Remove a user with DELETE /users/:id.",
-      "deleteSuccess": "User #{id} deleted successfully."
+      "deleteSuccess": "User #{id} deleted successfully.",
+      "queryTitle": "Query users",
+      "queryDescription": "Combine limit and sorting to mirror the /users endpoint.",
+      "querySuccess": "Fetched {count} users.",
+      "fields": {
+        "limit": "Limit",
+        "sort": "Sort"
+      }
     }
   },
   "ui": {
