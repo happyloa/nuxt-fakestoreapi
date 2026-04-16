@@ -17,7 +17,8 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
 </script>
 
 <template>
-  <BaseCard class="group flex h-full flex-col space-y-4">
+  <BaseCard
+    class="group flex h-full flex-col space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-premium focus-within:ring-2 focus-within:ring-brand/50">
     <NuxtLink :to="`/product/${product.id}`" class="flex flex-col space-y-3">
       <figure
         class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50">

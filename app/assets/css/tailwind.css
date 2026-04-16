@@ -18,15 +18,17 @@
   --color-accent-dark: #be123c;
   --color-accent-light: #fda4af;
 
-  /* 自訂陰影 */
   --shadow-card: 0 4px 24px -6px rgba(37, 99, 235, 0.12);
   --shadow-card-hover: 0 12px 40px -8px rgba(37, 99, 235, 0.25);
   --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
+  --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
 
   /* 自訂動畫 */
   --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
   --animate-shimmer: shimmer 2s linear infinite;
   --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+  --animate-spin-slow: spin 12s linear infinite;
 
   @keyframes float {
     0%,
@@ -141,5 +143,23 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .gradient-mesh {
+    background-color: #f8fafc;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.1) 0px, transparent 50%);
+  }
+
+  .dark .gradient-mesh {
+    background-color: #020617;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.2) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.2) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.15) 0px, transparent 50%);
   }
 }

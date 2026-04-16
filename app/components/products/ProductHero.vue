@@ -1,7 +1,7 @@
 <template>
   <section
     id="dashboard-hero"
-    class="relative overflow-hidden rounded-3xl border border-slate-200/60 bg-gradient-to-br from-brand/10 via-white to-accent/10 p-8 transition-colors duration-300 sm:p-12 dark:border-slate-800/60 dark:from-brand/20 dark:via-slate-900 dark:to-slate-950"
+    class="gradient-mesh relative overflow-hidden rounded-3xl border border-slate-200/60 p-8 transition-colors duration-300 sm:p-12 dark:border-slate-800/60"
     data-aos="fade-up"
     data-aos-duration="800">
     <!-- 背景裝飾 -->

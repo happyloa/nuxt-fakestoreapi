@@ -11,15 +11,13 @@ const skeletonCount = computed(() => props.count ?? 6);
 <template>
   <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
     <li v-for="index in skeletonCount" :key="index">
-      <BaseCard class="animate-pulse space-y-4">
-        <div class="h-48 rounded-xl bg-slate-200 dark:bg-slate-800"></div>
-        <div class="h-4 w-3/4 rounded bg-slate-200 dark:bg-slate-700"></div>
-        <div class="h-3 w-1/2 rounded bg-slate-100 dark:bg-slate-700"></div>
+      <BaseCard class="space-y-4">
+        <BaseSkeleton height="12rem" rounded="xl" />
+        <BaseSkeleton width="75%" />
+        <BaseSkeleton width="50%" height="0.75rem" />
         <div class="flex gap-2">
-          <div
-            class="h-6 w-16 rounded-full bg-slate-200 dark:bg-slate-700"></div>
-          <div
-            class="h-6 w-20 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+          <BaseSkeleton width="4rem" height="1.5rem" rounded="full" />
+          <BaseSkeleton width="5rem" height="1.5rem" rounded="full" />
         </div>
       </BaseCard>
     </li>
