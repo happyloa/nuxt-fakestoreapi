@@ -80,3 +80,13 @@ export const deleteProduct = (id: number) =>
   fakestoreClient<Product>(`/products/${id}`, {
     method: 'DELETE',
   })
+/**
+ * 部分更新產品資訊 (PATCH)
+ * @param id 產品 ID
+ * @param payload 更新內容
+ */
+export const patchProduct = (id: number, payload: UpdateProductPayload) =>
+  fakestoreClient<Product>(`/products/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })

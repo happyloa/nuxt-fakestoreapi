@@ -4,6 +4,7 @@ import {
   deleteUser as deleteUserApi,
   getUserById as getUserByIdApi,
   getUsers as getUsersApi,
+  patchUser as patchUserApi,
   updateUser as updateUserApi,
 } from '~/services/fakestore/users'
 import type {
@@ -35,20 +36,32 @@ export const useUsersStore = defineStore('users', {
      * 取得所有使用者列表
      * @param force 是否強制重新抓取
      */
-    async fetchUsers(force = false) {
-      if (this.users.length && !force) {
+    async fetchUsers(options: { limit?: number; sort?: 'asc' | 'desc'; force?: boolean } = {}) {
+      if (this.users.length && !options.force && !options.limit && !options.sort) {
         return
       }
       this.loading = true
       this.error = ''
       try {
-        const users = await getUsersApi()
-        this.users = users
+        const users = await getUsersApi({
+          limit: options.limit,
+          sort: options.sort
+        })
+        if (!options.limit && !options.sort) {
+          this.users = users
+        }
+        return users
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to load users.'
       } finally {
         this.loading = false
       }
+    },
+    /**
+     * 專門用於 API 操作區的查詢
+     */
+    async queryUsers(options: { limit?: number; sort?: 'asc' | 'desc' }) {
+      return await getUsersApi(options)
     },
     /**
      * 取得單一使用者詳細資料
@@ -127,6 +140,28 @@ export const useUsersStore = defineStore('users', {
         }
       } catch (error) {
         this.error = error instanceof Error ? error.message : 'Failed to delete user.'
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+    /**
+     * 部分更新使用者資訊 (PATCH)
+     * @param id 使用者 ID
+     * @param payload 更新內容
+     */
+    async patchUser(id: number, payload: UpdateUserPayload) {
+      this.loading = true
+      this.error = ''
+      try {
+        const updated = await patchUserApi(id, payload)
+        this.users = this.users.map((user) =>
+          user.id === id ? { ...user, ...updated } : user,
+        )
+        this.selectedUser = updated
+        return updated
+      } catch (error) {
+        this.error = error instanceof Error ? error.message : 'Failed to patch user.'
         throw error
       } finally {
         this.loading = false

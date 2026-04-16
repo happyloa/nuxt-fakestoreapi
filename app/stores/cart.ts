@@ -5,6 +5,7 @@ import {
   getCartById as getRemoteCartById,
   getCarts as getRemoteCarts,
   getCartsByUser as getRemoteCartsByUser,
+  patchCart as patchCartApi,
   updateCart as updateCartApi,
 } from "~/services/fakestore/carts";
 import { getProductById } from "~/services/fakestore/products";
@@ -267,6 +268,17 @@ export const useCartStore = defineStore("cart", {
       if (this.lastFetchedCart?.id === id) {
         this.lastFetchedCart = null;
       }
+    },
+    /**
+     * 管理員功能：部分更新遠端購物車 (PATCH)
+     */
+    async patchRemoteCart(id: number, payload: UpdateCartPayload) {
+      const updated = await patchCartApi(id, payload);
+      this.carts = this.carts.map((cart) => (cart.id === id ? updated : cart));
+      if (this.lastFetchedCart?.id === id) {
+        this.lastFetchedCart = updated;
+      }
+      return updated;
     },
     /**
      * 輔助函式：將購物車項目補齊詳細商品資料

@@ -63,3 +63,13 @@ export const deleteCart = (id: number) =>
   fakestoreClient<Cart>(`/carts/${id}`, {
     method: 'DELETE',
   })
+/**
+ * 部分更新購物車內容 (PATCH)
+ * @param id 購物車 ID
+ * @param payload 更新內容
+ */
+export const patchCart = (id: number, payload: UpdateCartPayload) =>
+  fakestoreClient<Cart>(`/carts/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })

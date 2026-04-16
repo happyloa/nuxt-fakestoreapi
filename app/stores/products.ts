@@ -6,6 +6,7 @@ import {
   getProductById,
   getProductCategories,
   queryProducts as queryProductsApi,
+  patchProduct as patchProductApi,
   updateProduct as updateProductApi,
 } from "~/services/fakestore/products";
 import type {
@@ -169,6 +170,28 @@ export const useProductsStore = defineStore("products", {
       } catch (error) {
         this.error =
           error instanceof Error ? error.message : "Failed to delete product.";
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    /**
+     * 部分更新商品資訊 (PATCH)
+     * @param id 商品 ID
+     * @param payload 更新內容
+     */
+    async patchProduct(id: number, payload: UpdateProductPayload) {
+      this.loading = true;
+      this.error = "";
+      try {
+        const updated = await patchProductApi(id, payload);
+        this.products = this.products.map((product) =>
+          product.id === id ? { ...product, ...updated } : product,
+        );
+        return updated;
+      } catch (error) {
+        this.error =
+          error instanceof Error ? error.message : "Failed to patch product.";
         throw error;
       } finally {
         this.loading = false;

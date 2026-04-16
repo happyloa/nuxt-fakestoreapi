@@ -54,3 +54,13 @@ export const deleteUser = (id: number) =>
   fakestoreClient<User>(`/users/${id}`, {
     method: 'DELETE',
   })
+/**
+ * 部分更新使用者資訊 (PATCH)
+ * @param id 使用者 ID
+ * @param payload 更新內容
+ */
+export const patchUser = (id: number, payload: UpdateUserPayload) =>
+  fakestoreClient<User>(`/users/${id}`, {
+    method: 'PATCH',
+    body: payload,
+  })
