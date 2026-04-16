@@ -119,4 +119,11 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  // 實驗性功能設定
+  experimental: {
+    // 關閉 serverAppConfig 以修復 Nuxt 4 目前已知的 "Duplicated imports useAppConfig" 警告
+    // 該警告為 cosmetic 無害，但在開發階段會造成干擾
+    serverAppConfig: false,
+  },
 });
