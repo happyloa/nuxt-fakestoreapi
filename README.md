@@ -65,7 +65,7 @@
 
 ## 🧱 使用技術
 
-- [Nuxt 4.4.2](https://nuxt.com/) 與最新的 Nitro 執行環境。
+- [Nuxt 4.4.6](https://nuxt.com/) 與最新的 Nitro 執行環境。
 - [Tailwind CSS v4](https://tailwindcss.com/)，採用 CSS-first 配置方式，透過 `@tailwindcss/vite` 整合。
 - 以 [Pinia](https://pinia.vuejs.org/) 建立的商品、購物車、認證、使用者、通知與主題狀態管理（共 6 個 Store）。
 - 使用 [@nuxtjs/i18n](https://i18n.nuxtjs.org/) 進行在地化，根路徑預設中文介面（無 `/zh`），英文頁面才以 `/en` 呈現，且非中文瀏覽器自動顯示英文。
