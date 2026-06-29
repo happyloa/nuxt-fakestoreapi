@@ -61,19 +61,12 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 20;
 };
 
-onMounted(() => {
-  if (!import.meta.client) return;
-  window.addEventListener("keyup", handleEscape);
-  window.addEventListener("resize", handleResize);
-  window.addEventListener("scroll", handleScroll, { passive: true });
-  handleScroll();
-});
+useWindowEvent("keyup", handleEscape);
+useWindowEvent("resize", handleResize);
+useWindowEvent("scroll", handleScroll, { passive: true });
 
-onBeforeUnmount(() => {
-  if (!import.meta.client) return;
-  window.removeEventListener("keyup", handleEscape);
-  window.removeEventListener("resize", handleResize);
-  window.removeEventListener("scroll", handleScroll);
+onMounted(() => {
+  if (import.meta.client) handleScroll();
 });
 </script>
 

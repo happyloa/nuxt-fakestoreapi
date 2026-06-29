@@ -15,15 +15,10 @@ const scrollToTop = () => {
   });
 };
 
-onMounted(() => {
-  if (!import.meta.client) return;
-  window.addEventListener("scroll", handleScroll, { passive: true });
-  handleScroll();
-});
+useWindowEvent("scroll", handleScroll, { passive: true });
 
-onBeforeUnmount(() => {
-  if (!import.meta.client) return;
-  window.removeEventListener("scroll", handleScroll);
+onMounted(() => {
+  if (import.meta.client) handleScroll();
 });
 </script>
 

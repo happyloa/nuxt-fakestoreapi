@@ -138,42 +138,20 @@ usePageSeo(() => ({
             {{ $t("account.sections.profile") }}
           </h2>
           <dl class="space-y-3 text-sm">
-            <div
-              class="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.username") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.username }}
-              </dd>
-            </div>
-            <div
-              class="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.fullName") }}
-              </dt>
-              <dd
-                class="font-semibold capitalize text-slate-900 dark:text-white">
-                {{ fullName }}
-              </dd>
-            </div>
-            <div
-              class="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.email") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.email }}
-              </dd>
-            </div>
-            <div class="flex justify-between">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.phone") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.phone }}
-              </dd>
-            </div>
+            <AccountInfoRow :label="$t('account.fields.username')">
+              {{ authStore.user.username }}
+            </AccountInfoRow>
+            <AccountInfoRow :label="$t('account.fields.fullName')" capitalize>
+              {{ fullName }}
+            </AccountInfoRow>
+            <AccountInfoRow :label="$t('account.fields.email')">
+              {{ authStore.user.email }}
+            </AccountInfoRow>
+            <AccountInfoRow
+              :label="$t('account.fields.phone')"
+              :divider="false">
+              {{ authStore.user.phone }}
+            </AccountInfoRow>
           </dl>
         </BaseCard>
 
@@ -200,33 +178,18 @@ usePageSeo(() => ({
             {{ $t("account.sections.address") }}
           </h2>
           <dl class="space-y-3 text-sm">
-            <div
-              class="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.city") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.address.city }}
-              </dd>
-            </div>
-            <div
-              class="flex justify-between border-b border-slate-100 pb-2 dark:border-slate-800">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.street") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.address.street }}
-                {{ authStore.user.address.number }}
-              </dd>
-            </div>
-            <div class="flex justify-between">
-              <dt class="font-medium text-slate-500 dark:text-slate-400">
-                {{ $t("account.fields.zipcode") }}
-              </dt>
-              <dd class="font-semibold text-slate-900 dark:text-white">
-                {{ authStore.user.address.zipcode }}
-              </dd>
-            </div>
+            <AccountInfoRow :label="$t('account.fields.city')">
+              {{ authStore.user.address.city }}
+            </AccountInfoRow>
+            <AccountInfoRow :label="$t('account.fields.street')">
+              {{ authStore.user.address.street }}
+              {{ authStore.user.address.number }}
+            </AccountInfoRow>
+            <AccountInfoRow
+              :label="$t('account.fields.zipcode')"
+              :divider="false">
+              {{ authStore.user.address.zipcode }}
+            </AccountInfoRow>
           </dl>
         </BaseCard>
 
