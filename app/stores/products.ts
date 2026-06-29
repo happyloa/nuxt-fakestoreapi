@@ -65,7 +65,7 @@ export const useProductsStore = defineStore("products", {
         this.products = products;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load products.";
+          toErrorMessage(error, "Failed to load products.");
       } finally {
         this.loading = false;
       }
@@ -83,7 +83,7 @@ export const useProductsStore = defineStore("products", {
         this.categories = categories;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load categories.";
+          toErrorMessage(error, "Failed to load categories.");
       }
     },
     /**
@@ -102,7 +102,7 @@ export const useProductsStore = defineStore("products", {
         return product;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load product.";
+          toErrorMessage(error, "Failed to load product.");
         throw error;
       }
     },
@@ -129,7 +129,7 @@ export const useProductsStore = defineStore("products", {
         return created;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to create product.";
+          toErrorMessage(error, "Failed to create product.");
         throw error;
       } finally {
         this.loading = false;
@@ -151,7 +151,7 @@ export const useProductsStore = defineStore("products", {
         return updated;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to update product.";
+          toErrorMessage(error, "Failed to update product.");
         throw error;
       } finally {
         this.loading = false;
@@ -169,7 +169,7 @@ export const useProductsStore = defineStore("products", {
         this.products = this.products.filter((product) => product.id !== id);
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to delete product.";
+          toErrorMessage(error, "Failed to delete product.");
         throw error;
       } finally {
         this.loading = false;
@@ -191,7 +191,7 @@ export const useProductsStore = defineStore("products", {
         return updated;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to patch product.";
+          toErrorMessage(error, "Failed to patch product.");
         throw error;
       } finally {
         this.loading = false;

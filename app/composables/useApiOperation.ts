@@ -50,8 +50,7 @@ export function useApiOperation<T>(initialResult: T) {
       options.onSuccess?.(result);
       return result;
     } catch (error) {
-      state.error =
-        error instanceof Error ? error.message : t("api.errors.generic");
+      state.error = toErrorMessage(error, t("api.errors.generic"));
       return undefined;
     } finally {
       state.loading = false;

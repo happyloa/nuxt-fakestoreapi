@@ -73,7 +73,7 @@ export const useCartStore = defineStore("cart", {
           this.lastFetchedCart = null;
         }
       } catch (e) {
-        this.error = e instanceof Error ? e.message : "Failed to load cart";
+        this.error = toErrorMessage(e, "Failed to load cart");
       } finally {
         this.loading = false;
       }
@@ -208,7 +208,7 @@ export const useCartStore = defineStore("cart", {
         return carts;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load carts.";
+          toErrorMessage(error, "Failed to load carts.");
         throw error;
       }
     },
@@ -222,7 +222,7 @@ export const useCartStore = defineStore("cart", {
         return cart;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load cart.";
+          toErrorMessage(error, "Failed to load cart.");
         throw error;
       }
     },
@@ -236,7 +236,7 @@ export const useCartStore = defineStore("cart", {
         return carts;
       } catch (error) {
         this.error =
-          error instanceof Error ? error.message : "Failed to load user carts.";
+          toErrorMessage(error, "Failed to load user carts.");
         throw error;
       }
     },

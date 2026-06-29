@@ -52,7 +52,7 @@ export const useUsersStore = defineStore('users', {
         }
         return users
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to load users.'
+        this.error = toErrorMessage(error, 'Failed to load users.')
       } finally {
         this.loading = false
       }
@@ -79,7 +79,7 @@ export const useUsersStore = defineStore('users', {
         }
         return user
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to load user.'
+        this.error = toErrorMessage(error, 'Failed to load user.')
         throw error
       } finally {
         this.loading = false
@@ -97,7 +97,7 @@ export const useUsersStore = defineStore('users', {
         this.users.push(created)
         return created
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to create user.'
+        this.error = toErrorMessage(error, 'Failed to create user.')
         throw error
       } finally {
         this.loading = false
@@ -119,7 +119,7 @@ export const useUsersStore = defineStore('users', {
         this.selectedUser = updated
         return updated
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to update user.'
+        this.error = toErrorMessage(error, 'Failed to update user.')
         throw error
       } finally {
         this.loading = false
@@ -139,7 +139,7 @@ export const useUsersStore = defineStore('users', {
           this.selectedUser = null
         }
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to delete user.'
+        this.error = toErrorMessage(error, 'Failed to delete user.')
         throw error
       } finally {
         this.loading = false
@@ -161,7 +161,7 @@ export const useUsersStore = defineStore('users', {
         this.selectedUser = updated
         return updated
       } catch (error) {
-        this.error = error instanceof Error ? error.message : 'Failed to patch user.'
+        this.error = toErrorMessage(error, 'Failed to patch user.')
         throw error
       } finally {
         this.loading = false
