@@ -64,7 +64,7 @@ const localePath = useLocalePath();
           style="animation-delay: -1.5s" />
         <NuxtImg
           src="/hero-products.svg"
-          alt="Product illustration"
+          :alt="$t('products.hero.illustrationAlt')"
           class="relative z-10 mx-auto h-48 w-auto drop-shadow-2xl transition-transform duration-500 hover:scale-105 sm:h-56"
           data-aos="zoom-in"
           data-aos-delay="400" />

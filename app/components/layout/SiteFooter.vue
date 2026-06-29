@@ -1,23 +1,28 @@
 <script setup lang="ts">
-const links = [
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+
+// 區塊標題與可譯連結文字走 i18n；品牌專有名詞（Fake Store API 等）維持原文
+const links = computed(() => [
   {
-    title: "API",
+    title: t("footer.sections.api"),
     items: [
       { label: "Fake Store API", href: "https://fakestoreapi.com" },
       { label: "API Reference", href: "https://fakestoreapi.com/docs" },
     ],
   },
   {
-    title: "Project",
+    title: t("footer.sections.project"),
     items: [
       {
-        label: "Source Code",
+        label: t("footer.links.sourceCode"),
         href: "https://github.com/happyloa/nuxt-fakestoreapi",
       },
       { label: "Nuxt Documentation", href: "https://nuxt.com/docs" },
     ],
   },
-];
+]);
 </script>
 
 <template>

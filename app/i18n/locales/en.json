@@ -17,7 +17,10 @@
     "users": "Users",
     "apiPlayground": "API playground",
     "login": "Login",
-    "account": "My Account"
+    "account": "My Account",
+    "menu": "Menu",
+    "ariaPrimary": "Primary navigation",
+    "ariaToggle": "Toggle navigation"
   },
   "products": {
     "hero": {
@@ -25,7 +28,8 @@
       "title": "Manage every product in one modern workspace",
       "subtitle": "Browse, filter, create and inspect catalogue items with live data coming from the Fake Store API.",
       "ctaPrimary": "Create product",
-      "ctaSecondary": "Meet the users"
+      "ctaSecondary": "Meet the users",
+      "illustrationAlt": "Product illustration"
     },
     "stats": {
       "sectionTitle": "Catalogue highlights",
@@ -252,6 +256,7 @@
       "updateTitle": "Update user",
       "updateDescription": "PUT changes to any user fields.",
       "updateSuccess": "User #{id} updated successfully.",
+      "deleteTitle": "Delete user",
       "deleteDescription": "Remove a user with DELETE /users/:id.",
       "deleteSuccess": "User #{id} deleted successfully.",
       "queryTitle": "Query users",
@@ -279,7 +284,14 @@
   "footer": {
     "title": "About this project",
     "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
-    "copyright": "© {year} Fake Store Dashboard. All rights reserved."
+    "copyright": "© {year} Fake Store Dashboard. All rights reserved.",
+    "sections": {
+      "api": "API",
+      "project": "Project"
+    },
+    "links": {
+      "sourceCode": "Source Code"
+    }
   },
   "seo": {
     "home": {

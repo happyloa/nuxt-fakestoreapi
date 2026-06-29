@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
         <span class="gradient-brand-text font-extrabold">Fake Store</span>
       </NuxtLink>
       <nav
-        aria-label="Primary navigation"
+        :aria-label="t('navigation.ariaPrimary')"
         class="hidden items-center gap-1.5 text-sm font-medium text-slate-600 lg:flex lg:flex-wrap lg:justify-end lg:gap-2 dark:text-slate-200">
         <NuxtLink
           v-for="item in navigation"
@@ -173,7 +173,7 @@ onBeforeUnmount(() => {
         :aria-expanded="isMenuOpen"
         aria-controls="site-navigation-mobile"
         @click="isMenuOpen = !isMenuOpen">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only">{{ t("navigation.ariaToggle") }}</span>
         <Transition name="menu-icon" mode="out-in">
           <svg
             v-if="!isMenuOpen"
@@ -226,10 +226,12 @@ onBeforeUnmount(() => {
             id="site-navigation-mobile"
             class="fixed inset-y-0 right-0 z-50 w-72 lg:hidden">
             <nav
-              aria-label="Primary navigation"
+              :aria-label="t('navigation.ariaPrimary')"
               class="flex h-full flex-col bg-white/95 px-5 py-6 shadow-2xl backdrop-blur-xl dark:bg-slate-900/95">
               <div class="mb-6 flex items-center justify-between">
-                <span class="gradient-brand-text text-lg font-bold">選單</span>
+                <span class="gradient-brand-text text-lg font-bold">{{
+                  t("navigation.menu")
+                }}</span>
                 <button
                   type="button"
                   class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"

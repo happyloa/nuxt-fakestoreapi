@@ -17,7 +17,10 @@
     "users": "會員列表",
     "apiPlayground": "API 操作台",
     "login": "會員登入",
-    "account": "我的帳號"
+    "account": "我的帳號",
+    "menu": "選單",
+    "ariaPrimary": "主要導覽",
+    "ariaToggle": "切換導覽選單"
   },
   "products": {
     "hero": {
@@ -25,7 +28,8 @@
       "title": "在一個介面管理所有商品",
       "subtitle": "結合 Fake Store API 的商品資料，支援瀏覽、篩選、建立與查看詳細資訊。",
       "ctaPrimary": "建立新商品",
-      "ctaSecondary": "查看會員資料"
+      "ctaSecondary": "查看會員資料",
+      "illustrationAlt": "商品插畫"
     },
     "stats": {
       "sectionTitle": "商店概況",
@@ -265,6 +269,7 @@
       "updateTitle": "更新會員",
       "updateDescription": "使用 PUT 請求更新會員欄位。",
       "updateSuccess": "會員 #{id} 更新成功。",
+      "deleteTitle": "刪除會員",
       "deleteDescription": "對 /users/:id 發送 DELETE 移除會員。",
       "deleteSuccess": "會員 #{id} 已刪除。",
       "queryTitle": "查詢會員列表",
@@ -279,7 +284,14 @@
   "footer": {
     "title": "專案說明",
     "description": "以 Nuxt 4、Tailwind CSS 與 Fake Store API 打造的示範作品。",
-    "copyright": "© {year} Fake Store Dashboard. 版權所有。"
+    "copyright": "© {year} Fake Store Dashboard. 版權所有。",
+    "sections": {
+      "api": "API",
+      "project": "專案"
+    },
+    "links": {
+      "sourceCode": "原始碼"
+    }
   },
   "seo": {
     "home": {
