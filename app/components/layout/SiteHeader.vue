@@ -130,10 +130,10 @@ onBeforeUnmount(() => {
         <!-- 登入/帳號連結（ClientOnly 避免 hydration mismatch） -->
         <ClientOnly>
           <NuxtLink
-            :to="auth.user ? localePath('/account') : localePath('/login')"
+            :to="auth.isAuthenticated ? localePath('/account') : localePath('/login')"
             :aria-current="
               isActive(
-                auth.user ? localePath('/account') : localePath('/login'),
+                auth.isAuthenticated ? localePath('/account') : localePath('/login'),
               )
                 ? 'page'
                 : undefined
@@ -141,16 +141,16 @@ onBeforeUnmount(() => {
             class="relative rounded-lg px-3 py-2 transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
             :class="[
               isActive(
-                auth.user ? localePath('/account') : localePath('/login'),
+                auth.isAuthenticated ? localePath('/account') : localePath('/login'),
               )
                 ? 'text-brand dark:text-brand-light font-semibold'
                 : 'text-slate-600 dark:text-slate-300',
             ]">
-            {{ auth.user ? t("navigation.account") : t("navigation.login") }}
+            {{ auth.isAuthenticated ? t("navigation.account") : t("navigation.login") }}
             <span
               v-if="
                 isActive(
-                  auth.user ? localePath('/account') : localePath('/login'),
+                  auth.isAuthenticated ? localePath('/account') : localePath('/login'),
                 )
               "
               class="absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-brand transition-all dark:bg-brand-light" />
@@ -268,7 +268,7 @@ onBeforeUnmount(() => {
                 <ClientOnly>
                   <NuxtLink
                     :to="
-                      auth.user ? localePath('/account') : localePath('/login')
+                      auth.isAuthenticated ? localePath('/account') : localePath('/login')
                     "
                     :aria-current="
                       isActive(

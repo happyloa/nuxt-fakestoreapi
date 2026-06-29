@@ -10,6 +10,9 @@ const notifications = useNotificationsStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
 
+// 此頁需登入才能瀏覽；未登入者由 auth middleware 導向登入頁
+definePageMeta({ middleware: "auth" });
+
 const handleLogout = () => {
   authStore.logoutUser();
   notifications.info(t("notifications.loggedOut"), 2000);
@@ -48,8 +51,10 @@ useHead(() => ({
 
 <template>
   <div class="space-y-8" data-aos="fade-up">
-    <!-- 未登入提示 -->
-    <div v-if="!authStore.user" class="flex flex-col items-center gap-6 py-12">
+    <!-- 未登入提示（auth middleware 已守衛，此為防禦性後備） -->
+    <div
+      v-if="!authStore.isAuthenticated"
+      class="flex flex-col items-center gap-6 py-12">
       <div
         class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
         <svg
@@ -76,6 +81,11 @@ useHead(() => ({
       <NuxtLink :to="localePath('/login')">
         <BaseButton>{{ $t("account.loginCta") }}</BaseButton>
       </NuxtLink>
+    </div>
+
+    <!-- 已登入但使用者資料載入中 -->
+    <div v-else-if="!authStore.user" class="flex justify-center py-20">
+      <BaseLoader />
     </div>
 
     <!-- 已登入帳號頁面 -->

@@ -10,8 +10,12 @@ import { useCartStore } from "~/stores/cart";
  */
 export const useAuthStore = defineStore("auth", () => {
   // 使用 useCookie 來持久化保存 token，設定過期時間為 7 天
+  // 註：因 client 需讀取 token 解析 userId，故無法設 httpOnly；
+  //     徹底解法需改由 server route 代理登入並以 httpOnly cookie 保存。
   const token = useCookie<string | null>("auth_token", {
     maxAge: 60 * 60 * 24 * 7,
+    sameSite: "lax",
+    secure: !import.meta.dev,
   });
 
   const user = ref<User | null>(null);

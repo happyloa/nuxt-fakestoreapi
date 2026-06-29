@@ -9,10 +9,20 @@ const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
+const route = useRoute();
 
-// 已登入的使用者直接導向帳號頁
-if (authStore.user) {
-  navigateTo(localePath("/account"));
+// 安全的重導目標：僅接受站內相對路徑，避免 open redirect
+const resolveRedirect = () => {
+  const r = route.query.redirect;
+  if (typeof r === "string" && r.startsWith("/") && !r.startsWith("//")) {
+    return r;
+  }
+  return localePath("/account");
+};
+
+// 已登入的使用者直接導向目標頁
+if (authStore.isAuthenticated) {
+  navigateTo(resolveRedirect());
 }
 
 /**
@@ -27,12 +37,16 @@ const handleSubmit = async ({
   password: string;
 }) => {
   await authStore.loginUser(username, password);
-  if (authStore.user) {
-    cartStore.fetchCart(authStore.user.id);
+  if (authStore.isAuthenticated) {
+    if (authStore.user) {
+      cartStore.fetchCart(authStore.user.id);
+    }
     notifications.success(
-      t("notifications.loggedIn", { name: authStore.user.username }),
+      t("notifications.loggedIn", {
+        name: authStore.user?.username ?? username,
+      }),
     );
-    navigateTo(localePath("/account"));
+    navigateTo(resolveRedirect());
   }
 };
 
@@ -49,7 +63,7 @@ useHead(() => ({
 <template>
   <div class="flex flex-col items-center gap-6" data-aos="fade-up">
     <LoginForm
-      v-if="!authStore.user"
+      v-if="!authStore.isAuthenticated"
       :loading="authStore.loading"
       :error="authStore.error ?? undefined"
       @submit="handleSubmit" />
