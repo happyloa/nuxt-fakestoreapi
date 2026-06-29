@@ -48,9 +48,9 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
     </NuxtLink>
     <footer
       class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-      <BaseBadge variant="brand"
-        >${{ Number(product.price).toFixed(2) }}</BaseBadge
-      >
+      <BaseBadge variant="brand">{{
+        $n(Number(product.price), "currency")
+      }}</BaseBadge>
       <div class="flex items-center gap-1 text-xs font-medium">
         <svg
           class="h-4 w-4 text-amber-400"

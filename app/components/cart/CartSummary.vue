@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
     <div class="space-y-2 text-sm text-slate-600 dark:text-slate-300">
       <p>{{ $t("cart.summary.items", { count: itemCount }) }}</p>
       <p class="text-lg font-semibold text-slate-900 dark:text-white">
-        {{ $t("cart.summary.total", { total: total.toFixed(2) }) }}
+        {{ $t("cart.summary.total", { total: $n(total, "currency") }) }}
       </p>
     </div>
     <div class="space-y-2">

@@ -91,7 +91,6 @@
     "title": "購物車",
     "subtitle": "登入後會自動與 Fake Store API 的購物車同步。",
     "loginPrompt": "請先登入以載入最新的購物車資料並同步後續變動。",
-    "itemPrice": "USD {price}",
     "remove": "移除",
     "empty": "購物車目前是空的，快去逛逛商品吧！",
     "itemsHeading": "購物車內的商品",
@@ -99,7 +98,7 @@
       "title": "訂單摘要",
       "description": "確認商品與金額後再進行下一步。",
       "items": "項目數：{count}",
-      "total": "總計：USD {total}",
+      "total": "總計：{total}",
       "checkout": "前往結帳",
       "clear": "清空購物車"
     }

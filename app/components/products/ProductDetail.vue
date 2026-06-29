@@ -37,9 +37,9 @@ const props = withDefaults(defineProps<Props>(), {
         {{ product.description }}
       </p>
       <div class="flex items-center gap-6">
-        <span class="text-3xl font-semibold text-brand dark:text-brand-light"
-          >${{ Number(product.price).toFixed(2) }}</span
-        >
+        <span class="text-3xl font-semibold text-brand dark:text-brand-light">{{
+          $n(Number(product.price), "currency")
+        }}</span>
         <BaseButton @click="$emit('add-to-cart', product)">
           {{ $t("products.actions.addToCart") }}
         </BaseButton>

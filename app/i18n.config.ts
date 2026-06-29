@@ -8,4 +8,13 @@ export default defineI18nConfig(() => ({
   locale: "zh",
   fallbackLocale: "en",
   availableLocales: ["zh", "en"],
+  // 貨幣格式：FakeStore 商品價格皆為 USD，統一以 $n(value, 'currency') 在地化呈現
+  numberFormats: {
+    zh: {
+      currency: { style: "currency", currency: "USD" },
+    },
+    en: {
+      currency: { style: "currency", currency: "USD" },
+    },
+  },
 }));

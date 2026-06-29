@@ -91,7 +91,6 @@
     "title": "Shopping cart",
     "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
     "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
-    "itemPrice": "USD {price}",
     "remove": "Remove",
     "empty": "Your cart is empty. Add something from the products page!",
     "itemsHeading": "Items in your cart",
@@ -99,7 +98,7 @@
       "title": "Order summary",
       "description": "Review the totals and proceed when you're ready.",
       "items": "Items: {count}",
-      "total": "Total: USD {total}",
+      "total": "Total: {total}",
       "checkout": "Checkout",
       "clear": "Clear cart"
     }

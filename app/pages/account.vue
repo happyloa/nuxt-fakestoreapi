@@ -261,8 +261,8 @@ useHead(() => ({
                   {{ item.title }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  × {{ item.quantity }} · USD
-                  {{ (item.price * item.quantity).toFixed(2) }}
+                  × {{ item.quantity }} ·
+                  {{ $n(item.price * item.quantity, "currency") }}
                 </p>
               </div>
             </div>
