@@ -5,7 +5,7 @@ import {
 } from "~/services/fakestore/carts";
 import { getProductById } from "~/services/fakestore/products";
 import { useProductsStore } from "~/stores/products";
-import type { Cart, CartProductItem } from "~/types/fakestore";
+import type { CartProductItem } from "~/types/fakestore";
 
 export interface CartItem {
   id: number;
@@ -38,7 +38,6 @@ export const useCartStore = defineStore("cart", {
     userId: null as number | null,
     loading: false,
     error: "",
-    lastFetchedCart: null as Cart | null,
   }),
   getters: {
     // 計算購物車總金額
@@ -68,10 +67,8 @@ export const useCartStore = defineStore("cart", {
           const latest = carts[carts.length - 1]!;
           const items = await this.enrichCartItems(latest.products);
           this.items = items;
-          this.lastFetchedCart = latest;
         } else {
           this.items = [];
-          this.lastFetchedCart = null;
         }
       } catch {
         this.error = localizedError("load");
@@ -187,7 +184,6 @@ export const useCartStore = defineStore("cart", {
           quantity: item.quantity,
         })),
       });
-      this.lastFetchedCart = order;
       this.lastOrderItems = [...this.items];
       this.items = [];
       return order;

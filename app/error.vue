@@ -12,6 +12,8 @@ const localePath = useLocalePath();
 const handleError = () => {
   clearError({ redirect: localePath("/") });
 };
+
+useSeoMeta({ robots: "noindex, nofollow" });
 </script>
 
 <template>

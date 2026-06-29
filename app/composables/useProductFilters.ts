@@ -8,11 +8,14 @@ export const useProductFilters = (productsSource: () => Product[]) => {
   const route = useRoute();
   const router = useRouter();
 
-  const selectedCategory = ref((route.query.category as string) ?? "all");
+  const qs = (val: string | string[] | undefined): string =>
+    Array.isArray(val) ? (val[0] ?? "") : (val ?? "");
+
+  const selectedCategory = ref(qs(route.query.category) || "all");
   const sortOrder = ref<"asc" | "desc">(
-    ((route.query.sort as string) ?? "asc") === "desc" ? "desc" : "asc",
+    qs(route.query.sort) === "desc" ? "desc" : "asc",
   );
-  const searchQuery = ref((route.query.q as string) ?? "");
+  const searchQuery = ref(qs(route.query.q));
 
   const filteredProducts = computed(() => {
     let items = [...productsSource()];
