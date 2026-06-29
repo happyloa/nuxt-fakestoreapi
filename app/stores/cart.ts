@@ -9,6 +9,7 @@ import {
   updateCart as updateCartApi,
 } from "~/services/fakestore/carts";
 import { getProductById } from "~/services/fakestore/products";
+import { useProductsStore } from "~/stores/products";
 import type {
   Cart,
   CartProductItem,
@@ -22,6 +23,16 @@ export interface CartItem {
   price: number;
   image: string;
   quantity: number;
+}
+
+// syncCart 防抖：將短時間內連續的購物車變更合併成一次 POST，避免請求風暴。
+// 僅在 client 端使用者操作時觸發，故以 module 層 timer 實作即可。
+let syncTimer: ReturnType<typeof setTimeout> | null = null;
+function cancelPendingSync() {
+  if (syncTimer) {
+    clearTimeout(syncTimer);
+    syncTimer = null;
+  }
 }
 
 /**
@@ -79,6 +90,16 @@ export const useCartStore = defineStore("cart", {
       }
     },
     /**
+     * 將購物車同步排入防抖佇列（300ms 內的連續變更只送一次）
+     */
+    queueSync() {
+      cancelPendingSync();
+      syncTimer = setTimeout(() => {
+        syncTimer = null;
+        this.syncCart();
+      }, 300);
+    },
+    /**
      * 同步本地購物車到遠端伺服器
      * 每次變更購物車內容時呼叫
      */
@@ -113,7 +134,7 @@ export const useCartStore = defineStore("cart", {
       } else {
         this.items.push({ ...product, quantity: 1 });
       }
-      this.syncCart();
+      this.queueSync();
     },
     /**
      * 從購物車移除商品
@@ -121,7 +142,7 @@ export const useCartStore = defineStore("cart", {
      */
     removeItem(id: number) {
       this.items = this.items.filter((i) => i.id !== id);
-      this.syncCart();
+      this.queueSync();
     },
     /**
      * 增加商品數量 (+1)
@@ -131,7 +152,7 @@ export const useCartStore = defineStore("cart", {
       const item = this.items.find((i) => i.id === id);
       if (item) {
         item.quantity += 1;
-        this.syncCart();
+        this.queueSync();
       }
     },
     /**
@@ -149,15 +170,16 @@ export const useCartStore = defineStore("cart", {
       } else {
         this.items = this.items.filter((i) => i.id !== id);
       }
-      this.syncCart();
+      this.queueSync();
     },
     /**
      * 清空購物車
      * @param preserveUser 是否保留使用者 ID (預設不保留)
      */
     clear({ preserveUser = false }: { preserveUser?: boolean } = {}) {
+      // 清空不主動同步：FakeStore 為 mock API，POST 空車無意義且會污染 carts
+      cancelPendingSync();
       this.items = [];
-      this.syncCart();
       if (!preserveUser) {
         this.userId = null;
       }
@@ -167,6 +189,7 @@ export const useCartStore = defineStore("cart", {
      * 建立一筆新的訂單 (模擬) 並清空購物車
      */
     async checkout() {
+      cancelPendingSync();
       if (!this.userId) {
         throw new Error("User not authenticated");
       }
@@ -285,9 +308,14 @@ export const useCartStore = defineStore("cart", {
      * 因為 API 回傳的購物車只有 productId，需要額外查詢商品詳情
      */
     async enrichCartItems(products: CartProductItem[]): Promise<CartItem[]> {
+      const productsStore = useProductsStore();
       const items = await Promise.all(
         products.map(async (product) => {
-          const detail = await getProductById(product.productId);
+          // 先查 products store 既有快取，命中則免發單品請求
+          const cached = productsStore.products.find(
+            (p) => p.id === product.productId,
+          );
+          const detail = cached ?? (await getProductById(product.productId));
           return {
             id: detail.id,
             title: detail.title,

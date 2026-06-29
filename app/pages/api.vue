@@ -29,8 +29,8 @@ usePageSeo(() => ({
       :description="$t('api.subtitle')"
       data-aos="fade-up" />
 
-    <ProductsSection data-aos="fade-up" data-aos-delay="100" />
-    <CartsSection data-aos="fade-up" data-aos-delay="200" />
-    <UsersSection data-aos="fade-up" data-aos-delay="300" />
+    <LazyProductsSection data-aos="fade-up" data-aos-delay="100" />
+    <LazyCartsSection data-aos="fade-up" data-aos-delay="200" />
+    <LazyUsersSection data-aos="fade-up" data-aos-delay="300" />
   </div>
 </template>
