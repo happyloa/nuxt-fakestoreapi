@@ -50,7 +50,7 @@ const links = computed(() => [
         </div>
         <div v-for="section in links" :key="section.title" class="space-y-4">
           <h4
-            class="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
             {{ section.title }}
           </h4>
           <ul class="space-y-2 text-sm">
@@ -79,7 +79,7 @@ const links = computed(() => [
         </div>
       </div>
       <div
-        class="mt-12 flex flex-col gap-5 border-t border-slate-200/60 pt-8 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800/60 dark:text-slate-500">
+        class="mt-12 flex flex-col gap-5 border-t border-slate-200/60 pt-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800/60 dark:text-slate-400">
         <p>
           {{ $t("footer.copyright", { year: new Date().getFullYear() }) }}
         </p>

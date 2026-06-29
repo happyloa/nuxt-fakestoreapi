@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
       class="absolute inset-x-0 top-0 h-1 bg-[length:200%_100%] bg-gradient-to-r transition-all duration-500 group-hover:h-1.5 group-hover:bg-right"
       :class="accentColor" />
     <p
-      class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+      class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
       {{ label }}
     </p>
     <p

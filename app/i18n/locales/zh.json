@@ -92,6 +92,11 @@
     "subtitle": "登入後會自動與 Fake Store API 的購物車同步。",
     "loginPrompt": "請先登入以載入最新的購物車資料並同步後續變動。",
     "remove": "移除",
+    "a11y": {
+      "increaseQty": "增加「{title}」的數量",
+      "decreaseQty": "減少「{title}」的數量",
+      "removeItem": "移除「{title}」"
+    },
     "empty": "購物車目前是空的，快去逛逛商品吧！",
     "itemsHeading": "購物車內的商品",
     "summary": {

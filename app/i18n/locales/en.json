@@ -92,6 +92,11 @@
     "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
     "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
     "remove": "Remove",
+    "a11y": {
+      "increaseQty": "Increase quantity of {title}",
+      "decreaseQty": "Decrease quantity of {title}",
+      "removeItem": "Remove {title}"
+    },
     "empty": "Your cart is empty. Add something from the products page!",
     "itemsHeading": "Items in your cart",
     "summary": {

@@ -75,7 +75,12 @@ const props = withDefaults(defineProps<Props>(), {
               <BaseButton
                 variant="outline"
                 size="sm"
-                class="w-8 h-8 !p-0 shrink-0"
+                class="h-11 w-11 !p-0 shrink-0"
+                :aria-label="
+                  item.quantity === 1
+                    ? $t('cart.a11y.removeItem', { title: item.title })
+                    : $t('cart.a11y.decreaseQty', { title: item.title })
+                "
                 @click="
                   item.quantity === 1
                     ? $emit('remove', item.id)
@@ -88,7 +93,8 @@ const props = withDefaults(defineProps<Props>(), {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  stroke-width="2">
+                  stroke-width="2"
+                  aria-hidden="true">
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -103,7 +109,8 @@ const props = withDefaults(defineProps<Props>(), {
               <BaseButton
                 variant="outline"
                 size="sm"
-                class="w-8 h-8 !p-0 shrink-0"
+                class="h-11 w-11 !p-0 shrink-0"
+                :aria-label="$t('cart.a11y.increaseQty', { title: item.title })"
                 @click="$emit('increment', item.id)"
                 >+</BaseButton
               >

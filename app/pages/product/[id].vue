@@ -93,8 +93,8 @@ const addToCart = () => {
     </NuxtLink>
 
     <div v-if="pending" class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
-      <BaseCard class="h-64 animate-pulse bg-slate-100" />
-      <BaseCard class="h-64 animate-pulse bg-slate-100" />
+      <BaseCard class="h-64 animate-pulse bg-slate-100 dark:bg-slate-800" />
+      <BaseCard class="h-64 animate-pulse bg-slate-100 dark:bg-slate-800" />
     </div>
 
     <BaseAlert v-else-if="errorMessage" variant="error">
