@@ -19,7 +19,13 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@pinia/nuxt",
     "@nuxt/image",
+    "@nuxtjs/sitemap",
   ],
+
+  // 站台 URL（供 sitemap 與 SEO 使用），可由環境變數覆寫
+  site: {
+    url: process.env.NUXT_PUBLIC_SITE_URL || "https://nuxt-fakestoreapi.worksbyaaron.com",
+  },
 
   // Nuxt Image 相關配置
   image: {
