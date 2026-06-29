@@ -65,7 +65,7 @@ export const useProductsStore = defineStore("products", {
         this.products = products;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to load products.");
+          localizedError("load");
       } finally {
         this.loading = false;
       }
@@ -83,7 +83,7 @@ export const useProductsStore = defineStore("products", {
         this.categories = categories;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to load categories.");
+          localizedError("load");
       }
     },
     /**
@@ -102,7 +102,7 @@ export const useProductsStore = defineStore("products", {
         return product;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to load product.");
+          localizedError("load");
         throw error;
       }
     },
@@ -129,7 +129,7 @@ export const useProductsStore = defineStore("products", {
         return created;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to create product.");
+          localizedError("save");
         throw error;
       } finally {
         this.loading = false;
@@ -151,7 +151,7 @@ export const useProductsStore = defineStore("products", {
         return updated;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to update product.");
+          localizedError("save");
         throw error;
       } finally {
         this.loading = false;
@@ -169,7 +169,7 @@ export const useProductsStore = defineStore("products", {
         this.products = this.products.filter((product) => product.id !== id);
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to delete product.");
+          localizedError("delete");
         throw error;
       } finally {
         this.loading = false;
@@ -191,7 +191,7 @@ export const useProductsStore = defineStore("products", {
         return updated;
       } catch (error) {
         this.error =
-          toErrorMessage(error, "Failed to patch product.");
+          localizedError("save");
         throw error;
       } finally {
         this.loading = false;

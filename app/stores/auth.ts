@@ -56,7 +56,7 @@ export const useAuthStore = defineStore("auth", () => {
       user.value = await getUserById(userId);
     } catch (e) {
       console.error("Failed to fetch user:", e);
-      error.value = "Failed to fetch user profile";
+      error.value = localizedError("profile");
       // 如果抓不到使用者，可能 Token 失效，考慮登出
       // token.value = null
     } finally {
@@ -79,7 +79,7 @@ export const useAuthStore = defineStore("auth", () => {
       return true;
     } catch (e) {
       console.error("Login failed:", e);
-      error.value = toErrorMessage(e, "Login failed");
+      error.value = localizedError("login");
       return false;
     } finally {
       loading.value = false;

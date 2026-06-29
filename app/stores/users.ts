@@ -52,7 +52,7 @@ export const useUsersStore = defineStore('users', {
         }
         return users
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to load users.')
+        this.error = localizedError("load")
       } finally {
         this.loading = false
       }
@@ -79,7 +79,7 @@ export const useUsersStore = defineStore('users', {
         }
         return user
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to load user.')
+        this.error = localizedError("load")
         throw error
       } finally {
         this.loading = false
@@ -97,7 +97,7 @@ export const useUsersStore = defineStore('users', {
         this.users.push(created)
         return created
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to create user.')
+        this.error = localizedError("save")
         throw error
       } finally {
         this.loading = false
@@ -119,7 +119,7 @@ export const useUsersStore = defineStore('users', {
         this.selectedUser = updated
         return updated
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to update user.')
+        this.error = localizedError("save")
         throw error
       } finally {
         this.loading = false
@@ -139,7 +139,7 @@ export const useUsersStore = defineStore('users', {
           this.selectedUser = null
         }
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to delete user.')
+        this.error = localizedError("delete")
         throw error
       } finally {
         this.loading = false
@@ -161,7 +161,7 @@ export const useUsersStore = defineStore('users', {
         this.selectedUser = updated
         return updated
       } catch (error) {
-        this.error = toErrorMessage(error, 'Failed to patch user.')
+        this.error = localizedError("save")
         throw error
       } finally {
         this.loading = false

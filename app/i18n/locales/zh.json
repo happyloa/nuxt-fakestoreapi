@@ -160,6 +160,13 @@
     "backToTop": "回到頂部",
     "skipToContent": "跳到主要內容"
   },
+  "errors": {
+    "load": "載入資料失敗，請稍後再試。",
+    "save": "儲存失敗，請稍後再試。",
+    "delete": "刪除失敗，請稍後再試。",
+    "login": "登入失敗，請確認帳號與密碼。",
+    "profile": "無法載入個人資料。"
+  },
   "error": {
     "title404": "404",
     "titleGeneric": "哎呀！出錯了",

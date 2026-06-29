@@ -275,6 +275,13 @@
     "backToTop": "Back to top",
     "skipToContent": "Skip to main content"
   },
+  "errors": {
+    "load": "Failed to load data. Please try again.",
+    "save": "Failed to save. Please try again.",
+    "delete": "Failed to delete. Please try again.",
+    "login": "Login failed. Please check your username and password.",
+    "profile": "Failed to load your profile."
+  },
   "error": {
     "title404": "404",
     "titleGeneric": "Oops! Something went wrong",
