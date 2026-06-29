@@ -5,7 +5,7 @@
  */
 
 import { useI18n } from "vue-i18n";
-import { useCartStore } from "~/stores/cart";
+import { useAdminCartsStore } from "~/stores/adminCarts";
 import { useNotificationsStore } from "~/stores/notifications";
 import type {
   Cart,
@@ -14,7 +14,7 @@ import type {
 } from "~/types/fakestore";
 
 const { t } = useI18n();
-const cartStore = useCartStore();
+const adminCartsStore = useAdminCartsStore();
 const notifications = useNotificationsStore();
 
 // 查詢購物車列表 (Query Carts)
@@ -29,7 +29,7 @@ const cartQueryState = cartQuery.state;
 const handleCartsQuery = () =>
   cartQuery.run(
     () =>
-      cartStore.fetchAllCarts({
+      adminCartsStore.fetchAllCarts({
         limit: cartQueryForm.limit || undefined,
         sort: cartQueryForm.sort,
         startDate: cartQueryForm.startDate || undefined,
@@ -46,7 +46,7 @@ const cartById = useApiOperation<Cart | null>(null);
 const cartByIdState = cartById.state;
 const handleCartById = () => {
   if (!cartByIdForm.id) return cartById.fail(t("api.errors.idRequired"));
-  return cartById.run(() => cartStore.fetchCartById(Number(cartByIdForm.id)));
+  return cartById.run(() => adminCartsStore.fetchCartById(Number(cartByIdForm.id)));
 };
 
 // 依使用者取得購物車 (Get Cart By User)
@@ -57,7 +57,7 @@ const handleCartByUser = () => {
   if (!cartByUserForm.userId)
     return cartByUser.fail(t("api.errors.userIdRequired"));
   return cartByUser.run(() =>
-    cartStore.fetchCartsByUser(Number(cartByUserForm.userId)),
+    adminCartsStore.fetchCartsByUser(Number(cartByUserForm.userId)),
   );
 };
 
@@ -82,7 +82,7 @@ const handleCartCreate = () => {
   } catch {
     return cartCreate.fail(t("api.errors.invalidJson"));
   }
-  return cartCreate.run(() => cartStore.createRemoteCart(payload), {
+  return cartCreate.run(() => adminCartsStore.createRemoteCart(payload), {
     success: (cart) => t("api.carts.createSuccess", { id: cart!.id }),
     onSuccess: (cart) =>
       notifications.success(t("notifications.cartCreated", { id: cart!.id })),
@@ -108,8 +108,8 @@ const handleCartUpdate = () => {
   return cartUpdate.run(
     () =>
       cartUpdateForm.method === "PATCH"
-        ? cartStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
-        : cartStore.updateRemoteCart(Number(cartUpdateForm.id), payload),
+        ? adminCartsStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
+        : adminCartsStore.updateRemoteCart(Number(cartUpdateForm.id), payload),
     {
       success: (cart) => t("api.carts.updateSuccess", { id: cart!.id }),
       onSuccess: (cart) =>
@@ -126,7 +126,7 @@ const handleCartDelete = () => {
   if (!cartDeleteForm.id) return cartDelete.fail(t("api.errors.idRequired"));
   return cartDelete.run(
     async () => {
-      await cartStore.deleteRemoteCart(Number(cartDeleteForm.id));
+      await adminCartsStore.deleteRemoteCart(Number(cartDeleteForm.id));
       return null;
     },
     {

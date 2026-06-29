@@ -1,21 +1,11 @@
 import { defineStore } from "pinia";
 import {
   createCart as createCartApi,
-  deleteCart as deleteCartApi,
-  getCartById as getRemoteCartById,
-  getCarts as getRemoteCarts,
   getCartsByUser as getRemoteCartsByUser,
-  patchCart as patchCartApi,
-  updateCart as updateCartApi,
 } from "~/services/fakestore/carts";
 import { getProductById } from "~/services/fakestore/products";
 import { useProductsStore } from "~/stores/products";
-import type {
-  Cart,
-  CartProductItem,
-  CreateCartPayload,
-  UpdateCartPayload,
-} from "~/types/fakestore";
+import type { Cart, CartProductItem } from "~/types/fakestore";
 
 export interface CartItem {
   id: number;
@@ -36,8 +26,10 @@ function cancelPendingSync() {
 }
 
 /**
- * 處理購物車與 Fake Store API 互動的 Store。
- * 將遠端資料轉換為本地可以直接使用的結構，並維持登入使用者的購物車同步。
+ * 「登入使用者自己的購物車」Store。
+ * 管理員的購物車列表 CRUD（API 操作台用）已分離至 useAdminCartsStore，
+ * 使用者加減商品的同步不再經過會 mutate 管理員列表的 createRemoteCart，
+ * 而是直接呼叫 service，根治原本的雙語意耦合。
  */
 export const useCartStore = defineStore("cart", {
   state: () => ({
@@ -46,7 +38,6 @@ export const useCartStore = defineStore("cart", {
     userId: null as number | null,
     loading: false,
     error: "",
-    carts: [] as Cart[],
     lastFetchedCart: null as Cart | null,
   }),
   getters: {
@@ -64,8 +55,7 @@ export const useCartStore = defineStore("cart", {
   },
   actions: {
     /**
-     * 取得特定使用者的購物車資料
-     * 會自動抓取最新的購物車紀錄並轉換為本地 items 格式
+     * 取得特定使用者的購物車資料，並轉換為本地 items 格式
      * @param userId 使用者 ID
      */
     async fetchCart(userId: number) {
@@ -83,7 +73,7 @@ export const useCartStore = defineStore("cart", {
           this.items = [];
           this.lastFetchedCart = null;
         }
-      } catch (e) {
+      } catch {
         this.error = localizedError("load");
       } finally {
         this.loading = false;
@@ -100,13 +90,12 @@ export const useCartStore = defineStore("cart", {
       }, 300);
     },
     /**
-     * 同步本地購物車到遠端伺服器
-     * 每次變更購物車內容時呼叫
+     * 同步本地購物車到遠端伺服器（直接呼叫 service，不經管理員列表）
      */
     async syncCart() {
       if (!this.userId) return;
       try {
-        await this.createRemoteCart({
+        await createCartApi({
           userId: this.userId,
           date: new Date().toISOString(),
           products: this.items.map((i) => ({
@@ -119,8 +108,7 @@ export const useCartStore = defineStore("cart", {
       }
     },
     /**
-     * 加入商品到購物車
-     * 如果商品已存在則增加數量
+     * 加入商品到購物車（已存在則增加數量）
      */
     addItem(product: {
       id: number;
@@ -138,7 +126,6 @@ export const useCartStore = defineStore("cart", {
     },
     /**
      * 從購物車移除商品
-     * @param id 商品 ID
      */
     removeItem(id: number) {
       this.items = this.items.filter((i) => i.id !== id);
@@ -146,7 +133,6 @@ export const useCartStore = defineStore("cart", {
     },
     /**
      * 增加商品數量 (+1)
-     * @param id 商品 ID
      */
     increment(id: number) {
       const item = this.items.find((i) => i.id === id);
@@ -156,9 +142,7 @@ export const useCartStore = defineStore("cart", {
       }
     },
     /**
-     * 減少商品數量 (-1)
-     * 如果數量歸零則移除商品
-     * @param id 商品 ID
+     * 減少商品數量 (-1)，歸零則移除
      */
     decrement(id: number) {
       const item = this.items.find((i) => i.id === id);
@@ -177,7 +161,7 @@ export const useCartStore = defineStore("cart", {
      * @param preserveUser 是否保留使用者 ID (預設不保留)
      */
     clear({ preserveUser = false }: { preserveUser?: boolean } = {}) {
-      // 清空不主動同步：FakeStore 為 mock API，POST 空車無意義且會污染 carts
+      // 清空不主動同步：FakeStore 為 mock API，POST 空車無意義
       cancelPendingSync();
       this.items = [];
       if (!preserveUser) {
@@ -185,8 +169,7 @@ export const useCartStore = defineStore("cart", {
       }
     },
     /**
-     * 結帳
-     * 建立一筆新的訂單 (模擬) 並清空購物車
+     * 結帳：建立一筆新訂單 (模擬) 並清空購物車
      */
     async checkout() {
       cancelPendingSync();
@@ -196,7 +179,7 @@ export const useCartStore = defineStore("cart", {
       if (!this.items.length) {
         return null;
       }
-      const order = await this.createRemoteCart({
+      const order = await createCartApi({
         userId: this.userId,
         date: new Date().toISOString(),
         products: this.items.map((item) => ({
@@ -208,100 +191,6 @@ export const useCartStore = defineStore("cart", {
       this.lastOrderItems = [...this.items];
       this.items = [];
       return order;
-    },
-    /**
-     * 管理員功能：取得所有購物車列表
-     */
-    async fetchAllCarts(
-      options: {
-        startDate?: string;
-        endDate?: string;
-        sort?: "asc" | "desc";
-        limit?: number;
-      } = {},
-    ) {
-      try {
-        const carts = await getRemoteCarts({
-          limit: options.limit,
-          sort: options.sort,
-          startDate: options.startDate,
-          endDate: options.endDate,
-        });
-        this.carts = carts;
-        return carts;
-      } catch (error) {
-        this.error =
-          localizedError("load");
-        throw error;
-      }
-    },
-    /**
-     * 管理員功能：取得單一購物車
-     */
-    async fetchCartById(id: number) {
-      try {
-        const cart = await getRemoteCartById(id);
-        this.lastFetchedCart = cart;
-        return cart;
-      } catch (error) {
-        this.error =
-          localizedError("load");
-        throw error;
-      }
-    },
-    /**
-     * 管理員功能：取得特定使用者的所有購物車
-     */
-    async fetchCartsByUser(userId: number) {
-      try {
-        const carts = await getRemoteCartsByUser(userId);
-        this.carts = carts;
-        return carts;
-      } catch (error) {
-        this.error =
-          localizedError("load");
-        throw error;
-      }
-    },
-    /**
-     * 管理員功能：建立遠端購物車
-     */
-    async createRemoteCart(payload: CreateCartPayload) {
-      const created = await createCartApi(payload);
-      this.carts = [created, ...this.carts];
-      return created;
-    },
-    /**
-     * 管理員功能：更新遠端購物車
-     */
-    async updateRemoteCart(id: number, payload: UpdateCartPayload) {
-      const updated = await updateCartApi(id, payload);
-      this.carts = this.carts.map((cart) => (cart.id === id ? updated : cart));
-      if (this.lastFetchedCart?.id === id) {
-        this.lastFetchedCart = updated;
-      }
-      return updated;
-    },
-    /**
-     * 管理員功能：刪除遠端購物車
-     */
-    async deleteRemoteCart(id: number) {
-      await deleteCartApi(id);
-      this.carts = this.carts.filter((cart) => cart.id !== id);
-      if (this.lastFetchedCart?.id === id) {
-        this.lastFetchedCart = null;
-      }
-    },
-    /**
-     * 管理員功能：部分更新遠端購物車 (PATCH)
-     */
-    async patchRemoteCart(id: number, payload: UpdateCartPayload) {
-      const updated = await patchCartApi(id, payload);
-      this.carts = this.carts.map((cart) => (cart.id === id ? updated : cart));
-      if (this.lastFetchedCart?.id === id) {
-        this.lastFetchedCart = updated;
-      }
-      return updated;
     },
     /**
      * 輔助函式：將購物車項目補齊詳細商品資料
