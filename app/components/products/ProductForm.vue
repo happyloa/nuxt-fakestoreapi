@@ -24,15 +24,8 @@ const form = reactive({
 });
 
 const handleSubmit = () => {
-  if (
-    !form.title ||
-    !form.price ||
-    !form.description ||
-    !form.image ||
-    !form.category
-  ) {
-    return;
-  }
+  // 欄位皆有原生 required，瀏覽器會在送出前攔截空欄位並聚焦，
+  // 因此不需額外的 JS 防呆（原本的靜默 return 會讓使用者「按了沒反應」）
   emit("submit", {
     title: form.title,
     price: Number(form.price),
@@ -54,6 +47,7 @@ const handleSubmit = () => {
       <BaseInput
         v-model="form.price"
         type="number"
+        inputmode="decimal"
         min="0"
         step="0.01"
         :label="$t('products.form.priceLabel')"
@@ -68,6 +62,9 @@ const handleSubmit = () => {
     <div class="grid gap-6 sm:grid-cols-2">
       <BaseInput
         v-model="form.image"
+        type="url"
+        inputmode="url"
+        autocomplete="off"
         :label="$t('products.form.imageLabel')"
         :placeholder="$t('products.form.imagePlaceholder')"
         required />

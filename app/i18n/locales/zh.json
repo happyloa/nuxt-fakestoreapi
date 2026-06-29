@@ -125,6 +125,7 @@
       "username": "帳號",
       "password": "密碼",
       "submit": "登入",
+      "demoHint": "示範帳號已預先填入（mor_2314 / 83r5^_），可直接點擊登入。",
       "success": "歡迎回來，{name}！購物車已準備就緒。",
       "logout": "登出"
     }

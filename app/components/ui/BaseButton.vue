@@ -145,7 +145,12 @@ const isButton = computed(() => {
     </svg>
     <slot />
   </a>
-  <button v-else :type="type" :class="classes" :disabled="disabled || loading">
+  <button
+    v-else
+    :type="type"
+    :class="classes"
+    :disabled="disabled || loading"
+    :aria-busy="loading ? 'true' : undefined">
     <svg
       v-if="loading"
       class="h-4 w-4 animate-spin"

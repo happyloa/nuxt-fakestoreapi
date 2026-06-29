@@ -125,6 +125,7 @@
       "username": "Username",
       "password": "Password",
       "submit": "Sign in",
+      "demoHint": "Demo credentials are pre-filled (mor_2314 / 83r5^_) — just sign in.",
       "success": "Welcome back, {name}! Your cart is ready.",
       "logout": "Log out"
     }

@@ -28,6 +28,8 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
         :description="$t('users.list.description')" />
       <BaseInput
         :model-value="search"
+        type="search"
+        autocomplete="off"
         class="sm:w-64"
         :label="$t('users.list.searchLabel')"
         :placeholder="$t('users.list.searchPlaceholder')"

@@ -49,6 +49,7 @@ const categoryOptions = computed(() => [
     <div class="space-y-4">
       <BaseInput
         :model-value="searchQuery"
+        type="search"
         :label="$t('products.filters.searchLabel')"
         :placeholder="$t('products.filters.searchPlaceholder')"
         @update:model-value="emit('update:search', $event as string)" />

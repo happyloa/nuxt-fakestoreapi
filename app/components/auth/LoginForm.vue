@@ -29,14 +29,19 @@ const submit = () => {
       :title="$t('auth.login.title')"
       :description="$t('auth.login.subtitle')"
       align="center" />
+    <p class="text-center text-xs text-slate-500 dark:text-slate-400">
+      {{ $t("auth.login.demoHint") }}
+    </p>
     <form class="space-y-4" @submit.prevent="submit">
       <BaseInput
         v-model="form.username"
+        autocomplete="username"
         :label="$t('auth.login.username')"
         required />
       <BaseInput
         v-model="form.password"
         type="password"
+        autocomplete="current-password"
         :label="$t('auth.login.password')"
         required />
       <BaseButton type="submit" :loading="loading" block>
