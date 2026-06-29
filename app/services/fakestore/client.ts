@@ -17,7 +17,9 @@ export const fakestoreClient = ofetch.create({
  * 輔助函式：建立查詢字串
  * 過濾掉 undefined 或 null 的參數
  */
-export const createQueryString = (params: Record<string, any>) => {
+export const createQueryString = (
+  params: Record<string, string | number | boolean | null | undefined>,
+) => {
   const searchParams = new URLSearchParams()
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {

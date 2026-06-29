@@ -41,8 +41,8 @@ const handleUserQuery = async () => {
     userQueryState.success = t("api.users.querySuccess", {
       count: result.length,
     });
-  } catch (error: any) {
-    userQueryState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    userQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     userQueryState.loading = false;
   }
@@ -66,8 +66,8 @@ const handleUserById = async () => {
   try {
     const user = await usersStore.fetchUserById(Number(userByIdForm.id));
     userByIdState.result = user;
-  } catch (error: any) {
-    userByIdState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    userByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     userByIdState.loading = false;
   }
@@ -104,7 +104,7 @@ const handleUserCreate = async () => {
   let payload: CreateUserPayload;
   try {
     payload = JSON.parse(userCreateForm.value);
-  } catch (error: any) {
+  } catch (error) {
     userCreateState.error = t("api.errors.invalidJson");
     return;
   }
@@ -120,8 +120,8 @@ const handleUserCreate = async () => {
     notifications.success(
       t("notifications.userCreated", { username: created.username }),
     );
-  } catch (error: any) {
-    userCreateState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    userCreateState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     userCreateState.loading = false;
   }
@@ -147,7 +147,7 @@ const handleUserUpdate = async () => {
   let payload: UpdateUserPayload;
   try {
     payload = JSON.parse(userUpdateForm.payload);
-  } catch (error: any) {
+  } catch (error) {
     userUpdateState.error = t("api.errors.invalidJson");
     return;
   }
@@ -164,8 +164,8 @@ const handleUserUpdate = async () => {
     notifications.info(
       t("notifications.userUpdated", { username: updated.username }),
     );
-  } catch (error: any) {
-    userUpdateState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    userUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     userUpdateState.loading = false;
   }
@@ -194,8 +194,8 @@ const handleUserDelete = async () => {
     notifications.info(
       t("notifications.userDeleted", { id: userDeleteForm.id }),
     );
-  } catch (error: any) {
-    userDeleteState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    userDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     userDeleteState.loading = false;
   }

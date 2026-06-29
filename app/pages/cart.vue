@@ -72,9 +72,9 @@ const handleCheckout = async () => {
         4000,
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     notifications.error(
-      error?.message ?? t("notifications.checkoutError"),
+      error instanceof Error ? error.message : t("notifications.checkoutError"),
       4000,
     );
   } finally {

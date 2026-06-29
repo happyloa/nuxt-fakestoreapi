@@ -67,7 +67,8 @@
       "back": "Back to all products",
       "rating": "Rating {rate}",
       "reviews": "{count} reviews",
-      "missing": "We could not find this product. Please try again from the catalogue."
+      "missing": "We could not find this product. Please try again from the catalogue.",
+      "loadError": "Unable to load product details."
     },
     "form": {
       "back": "Back to catalogue",

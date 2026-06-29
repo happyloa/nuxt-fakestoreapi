@@ -39,8 +39,8 @@ const handleProductQuery = async () => {
     productQueryState.success = t("api.products.querySuccess", {
       count: result.length,
     });
-  } catch (error: any) {
-    productQueryState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    productQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     productQueryState.loading = false;
   }
@@ -66,8 +66,8 @@ const handleProductById = async () => {
       Number(productByIdForm.id),
     );
     productByIdState.result = product;
-  } catch (error: any) {
-    productByIdState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    productByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     productByIdState.loading = false;
   }
@@ -86,8 +86,8 @@ const handleFetchCategories = async () => {
     const result = await productsStore.fetchCategories(true);
     // Since fetchCategories updates the store, we can also return it or access store.categories
     productCategoriesState.result = productsStore.categories;
-  } catch (error: any) {
-    productCategoriesState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    productCategoriesState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     productCategoriesState.loading = false;
   }
@@ -113,7 +113,7 @@ const handleProductUpdate = async () => {
   let parsed: UpdateProductPayload;
   try {
     parsed = JSON.parse(productUpdateForm.payload);
-  } catch (error: any) {
+  } catch (error) {
     productUpdateState.error = t("api.errors.invalidJson");
     return;
   }
@@ -135,8 +135,8 @@ const handleProductUpdate = async () => {
     notifications.success(
       t("notifications.productUpdated", { title: updated.title }),
     );
-  } catch (error: any) {
-    productUpdateState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    productUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     productUpdateState.loading = false;
   }
@@ -165,8 +165,8 @@ const handleProductDelete = async () => {
     notifications.info(
       t("notifications.productDeleted", { id: productDeleteForm.id }),
     );
-  } catch (error: any) {
-    productDeleteState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    productDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     productDeleteState.loading = false;
   }

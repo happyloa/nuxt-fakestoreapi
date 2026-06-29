@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 import { NuxtLink } from "#components";
-
-type RouteLocation = string | Record<string, any>;
 
 type Variant = "primary" | "secondary" | "outline" | "ghost";
 type Size = "sm" | "md" | "lg";
@@ -14,7 +13,7 @@ const props = withDefaults(
   defineProps<{
     type?: "button" | "submit" | "reset";
     as?: ComponentTag;
-    to?: RouteLocation;
+    to?: RouteLocationRaw;
     href?: string;
     variant?: Variant;
     size?: Size;

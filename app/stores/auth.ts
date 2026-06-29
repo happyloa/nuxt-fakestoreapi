@@ -73,9 +73,9 @@ export const useAuthStore = defineStore("auth", () => {
       token.value = jwt;
       await fetchUser();
       return true;
-    } catch (e: any) {
+    } catch (e) {
       console.error("Login failed:", e);
-      error.value = e.message || "Login failed";
+      error.value = e instanceof Error ? e.message : "Login failed";
       return false;
     } finally {
       loading.value = false;

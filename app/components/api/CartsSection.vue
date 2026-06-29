@@ -45,8 +45,8 @@ const handleCartsQuery = async () => {
     cartQueryState.success = t("api.carts.querySuccess", {
       count: result.length,
     });
-  } catch (error: any) {
-    cartQueryState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartQueryState.loading = false;
   }
@@ -70,8 +70,8 @@ const handleCartById = async () => {
   try {
     const cart = await cartStore.fetchCartById(Number(cartByIdForm.id));
     cartByIdState.result = cart;
-  } catch (error: any) {
-    cartByIdState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartByIdState.loading = false;
   }
@@ -97,8 +97,8 @@ const handleCartByUser = async () => {
       Number(cartByUserForm.userId),
     );
     cartByUserState.result = carts;
-  } catch (error: any) {
-    cartByUserState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartByUserState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartByUserState.loading = false;
   }
@@ -126,7 +126,7 @@ const handleCartCreate = async () => {
   let payload: CreateCartPayload;
   try {
     payload = JSON.parse(cartCreateForm.value);
-  } catch (error: any) {
+  } catch (error) {
     cartCreateState.error = t("api.errors.invalidJson");
     return;
   }
@@ -138,8 +138,8 @@ const handleCartCreate = async () => {
     cartCreateState.result = created;
     cartCreateState.success = t("api.carts.createSuccess", { id: created.id });
     notifications.success(t("notifications.cartCreated", { id: created.id }));
-  } catch (error: any) {
-    cartCreateState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartCreateState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartCreateState.loading = false;
   }
@@ -165,7 +165,7 @@ const handleCartUpdate = async () => {
   let payload: UpdateCartPayload;
   try {
     payload = JSON.parse(cartUpdateForm.payload);
-  } catch (error: any) {
+  } catch (error) {
     cartUpdateState.error = t("api.errors.invalidJson");
     return;
   }
@@ -180,8 +180,8 @@ const handleCartUpdate = async () => {
     cartUpdateState.result = updated;
     cartUpdateState.success = t("api.carts.updateSuccess", { id: updated.id });
     notifications.info(t("notifications.cartPatched", { id: updated.id }));
-  } catch (error: any) {
-    cartUpdateState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartUpdateState.loading = false;
   }
@@ -210,8 +210,8 @@ const handleCartDelete = async () => {
     notifications.info(
       t("notifications.cartRemoved", { id: cartDeleteForm.id }),
     );
-  } catch (error: any) {
-    cartDeleteState.error = error?.message ?? t("api.errors.generic");
+  } catch (error) {
+    cartDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
   } finally {
     cartDeleteState.loading = false;
   }

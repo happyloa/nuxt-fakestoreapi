@@ -25,8 +25,11 @@ const loadProduct = async () => {
   errorMessage.value = "";
   try {
     product.value = await productsStore.fetchProductById(id);
-  } catch (error: any) {
-    errorMessage.value = error?.message ?? "Unable to load product details.";
+  } catch (error) {
+    errorMessage.value =
+      error instanceof Error
+        ? error.message
+        : t("products.details.loadError");
   } finally {
     pending.value = false;
   }

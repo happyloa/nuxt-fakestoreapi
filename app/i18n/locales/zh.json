@@ -67,7 +67,8 @@
       "back": "返回商品列表",
       "rating": "評分 {rate}",
       "reviews": "{count} 則評價",
-      "missing": "找不到這項商品，請回到列表重新選擇。"
+      "missing": "找不到這項商品，請回到列表重新選擇。",
+      "loadError": "無法載入商品詳細資訊。"
     },
     "form": {
       "back": "回到商品列表",
