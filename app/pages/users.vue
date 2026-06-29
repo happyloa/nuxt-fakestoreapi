@@ -26,13 +26,9 @@ const filteredUsers = computed(() => {
   });
 });
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.users.title"),
-  meta: [
-    { name: "description", content: t("seo.users.description") },
-    { property: "og:title", content: t("seo.users.title") },
-    { property: "og:description", content: t("seo.users.description") },
-  ],
+  description: t("seo.users.description"),
 }));
 </script>
 

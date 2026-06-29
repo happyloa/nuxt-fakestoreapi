@@ -50,13 +50,9 @@ const handleSubmit = async ({
   }
 };
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.login.title"),
-  meta: [
-    { name: "description", content: t("seo.login.description") },
-    { property: "og:title", content: t("seo.login.title") },
-    { property: "og:description", content: t("seo.login.description") },
-  ],
+  description: t("seo.login.description"),
 }));
 </script>
 

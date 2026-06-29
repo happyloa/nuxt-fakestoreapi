@@ -65,13 +65,9 @@ const handleAddToCart = (product: Product) => {
   notifications.success(t("notifications.cartAdded", { title: product.title }));
 };
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.home.title"),
-  meta: [
-    { name: "description", content: t("seo.home.description") },
-    { property: "og:title", content: t("seo.home.title") },
-    { property: "og:description", content: t("seo.home.description") },
-  ],
+  description: t("seo.home.description"),
 }));
 </script>
 

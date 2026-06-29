@@ -82,13 +82,9 @@ const handleCheckout = async () => {
   }
 };
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.cart.title"),
-  meta: [
-    { name: "description", content: t("seo.cart.description") },
-    { property: "og:title", content: t("seo.cart.title") },
-    { property: "og:description", content: t("seo.cart.description") },
-  ],
+  description: t("seo.cart.description"),
 }));
 </script>
 

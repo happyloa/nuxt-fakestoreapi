@@ -39,13 +39,9 @@ const orderItems = computed(() =>
   cartStore.items.length ? cartStore.items : cartStore.lastOrderItems,
 );
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.account.title"),
-  meta: [
-    { name: "description", content: t("seo.account.description") },
-    { property: "og:title", content: t("seo.account.title") },
-    { property: "og:description", content: t("seo.account.description") },
-  ],
+  description: t("seo.account.description"),
 }));
 </script>
 

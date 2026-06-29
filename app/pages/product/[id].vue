@@ -37,26 +37,14 @@ const loadProduct = async () => {
 
 await loadProduct();
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.productDetail.title", {
     name: product.value?.title ?? "Product",
   }),
-  meta: [
-    {
-      name: "description",
-      content: product.value?.description ?? t("seo.productDetail.description"),
-    },
-    {
-      property: "og:title",
-      content: t("seo.productDetail.title", {
-        name: product.value?.title ?? "Product",
-      }),
-    },
-    {
-      property: "og:description",
-      content: product.value?.description ?? t("seo.productDetail.description"),
-    },
-  ],
+  description:
+    product.value?.description ?? t("seo.productDetail.description"),
+  image: product.value?.image,
+  type: "product",
 }));
 
 const addToCart = () => {

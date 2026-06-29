@@ -2,8 +2,13 @@
 // 品牌主色：須與 app/assets/css/tailwind.css 的 --color-brand 保持同步
 const BRAND_COLOR = '#2563eb'
 
-// 設定 SEO Meta 標籤
+// 站台級 SEO 預設：標題後綴模板 + 預設描述/OG（供未呼叫 usePageSeo 的頁面後備，如 error.vue）
+useHead({
+  titleTemplate: (title) => (title ? `${title}｜Fake Store` : 'Fake Store'),
+})
 useSeoMeta({
+  description: 'Nuxt 4 與 Tailwind CSS v4 打造的 Fake Store API 電商示範專案。',
+  ogSiteName: 'Fake Store',
   ogImage: '/og-image.webp',
 })
 </script>

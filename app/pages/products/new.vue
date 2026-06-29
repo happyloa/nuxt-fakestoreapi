@@ -28,13 +28,9 @@ const handleSubmit = async (payload: CreateProductPayload) => {
   }
 };
 
-useHead(() => ({
+usePageSeo(() => ({
   title: t("seo.newProduct.title"),
-  meta: [
-    { name: "description", content: t("seo.newProduct.description") },
-    { property: "og:title", content: t("seo.newProduct.title") },
-    { property: "og:description", content: t("seo.newProduct.description") },
-  ],
+  description: t("seo.newProduct.description"),
 }));
 </script>
 
