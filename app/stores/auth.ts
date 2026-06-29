@@ -84,7 +84,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   /**
    * 登出函式
-   * 清除 token 並導回首頁
+   * 僅清除 token / user 與購物車；導向交由呼叫端負責，
+   * 以便使用 localePath 維持當前語系（見 account.vue）。
    */
   const logoutUser = () => {
     token.value = null;
@@ -92,7 +93,6 @@ export const useAuthStore = defineStore("auth", () => {
     // 清空購物車，避免登出後殘留數量
     const cartStore = useCartStore();
     cartStore.clear();
-    navigateTo("/");
   };
 
   // 初始化：如果有 Token 但沒 User，嘗試抓取

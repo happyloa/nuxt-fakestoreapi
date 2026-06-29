@@ -7,9 +7,10 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 const handleError = () => {
-  clearError({ redirect: "/" });
+  clearError({ redirect: localePath("/") });
 };
 </script>
 

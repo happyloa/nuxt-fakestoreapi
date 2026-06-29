@@ -1,3 +1,8 @@
+<script setup lang="ts">
+// Hero 區塊：CTA 連結需經 localePath 以維持 /en 語系前綴
+const localePath = useLocalePath();
+</script>
+
 <template>
   <section
     id="dashboard-hero"
@@ -35,12 +40,13 @@
           class="flex flex-col gap-3 sm:flex-row"
           data-aos="fade-right"
           data-aos-delay="500">
-          <BaseButton to="/products/new" as="NuxtLink" class="w-full sm:w-auto">
+          <BaseButton
+            :to="localePath('/products/new')"
+            class="w-full sm:w-auto">
             {{ $t("products.hero.ctaPrimary") }}
           </BaseButton>
           <BaseButton
-            as="NuxtLink"
-            to="/users"
+            :to="localePath('/users')"
             variant="outline"
             class="w-full sm:w-auto">
             {{ $t("products.hero.ctaSecondary") }}

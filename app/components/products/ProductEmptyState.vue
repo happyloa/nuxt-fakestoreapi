@@ -3,6 +3,7 @@
  * 當商品列表為空時的友善提示元件。
  * 透過集中管理文案與 CTA，讓頁面維持整潔。
  */
+const localePath = useLocalePath();
 </script>
 
 <template>
@@ -15,7 +16,7 @@
     <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
       {{ $t("products.empty.description") }}
     </p>
-    <BaseButton as="NuxtLink" to="/products/new" class="mt-6">
+    <BaseButton :to="localePath('/products/new')" class="mt-6">
       {{ $t("products.empty.cta") }}
     </BaseButton>
   </section>

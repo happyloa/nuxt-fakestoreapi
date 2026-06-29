@@ -6,6 +6,7 @@ import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
 
 const route = useRoute();
+const localePath = useLocalePath();
 const productsStore = useProductsStore();
 const cartStore = useCartStore();
 const notifications = useNotificationsStore();
@@ -74,7 +75,7 @@ const addToCart = () => {
 <template>
   <div class="space-y-6" data-aos="fade-up">
     <NuxtLink
-      to="/"
+      :to="localePath('/')"
       class="inline-flex items-center gap-2 text-sm font-medium text-brand">
       <svg
         class="h-4 w-4"

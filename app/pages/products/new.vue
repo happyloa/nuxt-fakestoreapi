@@ -7,6 +7,7 @@ import { useNotificationsStore } from "~/stores/notifications";
 const productsStore = useProductsStore();
 const { t } = useI18n();
 const notifications = useNotificationsStore();
+const localePath = useLocalePath();
 const formKey = ref(0);
 
 /**
@@ -40,7 +41,7 @@ useHead(() => ({
 <template>
   <div class="space-y-8" data-aos="fade-up">
     <NuxtLink
-      to="/"
+      :to="localePath('/')"
       class="inline-flex items-center gap-2 text-sm font-medium text-brand">
       <svg
         class="h-4 w-4"

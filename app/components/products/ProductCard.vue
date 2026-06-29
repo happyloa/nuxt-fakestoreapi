@@ -8,6 +8,7 @@ const emit = defineEmits<{
 const props = defineProps<{ product: Product }>();
 
 const product = computed(() => props.product);
+const localePath = useLocalePath();
 
 /**
  * 單一商品卡片，負責呈現封面、分類與價格資訊。
@@ -19,7 +20,9 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
 <template>
   <BaseCard
     class="group flex h-full flex-col space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-premium focus-within:ring-2 focus-within:ring-brand/50">
-    <NuxtLink :to="`/product/${product.id}`" class="flex flex-col space-y-3">
+    <NuxtLink
+      :to="localePath(`/product/${product.id}`)"
+      class="flex flex-col space-y-3">
       <figure
         class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50">
         <NuxtImg
