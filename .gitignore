@@ -22,7 +22,3 @@ logs
 .env
 .env.*
 !.env.example
-
-# 暫存稽核報告（僅供本地參考，不納入版控）
-/docs/專案健檢報告.md
-/docs/UIUX-改善計畫.md
