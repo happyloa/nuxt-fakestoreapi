@@ -1,6 +1,5 @@
 {
   "header": {
-    "welcome": "嗨，{name}!",
     "theme": {
       "toggleLabel": "切換深淺色主題",
       "light": "切換為淺色模式",
@@ -84,8 +83,7 @@
       "imagePlaceholder": "https://",
       "categoryLabel": "商品分類",
       "categoryPlaceholder": "請選擇分類",
-      "submit": "送出建立",
-      "successSuffix": "建立成功！"
+      "submit": "送出建立"
     }
   },
   "cart": {
@@ -131,14 +129,11 @@
       "username": "帳號",
       "password": "密碼",
       "submit": "登入",
-      "demoHint": "示範帳號已預先填入（mor_2314 / 83r5^_），可直接點擊登入。",
-      "success": "歡迎回來，{name}！購物車已準備就緒。",
-      "logout": "登出"
+      "demoHint": "示範帳號已預先填入（mor_2314 / 83r5^_），可直接點擊登入。"
     }
   },
   "account": {
     "title": "我的帳號",
-    "subtitle": "管理您的個人資料與帳戶設定。",
     "loginPrompt": "請先登入以查看帳號資訊。",
     "loginCta": "前往登入",
     "sections": {

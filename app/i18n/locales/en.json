@@ -1,6 +1,5 @@
 {
   "header": {
-    "welcome": "Hi, {name}!",
     "theme": {
       "toggleLabel": "Toggle site theme",
       "light": "Switch to light mode",
@@ -84,8 +83,7 @@
       "imagePlaceholder": "https://",
       "categoryLabel": "Category",
       "categoryPlaceholder": "Select a category",
-      "submit": "Publish product",
-      "successSuffix": "was created successfully!"
+      "submit": "Publish product"
     }
   },
   "cart": {
@@ -131,14 +129,11 @@
       "username": "Username",
       "password": "Password",
       "submit": "Sign in",
-      "demoHint": "Demo credentials are pre-filled (mor_2314 / 83r5^_) — just sign in.",
-      "success": "Welcome back, {name}! Your cart is ready.",
-      "logout": "Log out"
+      "demoHint": "Demo credentials are pre-filled (mor_2314 / 83r5^_) — just sign in."
     }
   },
   "account": {
     "title": "My Account",
-    "subtitle": "Manage your profile and account settings.",
     "loginPrompt": "Please log in to view your account details.",
     "loginCta": "Go to Login",
     "sections": {

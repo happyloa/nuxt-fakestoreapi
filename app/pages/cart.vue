@@ -133,7 +133,6 @@ useHead(() => ({
       <CartSummary
         :total="cartStore.total"
         :item-count="cartStore.count"
-        :loading="cartStore.loading"
         :checkout-loading="checkoutLoading"
         @clear="handleClear"
         @checkout="handleCheckout" />

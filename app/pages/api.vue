@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useProductsStore } from "~/stores/products";
-import ProductsSection from "~/components/api/ProductsSection.vue";
-import CartsSection from "~/components/api/CartsSection.vue";
-import UsersSection from "~/components/api/UsersSection.vue";
+// ProductsSection / CartsSection / UsersSection 由 Nuxt 自動匯入，無需顯式 import
 
 /**
  * API Playground 頁面

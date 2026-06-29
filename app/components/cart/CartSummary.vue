@@ -7,14 +7,12 @@ defineEmits<{
 interface Props {
   total?: number;
   itemCount?: number;
-  loading?: boolean;
   checkoutLoading?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   total: 0,
   itemCount: 0,
-  loading: false,
   checkoutLoading: false,
 });
 </script>
