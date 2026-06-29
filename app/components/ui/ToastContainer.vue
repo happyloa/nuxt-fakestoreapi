@@ -19,10 +19,14 @@ const variantClasses: Record<string, string> = {
     <transition-group
       name="toast"
       tag="div"
+      role="status"
+      aria-live="polite"
+      aria-atomic="false"
       class="fixed top-6 right-6 z-[60] flex max-w-sm flex-col gap-3">
       <div
         v-for="toast in toasts"
         :key="toast.id"
+        :role="toast.variant === 'error' ? 'alert' : 'status'"
         class="flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg shadow-slate-900/5 backdrop-blur"
         :class="variantClasses[toast.variant]">
         <div class="flex-1 text-sm font-medium">{{ toast.message }}</div>
@@ -30,7 +34,7 @@ const variantClasses: Record<string, string> = {
           class="rounded-full p-1 text-xs text-current transition hover:bg-black/10 dark:hover:bg-white/10"
           :aria-label="$t('ui.dismiss')"
           @click="notifications.remove(toast.id)">
-          ✕
+          <span aria-hidden="true">✕</span>
         </button>
       </div>
     </transition-group>

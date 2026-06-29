@@ -115,6 +115,19 @@
       background-color 0.3s ease,
       color 0.3s ease;
   }
+
+  /* 尊重使用者「減少動態」偏好 (WCAG 2.3.3 / 2.2.2)：
+     幾乎關閉所有動畫與過渡，避免前庭功能障礙使用者不適 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {

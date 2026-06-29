@@ -25,10 +25,19 @@ const head = useLocaleHead({
     <Body>
       <div
         class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+        <!-- 跳過導覽，直達主要內容 (WCAG 2.4.1) -->
+        <a
+          href="#main-content"
+          class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+          {{ $t("ui.skipToContent") }}
+        </a>
         <!-- 網站頁首 -->
         <SiteHeader />
         <!-- 主要內容區域 -->
-        <main class="container mx-auto px-4 py-8">
+        <main
+          id="main-content"
+          tabindex="-1"
+          class="container mx-auto px-4 py-8 focus:outline-none">
           <NuxtPage
             :transition="{
               name: 'page',

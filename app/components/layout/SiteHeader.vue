@@ -103,6 +103,7 @@ onBeforeUnmount(() => {
           v-for="item in navigation"
           :key="item.to"
           :to="item.to"
+          :aria-current="isActive(item.to) ? 'page' : undefined"
           class="relative rounded-lg px-3 py-2 transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
           :class="[
             isActive(item.to)
@@ -130,6 +131,13 @@ onBeforeUnmount(() => {
         <ClientOnly>
           <NuxtLink
             :to="auth.user ? localePath('/account') : localePath('/login')"
+            :aria-current="
+              isActive(
+                auth.user ? localePath('/account') : localePath('/login'),
+              )
+                ? 'page'
+                : undefined
+            "
             class="relative rounded-lg px-3 py-2 transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
             :class="[
               isActive(
@@ -245,6 +253,7 @@ onBeforeUnmount(() => {
                   v-for="item in navigation"
                   :key="item.to"
                   :to="item.to"
+                  :aria-current="isActive(item.to) ? 'page' : undefined"
                   class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
                   :class="[
                     isActive(item.to)
@@ -258,6 +267,15 @@ onBeforeUnmount(() => {
                   <NuxtLink
                     :to="
                       auth.user ? localePath('/account') : localePath('/login')
+                    "
+                    :aria-current="
+                      isActive(
+                        auth.user
+                          ? localePath('/account')
+                          : localePath('/login'),
+                      )
+                        ? 'page'
+                        : undefined
                     "
                     class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/60"
                     :class="[

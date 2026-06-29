@@ -147,7 +147,8 @@
   "ui": {
     "loading": "載入中...",
     "dismiss": "關閉提示",
-    "backToTop": "回到頂部"
+    "backToTop": "回到頂部",
+    "skipToContent": "跳到主要內容"
   },
   "error": {
     "title404": "404",

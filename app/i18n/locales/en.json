@@ -261,7 +261,8 @@
   "ui": {
     "loading": "Loading...",
     "dismiss": "Dismiss",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "skipToContent": "Skip to main content"
   },
   "error": {
     "title404": "404",
