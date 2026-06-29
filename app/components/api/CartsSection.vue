@@ -24,84 +24,41 @@ const cartQueryForm = reactive({
   startDate: "",
   endDate: "",
 });
-const cartQueryState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: [] as Cart[],
-});
-const handleCartsQuery = async () => {
-  cartQueryState.loading = true;
-  cartQueryState.error = "";
-  cartQueryState.success = "";
-  try {
-    const result = await cartStore.fetchAllCarts({
-      limit: cartQueryForm.limit || undefined,
-      sort: cartQueryForm.sort,
-      startDate: cartQueryForm.startDate || undefined,
-      endDate: cartQueryForm.endDate || undefined,
-    });
-    cartQueryState.result = result;
-    cartQueryState.success = t("api.carts.querySuccess", {
-      count: result.length,
-    });
-  } catch (error) {
-    cartQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartQueryState.loading = false;
-  }
-};
+const cartQuery = useApiOperation<Cart[]>([]);
+const cartQueryState = cartQuery.state;
+const handleCartsQuery = () =>
+  cartQuery.run(
+    () =>
+      cartStore.fetchAllCarts({
+        limit: cartQueryForm.limit || undefined,
+        sort: cartQueryForm.sort,
+        startDate: cartQueryForm.startDate || undefined,
+        endDate: cartQueryForm.endDate || undefined,
+      }),
+    {
+      success: (carts) => t("api.carts.querySuccess", { count: carts.length }),
+    },
+  );
 
 // 取得單一購物車 (Get Cart By ID)
 const cartByIdForm = reactive({ id: "" as string | number });
-const cartByIdState = reactive({
-  loading: false,
-  error: "",
-  result: null as Cart | null,
-});
-const handleCartById = async () => {
-  if (!cartByIdForm.id) {
-    cartByIdState.error = t("api.errors.idRequired");
-    return;
-  }
-  cartByIdState.loading = true;
-  cartByIdState.error = "";
-  cartByIdState.result = null;
-  try {
-    const cart = await cartStore.fetchCartById(Number(cartByIdForm.id));
-    cartByIdState.result = cart;
-  } catch (error) {
-    cartByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartByIdState.loading = false;
-  }
+const cartById = useApiOperation<Cart | null>(null);
+const cartByIdState = cartById.state;
+const handleCartById = () => {
+  if (!cartByIdForm.id) return cartById.fail(t("api.errors.idRequired"));
+  return cartById.run(() => cartStore.fetchCartById(Number(cartByIdForm.id)));
 };
 
 // 依使用者取得購物車 (Get Cart By User)
 const cartByUserForm = reactive({ userId: "" as string | number });
-const cartByUserState = reactive({
-  loading: false,
-  error: "",
-  result: [] as Cart[],
-});
-const handleCartByUser = async () => {
-  if (!cartByUserForm.userId) {
-    cartByUserState.error = t("api.errors.userIdRequired");
-    return;
-  }
-  cartByUserState.loading = true;
-  cartByUserState.error = "";
-  cartByUserState.result = [];
-  try {
-    const carts = await cartStore.fetchCartsByUser(
-      Number(cartByUserForm.userId),
-    );
-    cartByUserState.result = carts;
-  } catch (error) {
-    cartByUserState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartByUserState.loading = false;
-  }
+const cartByUser = useApiOperation<Cart[]>([]);
+const cartByUserState = cartByUser.state;
+const handleCartByUser = () => {
+  if (!cartByUserForm.userId)
+    return cartByUser.fail(t("api.errors.userIdRequired"));
+  return cartByUser.run(() =>
+    cartStore.fetchCartsByUser(Number(cartByUserForm.userId)),
+  );
 };
 
 // 建立購物車 (Create Cart)
@@ -116,33 +73,20 @@ const cartCreateForm = ref(
     2,
   ),
 );
-const cartCreateState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: null as Cart | null,
-});
-const handleCartCreate = async () => {
+const cartCreate = useApiOperation<Cart | null>(null);
+const cartCreateState = cartCreate.state;
+const handleCartCreate = () => {
   let payload: CreateCartPayload;
   try {
     payload = JSON.parse(cartCreateForm.value);
-  } catch (error) {
-    cartCreateState.error = t("api.errors.invalidJson");
-    return;
+  } catch {
+    return cartCreate.fail(t("api.errors.invalidJson"));
   }
-  cartCreateState.loading = true;
-  cartCreateState.error = "";
-  cartCreateState.success = "";
-  try {
-    const created = await cartStore.createRemoteCart(payload);
-    cartCreateState.result = created;
-    cartCreateState.success = t("api.carts.createSuccess", { id: created.id });
-    notifications.success(t("notifications.cartCreated", { id: created.id }));
-  } catch (error) {
-    cartCreateState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartCreateState.loading = false;
-  }
+  return cartCreate.run(() => cartStore.createRemoteCart(payload), {
+    success: (cart) => t("api.carts.createSuccess", { id: cart!.id }),
+    onSuccess: (cart) =>
+      notifications.success(t("notifications.cartCreated", { id: cart!.id })),
+  });
 };
 
 // 更新購物車 (Update Cart)
@@ -151,70 +95,48 @@ const cartUpdateForm = reactive({
   method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "products": [{ "productId": 1, "quantity": 2 }]\n}',
 });
-const cartUpdateState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: null as Cart | null,
-});
-const handleCartUpdate = async () => {
-  if (!cartUpdateForm.id) {
-    cartUpdateState.error = t("api.errors.idRequired");
-    return;
-  }
+const cartUpdate = useApiOperation<Cart | null>(null);
+const cartUpdateState = cartUpdate.state;
+const handleCartUpdate = () => {
+  if (!cartUpdateForm.id) return cartUpdate.fail(t("api.errors.idRequired"));
   let payload: UpdateCartPayload;
   try {
     payload = JSON.parse(cartUpdateForm.payload);
-  } catch (error) {
-    cartUpdateState.error = t("api.errors.invalidJson");
-    return;
+  } catch {
+    return cartUpdate.fail(t("api.errors.invalidJson"));
   }
-  cartUpdateState.loading = true;
-  cartUpdateState.error = "";
-  cartUpdateState.success = "";
-  try {
-    const updated =
+  return cartUpdate.run(
+    () =>
       cartUpdateForm.method === "PATCH"
-        ? await cartStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
-        : await cartStore.updateRemoteCart(Number(cartUpdateForm.id), payload);
-    cartUpdateState.result = updated;
-    cartUpdateState.success = t("api.carts.updateSuccess", { id: updated.id });
-    notifications.info(t("notifications.cartPatched", { id: updated.id }));
-  } catch (error) {
-    cartUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartUpdateState.loading = false;
-  }
+        ? cartStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
+        : cartStore.updateRemoteCart(Number(cartUpdateForm.id), payload),
+    {
+      success: (cart) => t("api.carts.updateSuccess", { id: cart!.id }),
+      onSuccess: (cart) =>
+        notifications.info(t("notifications.cartPatched", { id: cart!.id })),
+    },
+  );
 };
 
 // 刪除購物車 (Delete Cart)
 const cartDeleteForm = reactive({ id: "" as string | number });
-const cartDeleteState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-});
-const handleCartDelete = async () => {
-  if (!cartDeleteForm.id) {
-    cartDeleteState.error = t("api.errors.idRequired");
-    return;
-  }
-  cartDeleteState.loading = true;
-  cartDeleteState.error = "";
-  cartDeleteState.success = "";
-  try {
-    await cartStore.deleteRemoteCart(Number(cartDeleteForm.id));
-    cartDeleteState.success = t("api.carts.deleteSuccess", {
-      id: cartDeleteForm.id,
-    });
-    notifications.info(
-      t("notifications.cartRemoved", { id: cartDeleteForm.id }),
-    );
-  } catch (error) {
-    cartDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    cartDeleteState.loading = false;
-  }
+const cartDelete = useApiOperation<null>(null);
+const cartDeleteState = cartDelete.state;
+const handleCartDelete = () => {
+  if (!cartDeleteForm.id) return cartDelete.fail(t("api.errors.idRequired"));
+  return cartDelete.run(
+    async () => {
+      await cartStore.deleteRemoteCart(Number(cartDeleteForm.id));
+      return null;
+    },
+    {
+      success: () => t("api.carts.deleteSuccess", { id: cartDeleteForm.id }),
+      onSuccess: () =>
+        notifications.info(
+          t("notifications.cartRemoved", { id: cartDeleteForm.id }),
+        ),
+    },
+  );
 };
 </script>
 

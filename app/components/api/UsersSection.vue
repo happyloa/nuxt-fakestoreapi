@@ -22,55 +22,27 @@ const userQueryForm = reactive({
   limit: 5,
   sort: "desc" as "asc" | "desc",
 });
-const userQueryState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: [] as User[],
-});
-const handleUserQuery = async () => {
-  userQueryState.loading = true;
-  userQueryState.error = "";
-  userQueryState.success = "";
-  try {
-    const result = await usersStore.queryUsers({
-      limit: userQueryForm.limit || undefined,
-      sort: userQueryForm.sort,
-    });
-    userQueryState.result = result;
-    userQueryState.success = t("api.users.querySuccess", {
-      count: result.length,
-    });
-  } catch (error) {
-    userQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    userQueryState.loading = false;
-  }
-};
+const userQuery = useApiOperation<User[]>([]);
+const userQueryState = userQuery.state;
+const handleUserQuery = () =>
+  userQuery.run(
+    () =>
+      usersStore.queryUsers({
+        limit: userQueryForm.limit || undefined,
+        sort: userQueryForm.sort,
+      }),
+    {
+      success: (users) => t("api.users.querySuccess", { count: users.length }),
+    },
+  );
 
 // 取得單一使用者 (Get User By ID)
 const userByIdForm = reactive({ id: "" as string | number });
-const userByIdState = reactive({
-  loading: false,
-  error: "",
-  result: null as User | null,
-});
-const handleUserById = async () => {
-  if (!userByIdForm.id) {
-    userByIdState.error = t("api.errors.idRequired");
-    return;
-  }
-  userByIdState.loading = true;
-  userByIdState.error = "";
-  userByIdState.result = null;
-  try {
-    const user = await usersStore.fetchUserById(Number(userByIdForm.id));
-    userByIdState.result = user;
-  } catch (error) {
-    userByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    userByIdState.loading = false;
-  }
+const userById = useApiOperation<User | null>(null);
+const userByIdState = userById.state;
+const handleUserById = () => {
+  if (!userByIdForm.id) return userById.fail(t("api.errors.idRequired"));
+  return userById.run(() => usersStore.fetchUserById(Number(userByIdForm.id)));
 };
 
 // 建立使用者 (Create User)
@@ -94,37 +66,23 @@ const userCreateForm = ref(
     2,
   ),
 );
-const userCreateState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: null as User | null,
-});
-const handleUserCreate = async () => {
+const userCreate = useApiOperation<User | null>(null);
+const userCreateState = userCreate.state;
+const handleUserCreate = () => {
   let payload: CreateUserPayload;
   try {
     payload = JSON.parse(userCreateForm.value);
-  } catch (error) {
-    userCreateState.error = t("api.errors.invalidJson");
-    return;
+  } catch {
+    return userCreate.fail(t("api.errors.invalidJson"));
   }
-  userCreateState.loading = true;
-  userCreateState.error = "";
-  userCreateState.success = "";
-  try {
-    const created = await usersStore.createUser(payload);
-    userCreateState.result = created;
-    userCreateState.success = t("api.users.createSuccess", {
-      username: created.username,
-    });
-    notifications.success(
-      t("notifications.userCreated", { username: created.username }),
-    );
-  } catch (error) {
-    userCreateState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    userCreateState.loading = false;
-  }
+  return userCreate.run(() => usersStore.createUser(payload), {
+    success: (user) =>
+      t("api.users.createSuccess", { username: user!.username }),
+    onSuccess: (user) =>
+      notifications.success(
+        t("notifications.userCreated", { username: user!.username }),
+      ),
+  });
 };
 
 // 更新使用者 (Update User)
@@ -133,72 +91,50 @@ const userUpdateForm = reactive({
   method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "phone": "02-8888888"\n}',
 });
-const userUpdateState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: null as User | null,
-});
-const handleUserUpdate = async () => {
-  if (!userUpdateForm.id) {
-    userUpdateState.error = t("api.errors.idRequired");
-    return;
-  }
+const userUpdate = useApiOperation<User | null>(null);
+const userUpdateState = userUpdate.state;
+const handleUserUpdate = () => {
+  if (!userUpdateForm.id) return userUpdate.fail(t("api.errors.idRequired"));
   let payload: UpdateUserPayload;
   try {
     payload = JSON.parse(userUpdateForm.payload);
-  } catch (error) {
-    userUpdateState.error = t("api.errors.invalidJson");
-    return;
+  } catch {
+    return userUpdate.fail(t("api.errors.invalidJson"));
   }
-  userUpdateState.loading = true;
-  userUpdateState.error = "";
-  userUpdateState.success = "";
-  try {
-    const updated =
+  return userUpdate.run(
+    () =>
       userUpdateForm.method === "PATCH"
-        ? await usersStore.patchUser(Number(userUpdateForm.id), payload)
-        : await usersStore.updateUser(Number(userUpdateForm.id), payload);
-    userUpdateState.result = updated;
-    userUpdateState.success = t("api.users.updateSuccess", { id: updated.id });
-    notifications.info(
-      t("notifications.userUpdated", { username: updated.username }),
-    );
-  } catch (error) {
-    userUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    userUpdateState.loading = false;
-  }
+        ? usersStore.patchUser(Number(userUpdateForm.id), payload)
+        : usersStore.updateUser(Number(userUpdateForm.id), payload),
+    {
+      success: (user) => t("api.users.updateSuccess", { id: user!.id }),
+      onSuccess: (user) =>
+        notifications.info(
+          t("notifications.userUpdated", { username: user!.username }),
+        ),
+    },
+  );
 };
 
 // 刪除使用者 (Delete User)
 const userDeleteForm = reactive({ id: "" as string | number });
-const userDeleteState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-});
-const handleUserDelete = async () => {
-  if (!userDeleteForm.id) {
-    userDeleteState.error = t("api.errors.idRequired");
-    return;
-  }
-  userDeleteState.loading = true;
-  userDeleteState.error = "";
-  userDeleteState.success = "";
-  try {
-    await usersStore.deleteUser(Number(userDeleteForm.id));
-    userDeleteState.success = t("api.users.deleteSuccess", {
-      id: userDeleteForm.id,
-    });
-    notifications.info(
-      t("notifications.userDeleted", { id: userDeleteForm.id }),
-    );
-  } catch (error) {
-    userDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    userDeleteState.loading = false;
-  }
+const userDelete = useApiOperation<null>(null);
+const userDeleteState = userDelete.state;
+const handleUserDelete = () => {
+  if (!userDeleteForm.id) return userDelete.fail(t("api.errors.idRequired"));
+  return userDelete.run(
+    async () => {
+      await usersStore.deleteUser(Number(userDeleteForm.id));
+      return null;
+    },
+    {
+      success: () => t("api.users.deleteSuccess", { id: userDeleteForm.id }),
+      onSuccess: () =>
+        notifications.info(
+          t("notifications.userDeleted", { id: userDeleteForm.id }),
+        ),
+    },
+  );
 };
 </script>
 

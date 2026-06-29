@@ -19,79 +19,41 @@ const productQueryForm = reactive({
   limit: 6,
   sort: "asc" as "asc" | "desc",
 });
-const productQueryState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: [] as Product[],
-});
-const handleProductQuery = async () => {
-  productQueryState.loading = true;
-  productQueryState.error = "";
-  productQueryState.success = "";
-  try {
-    const result = await productsStore.queryProducts({
-      category: productQueryForm.category,
-      limit: productQueryForm.limit,
-      sort: productQueryForm.sort,
-    });
-    productQueryState.result = result;
-    productQueryState.success = t("api.products.querySuccess", {
-      count: result.length,
-    });
-  } catch (error) {
-    productQueryState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    productQueryState.loading = false;
-  }
-};
+const productQuery = useApiOperation<Product[]>([]);
+const productQueryState = productQuery.state;
+const handleProductQuery = () =>
+  productQuery.run(
+    () =>
+      productsStore.queryProducts({
+        category: productQueryForm.category,
+        limit: productQueryForm.limit,
+        sort: productQueryForm.sort,
+      }),
+    {
+      success: (products) =>
+        t("api.products.querySuccess", { count: products.length }),
+    },
+  );
 
 // 取得單一產品 (Get Product By ID)
 const productByIdForm = reactive({ id: "" as string | number });
-const productByIdState = reactive({
-  loading: false,
-  error: "",
-  result: null as Product | null,
-});
-const handleProductById = async () => {
-  if (!productByIdForm.id) {
-    productByIdState.error = t("api.errors.idRequired");
-    return;
-  }
-  productByIdState.loading = true;
-  productByIdState.error = "";
-  productByIdState.result = null;
-  try {
-    const product = await productsStore.fetchProductById(
-      Number(productByIdForm.id),
-    );
-    productByIdState.result = product;
-  } catch (error) {
-    productByIdState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    productByIdState.loading = false;
-  }
+const productById = useApiOperation<Product | null>(null);
+const productByIdState = productById.state;
+const handleProductById = () => {
+  if (!productByIdForm.id) return productById.fail(t("api.errors.idRequired"));
+  return productById.run(() =>
+    productsStore.fetchProductById(Number(productByIdForm.id)),
+  );
 };
 
 // 取得全部分類 (Fetch All Categories)
-const productCategoriesState = reactive({
-  loading: false,
-  error: "",
-  result: [] as string[],
-});
-const handleFetchCategories = async () => {
-  productCategoriesState.loading = true;
-  productCategoriesState.error = "";
-  try {
-    const result = await productsStore.fetchCategories(true);
-    // Since fetchCategories updates the store, we can also return it or access store.categories
-    productCategoriesState.result = productsStore.categories;
-  } catch (error) {
-    productCategoriesState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    productCategoriesState.loading = false;
-  }
-};
+const productCategories = useApiOperation<string[]>([]);
+const productCategoriesState = productCategories.state;
+const handleFetchCategories = () =>
+  productCategories.run(async () => {
+    await productsStore.fetchCategories(true);
+    return productsStore.categories;
+  });
 
 // 更新產品 (Update Product)
 const productUpdateForm = reactive({
@@ -99,77 +61,54 @@ const productUpdateForm = reactive({
   method: "PUT" as "PUT" | "PATCH",
   payload: '{\n  "title": "Updated title"\n}',
 });
-const productUpdateState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-  result: null as Product | null,
-});
-const handleProductUpdate = async () => {
-  if (!productUpdateForm.id) {
-    productUpdateState.error = t("api.errors.idRequired");
-    return;
-  }
+const productUpdate = useApiOperation<Product | null>(null);
+const productUpdateState = productUpdate.state;
+const handleProductUpdate = () => {
+  if (!productUpdateForm.id)
+    return productUpdate.fail(t("api.errors.idRequired"));
   let parsed: UpdateProductPayload;
   try {
     parsed = JSON.parse(productUpdateForm.payload);
-  } catch (error) {
-    productUpdateState.error = t("api.errors.invalidJson");
-    return;
+  } catch {
+    return productUpdate.fail(t("api.errors.invalidJson"));
   }
-  productUpdateState.loading = true;
-  productUpdateState.error = "";
-  productUpdateState.success = "";
-  try {
-    const updated =
+  return productUpdate.run(
+    () =>
       productUpdateForm.method === "PATCH"
-        ? await productsStore.patchProduct(Number(productUpdateForm.id), parsed)
-        : await productsStore.updateProduct(
-            Number(productUpdateForm.id),
-            parsed,
-          );
-    productUpdateState.result = updated;
-    productUpdateState.success = t("api.products.updateSuccess", {
-      id: updated.id,
-    });
-    notifications.success(
-      t("notifications.productUpdated", { title: updated.title }),
-    );
-  } catch (error) {
-    productUpdateState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    productUpdateState.loading = false;
-  }
+        ? productsStore.patchProduct(Number(productUpdateForm.id), parsed)
+        : productsStore.updateProduct(Number(productUpdateForm.id), parsed),
+    {
+      success: (product) =>
+        t("api.products.updateSuccess", { id: product!.id }),
+      onSuccess: (product) =>
+        notifications.success(
+          t("notifications.productUpdated", { title: product!.title }),
+        ),
+    },
+  );
 };
 
 // 刪除產品 (Delete Product)
 const productDeleteForm = reactive({ id: "" as string | number });
-const productDeleteState = reactive({
-  loading: false,
-  error: "",
-  success: "",
-});
-const handleProductDelete = async () => {
-  if (!productDeleteForm.id) {
-    productDeleteState.error = t("api.errors.idRequired");
-    return;
-  }
-  productDeleteState.loading = true;
-  productDeleteState.error = "";
-  productDeleteState.success = "";
-  try {
-    await productsStore.deleteProduct(Number(productDeleteForm.id));
-    productDeleteState.success = t("api.products.deleteSuccess", {
-      id: productDeleteForm.id,
-    });
-    notifications.info(
-      t("notifications.productDeleted", { id: productDeleteForm.id }),
-    );
-  } catch (error) {
-    productDeleteState.error = error instanceof Error ? error.message : t("api.errors.generic");
-  } finally {
-    productDeleteState.loading = false;
-  }
+const productDelete = useApiOperation<null>(null);
+const productDeleteState = productDelete.state;
+const handleProductDelete = () => {
+  if (!productDeleteForm.id)
+    return productDelete.fail(t("api.errors.idRequired"));
+  return productDelete.run(
+    async () => {
+      await productsStore.deleteProduct(Number(productDeleteForm.id));
+      return null;
+    },
+    {
+      success: () =>
+        t("api.products.deleteSuccess", { id: productDeleteForm.id }),
+      onSuccess: () =>
+        notifications.info(
+          t("notifications.productDeleted", { id: productDeleteForm.id }),
+        ),
+    },
+  );
 };
 </script>
 
