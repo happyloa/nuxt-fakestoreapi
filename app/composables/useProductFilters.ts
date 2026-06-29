@@ -38,18 +38,29 @@ export const useProductFilters = (productsSource: () => Product[]) => {
     () => selectedCategory.value !== "all" || searchQuery.value.trim() !== "",
   );
 
+  // URL 同步加防抖：搜尋逐字輸入時不會每個字元都觸發 router.replace
+  let queryTimer: ReturnType<typeof setTimeout> | null = null;
   const updateQuery = () => {
-    router.replace({
-      query: {
-        category:
-          selectedCategory.value !== "all" ? selectedCategory.value : undefined,
-        sort: sortOrder.value === "desc" ? "desc" : undefined,
-        q: searchQuery.value ? searchQuery.value : undefined,
-      },
-    });
+    if (queryTimer) clearTimeout(queryTimer);
+    queryTimer = setTimeout(() => {
+      router.replace({
+        query: {
+          category:
+            selectedCategory.value !== "all"
+              ? selectedCategory.value
+              : undefined,
+          sort: sortOrder.value === "desc" ? "desc" : undefined,
+          q: searchQuery.value ? searchQuery.value : undefined,
+        },
+      });
+    }, 300);
   };
 
   watch([selectedCategory, sortOrder, searchQuery], updateQuery);
+
+  onScopeDispose(() => {
+    if (queryTimer) clearTimeout(queryTimer);
+  });
 
   const resetFilters = () => {
     selectedCategory.value = "all";
