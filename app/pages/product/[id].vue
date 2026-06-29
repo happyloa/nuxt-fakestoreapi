@@ -26,10 +26,10 @@ const loadProduct = async () => {
   try {
     product.value = await productsStore.fetchProductById(id);
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error
-        ? error.message
-        : t("products.details.loadError");
+    errorMessage.value = toErrorMessage(
+      error,
+      t("products.details.loadError"),
+    );
   } finally {
     pending.value = false;
   }
@@ -46,6 +46,42 @@ usePageSeo(() => ({
   image: product.value?.image,
   type: "product",
 }));
+
+// 商品結構化資料 (JSON-LD)，提升搜尋結果的 Rich Snippet（價格、評分星等）
+useHead(() => {
+  const p = product.value;
+  if (!p) return {};
+  return {
+    script: [
+      {
+        type: "application/ld+json",
+        innerHTML: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: p.title,
+          image: p.image,
+          description: p.description,
+          category: p.category,
+          offers: {
+            "@type": "Offer",
+            price: p.price,
+            priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
+          },
+          ...(p.rating
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: p.rating.rate,
+                  reviewCount: p.rating.count,
+                },
+              }
+            : {}),
+        }),
+      },
+    ],
+  };
+});
 
 const addToCart = () => {
   if (!product.value) {

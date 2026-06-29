@@ -27,7 +27,13 @@ const props = withDefaults(defineProps<Props>(), {
           $t("products.details.rating", { rate: product.rating.rate })
         }}</BaseBadge>
         <span v-if="product.rating" class="text-xs">
-          {{ $t("products.details.reviews", { count: product.rating.count }) }}
+          {{
+            $t(
+              "products.details.reviews",
+              { count: product.rating.count },
+              product.rating.count,
+            )
+          }}
         </span>
       </div>
       <h1 class="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
