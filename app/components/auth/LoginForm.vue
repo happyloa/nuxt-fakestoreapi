@@ -26,6 +26,7 @@ const submit = () => {
 <template>
   <BaseCard class="max-w-md space-y-6">
     <BaseSectionHeading
+      :level="1"
       :title="$t('auth.login.title')"
       :description="$t('auth.login.subtitle')"
       align="center" />

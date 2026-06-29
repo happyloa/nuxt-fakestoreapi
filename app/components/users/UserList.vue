@@ -24,6 +24,7 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
       class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <BaseSectionHeading
         id="user-list-heading"
+        :level="1"
         :title="$t('users.list.title')"
         :description="$t('users.list.description')" />
       <BaseInput

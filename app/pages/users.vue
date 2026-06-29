@@ -6,6 +6,8 @@ const usersStore = useUsersStore();
 const search = ref("");
 const { t } = useI18n();
 
+definePageMeta({ middleware: "auth" });
+
 await usersStore.fetchUsers();
 
 /**

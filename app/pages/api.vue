@@ -25,6 +25,7 @@ usePageSeo(() => ({
 <template>
   <div class="space-y-12">
     <BaseSectionHeading
+      :level="1"
       :title="$t('api.title')"
       :description="$t('api.subtitle')"
       data-aos="fade-up" />

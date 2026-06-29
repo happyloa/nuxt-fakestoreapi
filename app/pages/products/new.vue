@@ -10,9 +10,7 @@ const notifications = useNotificationsStore();
 const localePath = useLocalePath();
 const formKey = ref(0);
 
-/**
- * 建立商品頁面，將表單流程包裝成可重複利用的組件。
- */
+definePageMeta({ middleware: "auth" });
 
 await productsStore.fetchCategories();
 
@@ -55,6 +53,7 @@ usePageSeo(() => ({
     </NuxtLink>
 
     <BaseSectionHeading
+      :level="1"
       :title="$t('products.form.heading')"
       :description="$t('products.form.subheading')" />
 

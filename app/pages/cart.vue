@@ -92,6 +92,7 @@ usePageSeo(() => ({
   <section class="space-y-8" aria-labelledby="cart-heading">
     <BaseSectionHeading
       id="cart-heading"
+      :level="1"
       :title="$t('cart.title')"
       :description="$t('cart.subtitle')" />
 

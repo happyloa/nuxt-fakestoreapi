@@ -19,7 +19,8 @@
     "account": "My Account",
     "menu": "Menu",
     "ariaPrimary": "Primary navigation",
-    "ariaToggle": "Toggle navigation"
+    "ariaToggle": "Toggle navigation",
+    "ariaClose": "Close navigation menu"
   },
   "products": {
     "hero": {
