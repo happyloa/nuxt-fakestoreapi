@@ -55,6 +55,11 @@ const props = withDefaults(defineProps<Props>(), {
               <NuxtImg
                 :src="item.image"
                 :alt="item.title"
+                width="80"
+                height="80"
+                sizes="80px"
+                format="webp"
+                loading="lazy"
                 class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800" />
               <div>
                 <h3

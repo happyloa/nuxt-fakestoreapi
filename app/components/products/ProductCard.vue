@@ -25,6 +25,11 @@ const handleAddToCart = () => emit("add-to-cart", product.value);
         <NuxtImg
           :src="product.image"
           :alt="product.title"
+          width="280"
+          height="280"
+          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
+          format="webp"
+          loading="lazy"
           class="mx-auto h-48 w-auto object-contain p-4 transition-transform duration-500 group-hover:scale-110" />
       </figure>
       <div>

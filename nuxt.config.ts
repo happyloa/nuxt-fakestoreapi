@@ -23,7 +23,9 @@ export default defineNuxtConfig({
 
   // Nuxt Image 相關配置
   image: {
-    domains: ["nuxt-fakestoreapi.worksbyaaron.com"],
+    // 放行外部圖片網域，IPX 才會對其進行 resize / 轉現代格式 / 壓縮
+    // fakestoreapi.com 為全站商品圖來源，務必納入否則 NuxtImg 形同 passthrough
+    domains: ["nuxt-fakestoreapi.worksbyaaron.com", "fakestoreapi.com"],
   },
 
   // Vite 配置：整合 Tailwind CSS v4

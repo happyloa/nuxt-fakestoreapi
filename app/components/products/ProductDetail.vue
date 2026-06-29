@@ -51,6 +51,10 @@ const props = withDefaults(defineProps<Props>(), {
         <NuxtImg
           :src="product.image"
           :alt="product.title"
+          width="400"
+          height="400"
+          sizes="(max-width: 768px) 90vw, 400px"
+          format="webp"
           class="mx-auto h-72 w-auto object-contain" />
       </div>
     </figure>

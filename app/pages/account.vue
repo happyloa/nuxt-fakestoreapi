@@ -250,6 +250,11 @@ useHead(() => ({
               <NuxtImg
                 :src="item.image"
                 :alt="item.title"
+                width="40"
+                height="40"
+                sizes="40px"
+                format="webp"
+                loading="lazy"
                 class="h-10 w-10 shrink-0 rounded-lg bg-white object-contain p-1" />
               <div class="min-w-0 flex-1">
                 <p class="text-sm font-medium text-slate-900 dark:text-white">
