@@ -8,6 +8,7 @@ const authStore = useAuthStore();
 const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
+const localePath = useLocalePath();
 const checkoutLoading = ref(false);
 
 /**
@@ -55,6 +56,7 @@ const handleRemove = (id: number) => {
 const handleCheckout = async () => {
   if (!authStore.isAuthenticated) {
     notifications.info(t("notifications.checkoutLogin"), 2500);
+    navigateTo(localePath("/login"));
     return;
   }
   if (!cartStore.items.length) {
@@ -98,11 +100,16 @@ useHead(() => ({
       :description="$t('cart.subtitle')" />
 
     <BaseAlert v-if="!authStore.isAuthenticated" variant="info">
-      {{ $t("cart.loginPrompt") }}
+      <div
+        class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <span>{{ $t("cart.loginPrompt") }}</span>
+        <BaseButton :to="localePath('/login')" size="sm" class="shrink-0">
+          {{ $t("navigation.login") }}
+        </BaseButton>
+      </div>
     </BaseAlert>
 
     <div
-      v-else
       class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
       <section class="space-y-4" aria-labelledby="cart-items-heading">
         <h2 id="cart-items-heading" class="sr-only">

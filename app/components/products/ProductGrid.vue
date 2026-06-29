@@ -3,18 +3,21 @@ import type { Product } from "~/types/fakestore";
 
 const emit = defineEmits<{
   (e: "add-to-cart", product: Product): void;
+  (e: "reset"): void;
 }>();
 
 interface Props {
   products?: Product[];
   loading?: boolean;
   error?: string;
+  hasActiveFilters?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   products: () => [],
   loading: false,
   error: "",
+  hasActiveFilters: false,
 });
 
 /**
@@ -38,7 +41,10 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}
     </BaseAlert>
-    <ProductEmptyState v-else-if="!products.length" />
+    <ProductEmptyState
+      v-else-if="!products.length"
+      :has-active-filters="hasActiveFilters"
+      @reset="emit('reset')" />
     <ul v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       <li
         v-for="(product, index) in products"

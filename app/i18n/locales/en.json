@@ -52,7 +52,12 @@
     "empty": {
       "title": "No products found",
       "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
-      "cta": "Create your first product"
+      "cta": "Create your first product",
+      "noResults": {
+        "title": "No matching products",
+        "description": "Try adjusting or clearing your current search and filters.",
+        "cta": "Clear filters"
+      }
     },
     "details": {
       "back": "Back to all products",

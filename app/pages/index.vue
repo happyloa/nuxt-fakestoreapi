@@ -48,6 +48,7 @@ const {
   sortOrder,
   searchQuery,
   filteredProducts,
+  hasActiveFilters,
   resetFilters,
 } = useProductFilters(() => productsStore.products);
 
@@ -89,7 +90,9 @@ useHead(() => ({
         :products="filteredProducts"
         :loading="isPageLoading"
         :error="pageError"
-        @add-to-cart="handleAddToCart" />
+        :has-active-filters="hasActiveFilters"
+        @add-to-cart="handleAddToCart"
+        @reset="resetFilters" />
       <ProductFilterPanel
         :categories="productsStore.categories"
         :selected-category="selectedCategory"

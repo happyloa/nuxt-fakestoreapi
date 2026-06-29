@@ -34,6 +34,10 @@ export const useProductFilters = (productsSource: () => Product[]) => {
     );
   });
 
+  const hasActiveFilters = computed(
+    () => selectedCategory.value !== "all" || searchQuery.value.trim() !== "",
+  );
+
   const updateQuery = () => {
     router.replace({
       query: {
@@ -58,6 +62,7 @@ export const useProductFilters = (productsSource: () => Product[]) => {
     sortOrder,
     searchQuery,
     filteredProducts,
+    hasActiveFilters,
     resetFilters,
   };
 };
