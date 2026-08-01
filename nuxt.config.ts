@@ -11,7 +11,17 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/google-fonts",
     "@nuxtjs/i18n",
+    "@pinia/nuxt",
     "@nuxtjs/sitemap",
+  ],
+
+  // The restored interface uses unprefixed component names such as
+  // <SiteHeader>, <ProductGrid>, and the Base* UI kit.
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false,
+    },
   ],
 
   runtimeConfig: {
@@ -37,7 +47,7 @@ export default defineNuxtConfig({
 
   googleFonts: {
     families: {
-      "Noto+Sans+TC": [400, 500, 600, 700],
+      "Noto+Sans+TC": [100, 300, 400, 500, 700, 900],
     },
     display: "swap",
     download: false,
@@ -54,7 +64,7 @@ export default defineNuxtConfig({
     strategy: "prefix_except_default",
     detectBrowserLanguage: {
       useCookie: true,
-      cookieKey: "storefront_locale",
+      cookieKey: "i18n_redirected",
       redirectOn: "root",
       fallbackLocale: "en",
     },
@@ -65,7 +75,7 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  css: ["~/assets/styles/main.css"],
+  css: ["~/assets/css/tailwind.css"],
 
   routeRules: {
     "/api/catalog": { swr: 300 },
@@ -78,7 +88,7 @@ export default defineNuxtConfig({
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' data: https://fonts.gstatic.com",
           "img-src 'self' data: https:",
-          "connect-src 'self'",
+          "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
           "base-uri 'self'",
           "form-action 'self'",
           "frame-ancestors 'none'",

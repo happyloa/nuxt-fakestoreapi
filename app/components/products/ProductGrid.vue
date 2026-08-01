@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import type { Product } from "~/types/fakestore";
+
+const emit = defineEmits<{
+  (e: "add-to-cart", product: Product): void;
+  (e: "reset"): void;
+}>();
+
+interface Props {
+  products?: Product[];
+  loading?: boolean;
+  error?: string;
+  hasActiveFilters?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  products: () => [],
+  loading: false,
+  error: "",
+  hasActiveFilters: false,
+});
+
+/**
+ * 負責統整商品列表的不同顯示狀態：載入中、空狀態與實際資料。
+ */
+const handleAddToCart = (product: Product) => emit("add-to-cart", product);
+</script>
+
+<template>
+  <section class="space-y-6" aria-labelledby="product-results-heading">
+    <h2 id="product-results-heading" class="sr-only">
+      {{ $t("products.listingTitle") }}
+    </h2>
+    <div
+      v-if="loading"
+      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
+      aria-busy="true">
+      <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
+      <ProductGridSkeleton :count="6" />
+    </div>
+    <BaseAlert v-else-if="error" variant="error">
+      {{ error }}
+    </BaseAlert>
+    <ProductEmptyState
+      v-else-if="!products.length"
+      :has-active-filters="hasActiveFilters"
+      @reset="emit('reset')" />
+    <ul v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <li
+        v-for="(product, index) in products"
+        :key="product.id"
+        class="h-full"
+        data-aos="fade-up"
+        :data-aos-delay="(index % 6) * 80">
+        <ProductCard :product="product" @add-to-cart="handleAddToCart" />
+      </li>
+    </ul>
+  </section>
+</template>
