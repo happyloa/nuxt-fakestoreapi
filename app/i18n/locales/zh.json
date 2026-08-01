@@ -1,339 +1,142 @@
 {
-  "header": {
-    "theme": {
-      "toggleLabel": "切換深淺色主題",
-      "light": "切換為淺色模式",
-      "dark": "切換為深色模式"
-    },
-    "language": {
-      "toggleLabel": "切換語言，下一個：{next}"
-    }
+  "site": {
+    "name": "Storefront Lab",
+    "description": "以公開 Fake Store API 建立的現代化購物流程示範。"
   },
   "navigation": {
-    "products": "商品列表",
-    "newProduct": "新增商品",
+    "shop": "商品目錄",
     "cart": "購物車",
-    "users": "會員列表",
-    "apiPlayground": "API 操作台",
-    "login": "會員登入",
-    "account": "我的帳號",
-    "menu": "選單",
-    "ariaPrimary": "主要導覽",
-    "ariaToggle": "切換導覽選單",
-    "ariaClose": "關閉導覽選單"
+    "account": "帳戶",
+    "login": "登入"
   },
-  "products": {
-    "hero": {
-      "badge": "Fake Store API 即時資料",
-      "title": "在一個介面管理所有商品",
-      "subtitle": "結合 Fake Store API 的商品資料，支援瀏覽、篩選、建立與查看詳細資訊。",
-      "ctaPrimary": "建立新商品",
-      "ctaSecondary": "查看會員資料",
-      "illustrationAlt": "商品插畫"
-    },
-    "stats": {
-      "sectionTitle": "商店概況",
-      "totalProducts": "商品總數",
-      "averagePrice": "平均價格",
-      "categories": "分類數量"
-    },
-    "filters": {
-      "title": "智慧篩選",
-      "description": "透過關鍵字、分類與排序組合，快速找到需要的商品。",
-      "searchLabel": "搜尋",
-      "searchPlaceholder": "輸入商品名稱或描述...",
-      "categoryLabel": "分類",
-      "allCategories": "全部分類",
-      "sortLabel": "排序方式",
-      "sortAsc": "ID 由小到大",
-      "sortDesc": "ID 由大到小",
-      "reset": "重置篩選"
-    },
-    "actions": {
-      "addToCart": "加入購物車"
-    },
-    "listingTitle": "商品目錄",
-    "empty": {
-      "title": "目前沒有符合的商品",
-      "description": "試著調整篩選條件，或直接新增一個全新的商品。",
-      "cta": "新增第一個商品",
-      "noResults": {
-        "title": "找不到符合條件的商品",
-        "description": "試試調整或清除目前的搜尋與篩選條件。",
-        "cta": "清除篩選"
-      }
-    },
-    "details": {
-      "back": "返回商品列表",
-      "rating": "評分 {rate}",
-      "reviews": "{count} 則評價",
-      "missing": "找不到這項商品，請回到列表重新選擇。",
-      "loadError": "無法載入商品詳細資訊。"
-    },
-    "form": {
-      "back": "回到商品列表",
-      "heading": "建立新商品",
-      "subheading": "填寫完整資訊，立即透過 Fake Store API 發佈。",
-      "titleLabel": "商品名稱",
-      "titlePlaceholder": "時尚純棉 T 恤",
-      "priceLabel": "價格 (USD)",
-      "pricePlaceholder": "99.00",
-      "descriptionLabel": "商品描述",
-      "descriptionPlaceholder": "介紹這項商品的特色與亮點...",
-      "imageLabel": "圖片網址",
-      "imagePlaceholder": "https://",
-      "categoryLabel": "商品分類",
-      "categoryPlaceholder": "請選擇分類",
-      "submit": "送出建立"
+  "common": {
+    "skipToContent": "跳至主要內容",
+    "backToStore": "回到商品目錄",
+    "close": "關閉",
+    "openMenu": "開啟選單",
+    "light": "切換為淺色模式",
+    "dark": "切換為深色模式",
+    "loading": "載入中",
+    "retry": "重新載入",
+    "clear": "清除",
+    "cancel": "取消",
+    "remove": "移除",
+    "quantity": "數量",
+    "added": "已加入購物車"
+  },
+  "home": {
+    "eyebrow": "公開資料，完整體驗",
+    "title": "探索商品，體驗完整購物流程",
+    "description": "從搜尋、篩選到示範結帳，所有商品與價格皆來自 Fake Store API 的公開測試資料。",
+    "browse": "瀏覽商品",
+    "cartCta": "查看購物車",
+    "promiseOneTitle": "可分享的篩選",
+    "promiseOneText": "搜尋與排序會保留在網址中。",
+    "promiseTwoTitle": "本機保留購物車",
+    "promiseTwoText": "重新整理後，選擇仍會留在這台裝置。",
+    "promiseThreeTitle": "透明的示範邊界",
+    "promiseThreeText": "不會產生真實訂單、付款或庫存異動。"
+  },
+  "catalog": {
+    "eyebrow": "商品目錄",
+    "title": "挑選適合今天的好物",
+    "description": "用關鍵字、分類與價格排序，快速縮小選擇。",
+    "searchLabel": "搜尋商品",
+    "searchPlaceholder": "搜尋名稱或描述",
+    "categoryLabel": "分類",
+    "sortLabel": "排序",
+    "allCategories": "全部分類",
+    "featured": "預設排序",
+    "priceAscending": "價格：低至高",
+    "priceDescending": "價格：高至低",
+    "resultCount": "顯示 {count} 項商品",
+    "clearFilters": "清除篩選",
+    "viewProduct": "查看商品",
+    "addToCart": "加入購物車",
+    "rating": "評分 {rate}，共 {count} 則",
+    "noResultsTitle": "找不到相符商品",
+    "noResultsDescription": "試試其他關鍵字或清除目前篩選。",
+    "loadError": "目前無法取得商品資料，請稍後再試。",
+    "categories": {
+      "electronics": "電子產品",
+      "jewelery": "珠寶飾品",
+      "men's clothing": "男裝",
+      "women's clothing": "女裝"
     }
+  },
+  "product": {
+    "back": "返回商品目錄",
+    "addToCart": "加入購物車",
+    "category": "分類",
+    "rating": "{rate} / 5 · {count} 則評價",
+    "demoNotice": "此商品為公開示範資料；價格與庫存不代表真實商業資訊。",
+    "loadError": "無法載入這項商品。"
   },
   "cart": {
-    "title": "購物車",
-    "subtitle": "登入後會自動與 Fake Store API 的購物車同步。",
-    "loginPrompt": "請先登入以載入最新的購物車資料並同步後續變動。",
-    "remove": "移除",
-    "a11y": {
-      "increaseQty": "增加「{title}」的數量",
-      "decreaseQty": "減少「{title}」的數量",
-      "removeItem": "移除「{title}」"
-    },
-    "empty": "購物車目前是空的，快去逛逛商品吧！",
-    "itemsHeading": "購物車內的商品",
-    "summary": {
-      "title": "訂單摘要",
-      "description": "確認商品與金額後再進行下一步。",
-      "items": "項目數：{count}",
-      "total": "總計：{total}",
-      "checkout": "前往結帳",
-      "clear": "清空購物車"
-    }
-  },
-  "users": {
-    "list": {
-      "title": "會員列表",
-      "description": "瀏覽 Fake Store API 提供的所有會員資料。",
-      "searchLabel": "快速搜尋",
-      "searchPlaceholder": "以姓名、帳號或 Email 搜尋",
-      "empty": "查無符合的會員資料。"
-    },
-    "card": {
-      "address": "地址",
-      "contact": "聯絡資訊",
-      "phone": "電話",
-      "geo": "緯度 {lat}，經度 {long}"
-    }
+    "title": "你的購物車",
+    "description": "在送出前調整數量；這是示範訂單，不會產生實際付款。",
+    "emptyTitle": "購物車還沒有商品",
+    "emptyDescription": "回到目錄，選一件想體驗的商品吧。",
+    "continueShopping": "繼續瀏覽商品",
+    "summary": "訂單摘要",
+    "items": "{count} 件商品",
+    "subtotal": "商品小計",
+    "shipping": "運費",
+    "shippingValue": "示範免費",
+    "total": "預估總計",
+    "checkout": "送出示範訂單",
+    "checkingOut": "正在建立示範訂單",
+    "loginRequired": "登入公開示範帳戶後，即可送出示範訂單。",
+    "clearCart": "清空購物車",
+    "decrease": "減少 {title} 的數量",
+    "increase": "增加 {title} 的數量",
+    "remove": "從購物車移除 {title}",
+    "demoNotice": "訂單只會在這個示範站建立收據，不會進行付款或永久寫入 Fake Store API。",
+    "successTitle": "示範訂單已建立",
+    "successDescription": "收據編號 {id}。你可以繼續體驗商品目錄。",
+    "checkoutError": "暫時無法建立示範訂單，請再試一次。"
   },
   "auth": {
-    "login": {
-      "title": "會員登入",
-      "subtitle": "使用 Fake Store API 提供的示範帳號進行登入，便於測試購物車同步。",
-      "username": "帳號",
-      "password": "密碼",
-      "submit": "登入",
-      "demoHint": "示範帳號已預先填入（mor_2314 / 83r5^_），可直接點擊登入。"
-    }
+    "eyebrow": "示範登入",
+    "title": "登入以查看示範帳戶",
+    "description": "登入只用於體驗 Session 與帳戶頁；請勿在此輸入真實帳密。",
+    "username": "使用者名稱",
+    "password": "密碼",
+    "submit": "登入示範帳戶",
+    "submitting": "正在登入",
+    "fillDemo": "填入公開示範帳號",
+    "demoHint": "使用 Fake Store API 公開提供的測試帳號。",
+    "failure": "登入失敗，請確認示範帳號後再試。",
+    "success": "已登入 {name}"
   },
   "account": {
-    "title": "我的帳號",
-    "loginPrompt": "請先登入以查看帳號資訊。",
-    "loginCta": "前往登入",
-    "sections": {
-      "profile": "個人資料",
-      "address": "地址資訊",
-      "recentOrders": "最近訂單"
-    },
-    "fields": {
-      "username": "帳號",
-      "email": "電子郵件",
-      "phone": "電話",
-      "fullName": "姓名",
-      "city": "城市",
-      "street": "街道",
-      "zipcode": "郵遞區號"
-    },
-    "noOrders": "目前沒有訂單紀錄。",
-    "orderItems": "{count} 件商品",
-    "logout": "登出帳號"
-  },
-  "ui": {
-    "loading": "載入中...",
-    "dismiss": "關閉提示",
-    "backToTop": "回到頂部",
-    "skipToContent": "跳到主要內容"
+    "eyebrow": "你的示範帳戶",
+    "title": "帳戶概覽",
+    "description": "此頁只顯示 Fake Store API 的公開示範資料。",
+    "signedInAs": "以 @{username} 身分登入",
+    "profile": "公開帳戶資料",
+    "email": "電子郵件",
+    "phone": "電話",
+    "address": "地址",
+    "logout": "登出",
+    "logoutSuccess": "你已登出示範帳戶。",
+    "orderHistory": "最近的示範訂單",
+    "noOrders": "尚未建立示範訂單。",
+    "loginRequired": "請先登入，才能查看這個頁面。"
   },
   "errors": {
-    "load": "載入資料失敗，請稍後再試。",
-    "save": "儲存失敗，請稍後再試。",
-    "delete": "刪除失敗，請稍後再試。",
-    "login": "登入失敗，請確認帳號與密碼。",
-    "profile": "無法載入個人資料。"
-  },
-  "error": {
-    "title404": "404",
-    "titleGeneric": "哎呀！出錯了",
-    "desc404": "找不到您想訪問的頁面，它可能已被移除或網址輸入錯誤。",
-    "descGeneric": "伺服器發生未預期的狀況，請稍後再試。",
-    "backToHome": "返回首頁"
-  },
-  "notifications": {
-    "cartAdded": "已將 {title} 加入購物車。",
-    "productCreated": "{title} 已成功發佈。",
-    "cartCleared": "購物車已清空。",
-    "cartItemRemoved": "已移除購物車商品。",
-    "loggedIn": "已登入帳號 {name}。",
-    "loggedOut": "您已登出。",
-    "productUpdated": "{title} 更新完成。",
-    "productDeleted": "商品 #{id} 已刪除。",
-    "cartCreated": "已建立購物車 #{id}。",
-    "cartPatched": "購物車 #{id} 更新完成。",
-    "cartRemoved": "購物車 #{id} 已刪除。",
-    "userCreated": "已建立會員 {username}。",
-    "userUpdated": "會員 {username} 資料已更新。",
-    "userDeleted": "會員 #{id} 已刪除。",
-    "checkoutSuccess": "結帳完成，訂單編號 #{id} 已建立。",
-    "checkoutEmpty": "購物車內沒有商品，請先加入商品再結帳。",
-    "checkoutLogin": "請先登入帳號，再進行結帳。",
-    "checkoutError": "結帳時發生錯誤，請稍後再試。"
-  },
-  "api": {
-    "title": "API 操作台",
-    "subtitle": "直接在儀表板中測試 Fake Store API 的每一支端點。",
-    "actions": {
-      "runQuery": "送出請求",
-      "fetch": "取得資料",
-      "update": "送出更新",
-      "delete": "執行刪除",
-      "create": "建立資料"
+    "notFound": {
+      "title": "這個頁面不存在",
+      "description": "可能是網址已變更，或是你輸入了不存在的頁面。"
     },
-    "fields": {
-      "productId": "商品編號",
-      "cartId": "購物車編號",
-      "userId": "會員編號",
-      "payload": "JSON 內容"
-    },
-    "errors": {
-      "generic": "操作發生問題，請稍後再試。",
-      "idRequired": "請先輸入編號。",
-      "invalidJson": "無法解析提供的 JSON 內容。",
-      "userIdRequired": "請先輸入會員編號。"
-    },
-    "results": {
-      "preview": "回應預覽",
-      "response": "API 回應"
-    },
-    "products": {
-      "title": "商品相關端點",
-      "queryTitle": "查詢商品列表",
-      "queryDescription": "依照分類、筆數與排序模擬 /products 端點。",
-      "querySuccess": "共取得 {count} 項商品。",
-      "singleTitle": "取得單一商品",
-      "singleDescription": "直接呼叫 /products/:id 取得指定商品。",
-      "updateTitle": "更新商品資料",
-      "updateDescription": "以 PUT 請求更新任意欄位。",
-      "updateSuccess": "商品 #{id} 更新成功。",
-      "deleteTitle": "刪除商品",
-      "deleteDescription": "對 /products/:id 發送 DELETE 刪除指定商品。",
-      "deleteSuccess": "商品 #{id} 已成功刪除。",
-      "fields": {
-        "category": "分類",
-        "limit": "筆數",
-        "sort": "排序",
-        "method": "方法"
-      },
-      "categoriesTitle": "取得產品分類",
-      "categoriesDescription": "調用 /products/categories 取得所有可用的類別清單。"
-    },
-    "carts": {
-      "title": "購物車相關端點",
-      "queryTitle": "查詢購物車",
-      "queryDescription": "可依日期、筆數與排序篩選 /carts。",
-      "querySuccess": "共取得 {count} 筆購物車資料。",
-      "singleTitle": "取得單一購物車",
-      "singleDescription": "透過 /carts/:id 取得特定購物車。",
-      "userTitle": "依會員查詢購物車",
-      "userDescription": "使用 /carts/user/:id 取得該會員的購物車紀錄。",
-      "createTitle": "建立購物車",
-      "createDescription": "POST 自訂 payload 建立新的購物車。",
-      "createSuccess": "購物車 #{id} 建立成功。",
-      "updateTitle": "更新購物車",
-      "updateDescription": "透過 PUT /carts/:id 更新購物車內容。",
-      "updateSuccess": "購物車 #{id} 更新成功。",
-      "deleteTitle": "刪除購物車",
-      "deleteDescription": "對 /carts/:id 發送 DELETE 移除紀錄。",
-      "deleteSuccess": "購物車 #{id} 已刪除。",
-      "fields": {
-        "limit": "筆數",
-        "sort": "排序",
-        "startDate": "起始日期",
-        "endDate": "結束日期"
-      }
-    },
-    "users": {
-      "title": "會員相關端點",
-      "singleTitle": "取得會員資料",
-      "singleDescription": "使用 /users/:id 取得完整會員資訊。",
-      "createTitle": "建立會員",
-      "createDescription": "POST 包含地址的會員資料。",
-      "createSuccess": "會員 {username} 建立成功。",
-      "updateTitle": "更新會員",
-      "updateDescription": "使用 PUT 請求更新會員欄位。",
-      "updateSuccess": "會員 #{id} 更新成功。",
-      "deleteTitle": "刪除會員",
-      "deleteDescription": "對 /users/:id 發送 DELETE 移除會員。",
-      "deleteSuccess": "會員 #{id} 已刪除。",
-      "queryTitle": "查詢會員列表",
-      "queryDescription": "依照筆數與排序模擬 /users 端點。",
-      "querySuccess": "共取得 {count} 位會員。",
-      "fields": {
-        "limit": "筆數",
-        "sort": "排序"
-      }
+    "generic": {
+      "title": "暫時無法完成這項操作",
+      "description": "請稍後再試；如果問題持續發生，請回到商品目錄重新開始。"
     }
   },
   "footer": {
-    "title": "專案說明",
-    "description": "以 Nuxt 4、Tailwind CSS 與 Fake Store API 打造的示範作品。",
-    "copyright": "© {year} Fake Store Dashboard. 版權所有。",
-    "sections": {
-      "api": "API",
-      "project": "專案"
-    },
-    "links": {
-      "sourceCode": "原始碼"
-    }
-  },
-  "seo": {
-    "home": {
-      "title": "Fake Store",
-      "description": "瀏覽與管理 Fake Store API 商品，支援篩選、分析與快速操作。"
-    },
-    "cart": {
-      "title": "購物車 | Fake Store Dashboard",
-      "description": "查看並管理您的 Fake Store API 購物車。"
-    },
-    "login": {
-      "title": "會員登入 | Fake Store Dashboard",
-      "description": "使用 Fake Store API 帳號登入以同步購物車。"
-    },
-    "api": {
-      "title": "API 操作台 | Fake Store Dashboard",
-      "description": "直接在儀表板中測試 Fake Store API 的所有端點。"
-    },
-    "newProduct": {
-      "title": "建立新商品 | Fake Store Dashboard",
-      "description": "透過 Fake Store API 建立一項包含完整資訊的新商品。"
-    },
-    "productDetail": {
-      "title": "{name} | Fake Store Dashboard",
-      "description": "查看 Fake Store API 商品詳情。"
-    },
-    "users": {
-      "title": "會員列表 | Fake Store Dashboard",
-      "description": "瀏覽 Fake Store API 會員的聯絡與地址資訊。"
-    },
-    "account": {
-      "title": "我的帳號 | Fake Store Dashboard",
-      "description": "查看並管理您的帳號資訊與訂單紀錄。"
-    }
+    "description": "一個以 Nuxt 建立、使用公開 Fake Store API 的購物流程示範。",
+    "privacy": "所有商品、價格與訂單都只是測試資料。",
+    "source": "查看原始碼"
   }
 }

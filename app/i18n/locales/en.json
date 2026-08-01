@@ -1,339 +1,142 @@
 {
-  "header": {
-    "theme": {
-      "toggleLabel": "Toggle site theme",
-      "light": "Switch to light mode",
-      "dark": "Switch to dark mode"
-    },
-    "language": {
-      "toggleLabel": "Switch language, next: {next}"
-    }
+  "site": {
+    "name": "Storefront Lab",
+    "description": "A modern shopping-flow demo built with the public Fake Store API."
   },
   "navigation": {
-    "products": "Products",
-    "newProduct": "New product",
+    "shop": "Shop",
     "cart": "Cart",
-    "users": "Users",
-    "apiPlayground": "API playground",
-    "login": "Login",
-    "account": "My Account",
-    "menu": "Menu",
-    "ariaPrimary": "Primary navigation",
-    "ariaToggle": "Toggle navigation",
-    "ariaClose": "Close navigation menu"
+    "account": "Account",
+    "login": "Sign in"
   },
-  "products": {
-    "hero": {
-      "badge": "Powered by Fake Store API",
-      "title": "Manage every product in one modern workspace",
-      "subtitle": "Browse, filter, create and inspect catalogue items with live data coming from the Fake Store API.",
-      "ctaPrimary": "Create product",
-      "ctaSecondary": "Meet the users",
-      "illustrationAlt": "Product illustration"
-    },
-    "stats": {
-      "sectionTitle": "Catalogue highlights",
-      "totalProducts": "Products in catalogue",
-      "averagePrice": "Average price",
-      "categories": "Available categories"
-    },
-    "filters": {
-      "title": "Smart filters",
-      "description": "Combine search, category and sorting to find the exact product you need.",
-      "searchLabel": "Search",
-      "searchPlaceholder": "Search by name or description...",
-      "categoryLabel": "Category",
-      "allCategories": "All categories",
-      "sortLabel": "Sort by",
-      "sortAsc": "ID ↑",
-      "sortDesc": "ID ↓",
-      "reset": "Reset filters"
-    },
-    "actions": {
-      "addToCart": "Add to cart"
-    },
-    "listingTitle": "Product catalogue",
-    "empty": {
-      "title": "No products found",
-      "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
-      "cta": "Create your first product",
-      "noResults": {
-        "title": "No matching products",
-        "description": "Try adjusting or clearing your current search and filters.",
-        "cta": "Clear filters"
-      }
-    },
-    "details": {
-      "back": "Back to all products",
-      "rating": "Rating {rate}",
-      "reviews": "{count} review | {count} reviews",
-      "missing": "We could not find this product. Please try again from the catalogue.",
-      "loadError": "Unable to load product details."
-    },
-    "form": {
-      "back": "Back to catalogue",
-      "heading": "Create a new product",
-      "subheading": "Fill in every detail and publish directly to the Fake Store API.",
-      "titleLabel": "Product title",
-      "titlePlaceholder": "Sleek cotton t-shirt",
-      "priceLabel": "Price (USD)",
-      "pricePlaceholder": "99.00",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Tell shoppers why this product is special...",
-      "imageLabel": "Image URL",
-      "imagePlaceholder": "https://",
-      "categoryLabel": "Category",
-      "categoryPlaceholder": "Select a category",
-      "submit": "Publish product"
+  "common": {
+    "skipToContent": "Skip to content",
+    "backToStore": "Back to shop",
+    "close": "Close",
+    "openMenu": "Open menu",
+    "light": "Switch to light mode",
+    "dark": "Switch to dark mode",
+    "loading": "Loading",
+    "retry": "Try again",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "added": "Added to cart"
+  },
+  "home": {
+    "eyebrow": "Public data, complete flow",
+    "title": "Explore products, experience the whole shopping flow",
+    "description": "From search and filters to a demo checkout, every product and price comes from the public Fake Store API test data.",
+    "browse": "Browse products",
+    "cartCta": "View cart",
+    "promiseOneTitle": "Shareable filters",
+    "promiseOneText": "Search and sort choices stay in the URL.",
+    "promiseTwoTitle": "Local cart persistence",
+    "promiseTwoText": "Your choices survive a refresh on this device.",
+    "promiseThreeTitle": "Clear demo boundaries",
+    "promiseThreeText": "No real payment, inventory, or order is created."
+  },
+  "catalog": {
+    "eyebrow": "Catalog",
+    "title": "Find something for today",
+    "description": "Use a keyword, category, or price sort to narrow the list.",
+    "searchLabel": "Search products",
+    "searchPlaceholder": "Search title or description",
+    "categoryLabel": "Category",
+    "sortLabel": "Sort",
+    "allCategories": "All categories",
+    "featured": "Default order",
+    "priceAscending": "Price: low to high",
+    "priceDescending": "Price: high to low",
+    "resultCount": "Showing {count} products",
+    "clearFilters": "Clear filters",
+    "viewProduct": "View product",
+    "addToCart": "Add to cart",
+    "rating": "Rated {rate} from {count} reviews",
+    "noResultsTitle": "No matching products",
+    "noResultsDescription": "Try another keyword or clear the active filters.",
+    "loadError": "We could not load products right now. Please try again.",
+    "categories": {
+      "electronics": "Electronics",
+      "jewelery": "Jewellery",
+      "men's clothing": "Men's clothing",
+      "women's clothing": "Women's clothing"
     }
+  },
+  "product": {
+    "back": "Back to catalog",
+    "addToCart": "Add to cart",
+    "category": "Category",
+    "rating": "{rate} / 5 · {count} reviews",
+    "demoNotice": "This product uses public demo data. Prices and inventory are not commercial information.",
+    "loadError": "We could not load this product."
   },
   "cart": {
-    "title": "Shopping cart",
-    "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
-    "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
-    "remove": "Remove",
-    "a11y": {
-      "increaseQty": "Increase quantity of {title}",
-      "decreaseQty": "Decrease quantity of {title}",
-      "removeItem": "Remove {title}"
-    },
-    "empty": "Your cart is empty. Add something from the products page!",
-    "itemsHeading": "Items in your cart",
-    "summary": {
-      "title": "Order summary",
-      "description": "Review the totals and proceed when you're ready.",
-      "items": "Items: {count}",
-      "total": "Total: {total}",
-      "checkout": "Checkout",
-      "clear": "Clear cart"
-    }
-  },
-  "users": {
-    "list": {
-      "title": "Fake Store users",
-      "description": "A snapshot of every user profile available through the API.",
-      "searchLabel": "Quick search",
-      "searchPlaceholder": "Search users by name, username or email",
-      "empty": "No matching users were found."
-    },
-    "card": {
-      "address": "Address",
-      "contact": "Contact",
-      "phone": "Phone",
-      "geo": "Lat {lat}, Long {long}"
-    }
+    "title": "Your cart",
+    "description": "Adjust quantities before submitting. This is a demo order and no payment will be made.",
+    "emptyTitle": "Your cart is empty",
+    "emptyDescription": "Return to the catalog and choose a product to explore.",
+    "continueShopping": "Continue shopping",
+    "summary": "Order summary",
+    "items": "{count} items",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingValue": "Free in demo",
+    "total": "Estimated total",
+    "checkout": "Submit demo order",
+    "checkingOut": "Creating demo order",
+    "loginRequired": "Sign in with the public demo account to submit a demo order.",
+    "clearCart": "Clear cart",
+    "decrease": "Decrease quantity of {title}",
+    "increase": "Increase quantity of {title}",
+    "remove": "Remove {title} from cart",
+    "demoNotice": "The demo only creates a receipt in this app. It never takes payment or writes permanently to Fake Store API.",
+    "successTitle": "Demo order created",
+    "successDescription": "Receipt {id}. Keep exploring the catalog.",
+    "checkoutError": "We could not create the demo order. Please try again."
   },
   "auth": {
-    "login": {
-      "title": "Authenticate",
-      "subtitle": "Use the demo credentials from Fake Store API to manage carts.",
-      "username": "Username",
-      "password": "Password",
-      "submit": "Sign in",
-      "demoHint": "Demo credentials are pre-filled (mor_2314 / 83r5^_) — just sign in."
-    }
+    "eyebrow": "Demo sign in",
+    "title": "Sign in to view a demo account",
+    "description": "Sign-in demonstrates sessions and the account page. Never enter real credentials here.",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Sign in to demo account",
+    "submitting": "Signing in",
+    "fillDemo": "Use the public demo account",
+    "demoHint": "Uses a test account published by Fake Store API.",
+    "failure": "We could not sign you in. Check the demo account and try again.",
+    "success": "Signed in as {name}"
   },
   "account": {
-    "title": "My Account",
-    "loginPrompt": "Please log in to view your account details.",
-    "loginCta": "Go to Login",
-    "sections": {
-      "profile": "Profile",
-      "address": "Address",
-      "recentOrders": "Recent Orders"
-    },
-    "fields": {
-      "username": "Username",
-      "email": "Email",
-      "phone": "Phone",
-      "fullName": "Full Name",
-      "city": "City",
-      "street": "Street",
-      "zipcode": "Zip Code"
-    },
-    "noOrders": "No order history yet.",
-    "orderItems": "{count} items",
-    "logout": "Sign Out"
-  },
-  "notifications": {
-    "cartAdded": "Added {title} to your cart.",
-    "productCreated": "{title} published successfully.",
-    "cartCleared": "Cart cleared.",
-    "cartItemRemoved": "Item removed from cart.",
-    "loggedIn": "Signed in as {name}.",
-    "loggedOut": "You signed out.",
-    "productUpdated": "{title} updated.",
-    "productDeleted": "Product #{id} deleted.",
-    "cartCreated": "Created cart #{id}.",
-    "cartPatched": "Cart #{id} updated.",
-    "cartRemoved": "Cart #{id} deleted.",
-    "userCreated": "Created user {username}.",
-    "userUpdated": "Updated user {username}.",
-    "userDeleted": "Deleted user #{id}.",
-    "checkoutSuccess": "Checkout complete! Order #{id} is ready.",
-    "checkoutEmpty": "Add some items before checking out.",
-    "checkoutLogin": "Log in to checkout your cart.",
-    "checkoutError": "We couldn't finish the checkout. Try again soon."
-  },
-  "api": {
-    "title": "API playground",
-    "subtitle": "Try every Fake Store API endpoint without leaving the dashboard.",
-    "actions": {
-      "runQuery": "Run request",
-      "fetch": "Fetch",
-      "update": "Update",
-      "delete": "Delete",
-      "create": "Create"
-    },
-    "fields": {
-      "productId": "Product ID",
-      "cartId": "Cart ID",
-      "userId": "User ID",
-      "payload": "JSON payload"
-    },
-    "errors": {
-      "generic": "Something went wrong. Please try again.",
-      "idRequired": "Please enter an ID first.",
-      "invalidJson": "The JSON payload could not be parsed.",
-      "userIdRequired": "Please enter a user ID first."
-    },
-    "results": {
-      "preview": "Response preview",
-      "response": "Response"
-    },
-    "products": {
-      "title": "Products endpoints",
-      "queryTitle": "Query products",
-      "queryDescription": "Combine category, limit and sorting to mirror the /products endpoint.",
-      "querySuccess": "Fetched {count} products.",
-      "singleTitle": "Get product by ID",
-      "singleDescription": "Retrieve a single product directly from /products/:id.",
-      "updateTitle": "Update product",
-      "updateDescription": "Send a PUT request to update any product fields.",
-      "updateSuccess": "Product #{id} updated successfully.",
-      "deleteTitle": "Delete product",
-      "deleteDescription": "Issue a DELETE request to remove a product.",
-      "deleteSuccess": "Product #{id} deleted successfully.",
-      "fields": {
-        "category": "Category",
-        "limit": "Limit",
-        "sort": "Sort",
-        "method": "Method"
-      },
-      "categoriesTitle": "Fetch product categories",
-      "categoriesDescription": "Call /products/categories to retrieve all available category names."
-    },
-    "carts": {
-      "title": "Cart endpoints",
-      "queryTitle": "Query carts",
-      "queryDescription": "Filter carts with optional dates, limits and sorting.",
-      "querySuccess": "Fetched {count} carts.",
-      "singleTitle": "Get cart by ID",
-      "singleDescription": "Retrieve a single cart using /carts/:id.",
-      "userTitle": "Get carts by user",
-      "userDescription": "Load the entire cart history for a user via /carts/user/:id.",
-      "createTitle": "Create cart",
-      "createDescription": "Send a POST request with a custom payload.",
-      "createSuccess": "Cart #{id} created successfully.",
-      "updateTitle": "Update cart",
-      "updateDescription": "Update cart contents with PUT /carts/:id.",
-      "updateSuccess": "Cart #{id} updated successfully.",
-      "deleteTitle": "Delete cart",
-      "deleteDescription": "Delete a cart record with DELETE /carts/:id.",
-      "deleteSuccess": "Cart #{id} deleted successfully.",
-      "fields": {
-        "limit": "Limit",
-        "sort": "Sort",
-        "startDate": "Start date",
-        "endDate": "End date"
-      }
-    },
-    "users": {
-      "title": "User endpoints",
-      "singleTitle": "Get user by ID",
-      "singleDescription": "Retrieve a full profile from /users/:id.",
-      "createTitle": "Create user",
-      "createDescription": "POST a new user record with nested address data.",
-      "createSuccess": "User {username} created successfully.",
-      "updateTitle": "Update user",
-      "updateDescription": "PUT changes to any user fields.",
-      "updateSuccess": "User #{id} updated successfully.",
-      "deleteTitle": "Delete user",
-      "deleteDescription": "Remove a user with DELETE /users/:id.",
-      "deleteSuccess": "User #{id} deleted successfully.",
-      "queryTitle": "Query users",
-      "queryDescription": "Combine limit and sorting to mirror the /users endpoint.",
-      "querySuccess": "Fetched {count} users.",
-      "fields": {
-        "limit": "Limit",
-        "sort": "Sort"
-      }
-    }
-  },
-  "ui": {
-    "loading": "Loading...",
-    "dismiss": "Dismiss",
-    "backToTop": "Back to top",
-    "skipToContent": "Skip to main content"
+    "eyebrow": "Your demo account",
+    "title": "Account overview",
+    "description": "This page only displays public demo data from Fake Store API.",
+    "signedInAs": "Signed in as @{username}",
+    "profile": "Public account details",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "logout": "Sign out",
+    "logoutSuccess": "You signed out of the demo account.",
+    "orderHistory": "Recent demo orders",
+    "noOrders": "No demo orders yet.",
+    "loginRequired": "Sign in first to view this page."
   },
   "errors": {
-    "load": "Failed to load data. Please try again.",
-    "save": "Failed to save. Please try again.",
-    "delete": "Failed to delete. Please try again.",
-    "login": "Login failed. Please check your username and password.",
-    "profile": "Failed to load your profile."
-  },
-  "error": {
-    "title404": "404",
-    "titleGeneric": "Oops! Something went wrong",
-    "desc404": "The page you are looking for does not exist, might have been removed, or the URL is incorrect.",
-    "descGeneric": "An unexpected error occurred on the server. Please try again later.",
-    "backToHome": "Back to Home"
+    "notFound": {
+      "title": "This page does not exist",
+      "description": "The address may have changed, or the page is unavailable."
+    },
+    "generic": {
+      "title": "We could not complete that action",
+      "description": "Please try again shortly, or return to the catalog to start over."
+    }
   },
   "footer": {
-    "title": "About this project",
-    "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
-    "copyright": "© {year} Fake Store Dashboard. All rights reserved.",
-    "sections": {
-      "api": "API",
-      "project": "Project"
-    },
-    "links": {
-      "sourceCode": "Source Code"
-    }
-  },
-  "seo": {
-    "home": {
-      "title": "Fake Store Dashboard",
-      "description": "Explore and manage Fake Store API products with filters, analytics and quick actions."
-    },
-    "cart": {
-      "title": "Shopping Cart | Fake Store Dashboard",
-      "description": "View and manage your Fake Store API shopping cart."
-    },
-    "login": {
-      "title": "Login | Fake Store Dashboard",
-      "description": "Authenticate with the Fake Store API to sync your shopping cart."
-    },
-    "api": {
-      "title": "API Playground | Fake Store Dashboard",
-      "description": "Experiment with every Fake Store API endpoint directly from the dashboard."
-    },
-    "newProduct": {
-      "title": "Create Product | Fake Store Dashboard",
-      "description": "Create a new Fake Store API product with full metadata."
-    },
-    "productDetail": {
-      "title": "{name} | Fake Store Dashboard",
-      "description": "Fake Store product details."
-    },
-    "users": {
-      "title": "Users | Fake Store Dashboard",
-      "description": "Explore Fake Store API users with contact and address details."
-    },
-    "account": {
-      "title": "My Account | Fake Store Dashboard",
-      "description": "View and manage your account information and order history."
-    }
+    "description": "A Nuxt shopping-flow demo powered by the public Fake Store API.",
+    "privacy": "Products, prices, and orders are all test data.",
+    "source": "View source"
   }
 }

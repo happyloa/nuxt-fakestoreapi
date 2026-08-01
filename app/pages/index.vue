@@ -1,103 +1,79 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { useProductFilters } from "~/composables/useProductFilters";
-import { useCartStore } from "~/stores/cart";
-import { useProductsStore } from "~/stores/products";
-import { useNotificationsStore } from "~/stores/notifications";
-import type { Product } from "~/types/fakestore";
+import type { CatalogPayload, Product } from "~/types/storefront"
 
-const productsStore = useProductsStore();
-const cartStore = useCartStore();
-const { t } = useI18n();
-const notifications = useNotificationsStore();
+const { t } = useI18n()
+const localePath = useLocalePath()
+const { data, pending, error, refresh } = await useFetch<CatalogPayload>(
+  "/api/catalog",
+  { key: "storefront-catalog" },
+)
+const products = computed(() => data.value?.products ?? [])
+const categories = computed(() => data.value?.categories ?? [])
+const { search, category, sort, results, hasActiveFilters, clearFilters } =
+  useCatalogQuery(products)
+const { add } = useCart()
+const addedProduct = ref<string | null>(null)
+let noticeTimer: ReturnType<typeof setTimeout> | undefined
 
-/**
- * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
- */
-const { pending: isPageLoading, error: asyncError } = await useAsyncData(
-  "homepageData",
-  async () => {
-    productsStore.error = "";
-    // 以 allSettled 確認兩個請求都完成後再決定是否拋出錯誤
-    const results = await Promise.allSettled([
-      productsStore.fetchProducts(),
-      productsStore.fetchCategories(),
-    ]);
+const addToCart = (product: Product) => {
+  add(product)
+  addedProduct.value = product.title
+  if (noticeTimer) clearTimeout(noticeTimer)
+  noticeTimer = setTimeout(() => {
+    addedProduct.value = null
+  }, 2800)
+}
 
-    const rejected = results.find((result) => result.status === "rejected") as
-      | PromiseRejectedResult
-      | undefined;
+onScopeDispose(() => {
+  if (noticeTimer) clearTimeout(noticeTimer)
+})
 
-    if (rejected) {
-      throw new Error(rejected.reason?.message || "Failed to load data");
-    } else if (productsStore.error) {
-      throw new Error(productsStore.error);
-    }
-    return true;
-  },
-);
-
-const pageError = computed(() => {
-  if (asyncError.value)
-    return asyncError.value.message || t("api.errors.generic");
-  return "";
-});
-
-const {
-  selectedCategory,
-  sortOrder,
-  searchQuery,
-  filteredProducts,
-  hasActiveFilters,
-  resetFilters,
-} = useProductFilters(() => productsStore.products);
-
-/**
- * 將商品加入購物車並顯示提示訊息。
- */
-const handleAddToCart = (product: Product) => {
-  cartStore.addItem({
-    id: product.id,
-    title: product.title,
-    price: product.price,
-    image: product.image,
-  });
-  notifications.success(t("notifications.cartAdded", { title: product.title }));
-};
-
-usePageSeo(() => ({
-  title: t("seo.home.title"),
-  description: t("seo.home.description"),
-}));
+useSeoMeta({
+  title: () => t("catalog.title"),
+  description: () => t("site.description"),
+})
 </script>
 
 <template>
-  <section class="space-y-12" aria-labelledby="dashboard-hero">
-    <ProductHero />
+  <div class="space-y-12 lg:space-y-16">
+    <CatalogHero />
 
-    <ProductStats
-      :total-products="productsStore.total"
-      :average-price="productsStore.averagePrice"
-      :categories-count="productsStore.categories.length" />
+    <CatalogFilters
+      v-model:search="search"
+      v-model:category="category"
+      v-model:sort="sort"
+      :categories="categories"
+      :result-count="results.length"
+      @clear="clearFilters" />
 
-    <div
-      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,2.25fr)_minmax(0,1fr)]">
-      <ProductGrid
-        :products="filteredProducts"
-        :loading="isPageLoading"
-        :error="pageError"
-        :has-active-filters="hasActiveFilters"
-        @add-to-cart="handleAddToCart"
-        @reset="resetFilters" />
-      <ProductFilterPanel
-        :categories="productsStore.categories"
-        :selected-category="selectedCategory"
-        :sort-order="sortOrder"
-        :search-query="searchQuery"
-        @update:category="selectedCategory = $event"
-        @update:sort="sortOrder = $event"
-        @update:search="searchQuery = $event"
-        @refresh="resetFilters" />
-    </div>
-  </section>
+    <p v-if="addedProduct" class="success-notice" role="status">
+      {{ $t("common.added") }} · {{ addedProduct }}
+    </p>
+
+    <section aria-live="polite">
+      <div v-if="error" class="empty-state">
+        <div class="empty-state__icon" aria-hidden="true">!</div>
+        <h2>{{ $t("catalog.loadError") }}</h2>
+        <button class="btn-primary mt-5" type="button" @click="() => refresh()">
+          {{ $t("common.retry") }}
+        </button>
+      </div>
+      <CatalogProductGrid
+        v-else-if="pending || results.length"
+        :products="results"
+        :pending="pending"
+        @add="addToCart" />
+      <CatalogEmptyState v-else-if="hasActiveFilters" />
+      <div v-else class="empty-state">
+        <h2>{{ $t("catalog.loadError") }}</h2>
+        <button class="btn-primary mt-5" type="button" @click="() => refresh()">
+          {{ $t("common.retry") }}
+        </button>
+      </div>
+    </section>
+
+    <NuxtLink class="sr-only" :to="localePath('/cart')">
+      {{ $t("navigation.cart") }}
+    </NuxtLink>
+  </div>
 </template>

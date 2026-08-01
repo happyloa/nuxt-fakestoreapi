@@ -1,136 +1,94 @@
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from "@tailwindcss/vite"
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000"
+
 export default defineNuxtConfig({
   srcDir: "app",
-  // 設定兼容性日期，這將影響 Nuxt 在此日期之後可用的功能。
-  compatibilityDate: "2024-04-03",
+  compatibilityDate: "2026-08-01",
+  devtools: { enabled: process.env.NODE_ENV !== "production" },
 
-  // 開啟開發工具（devtools），便於在開發過程中除錯和查看應用的狀態。
-  devtools: { enabled: true },
-
-  // 加入所需的模組
-  // @nuxtjs/google-fonts: 處理 Google Fonts 字型
-  // @nuxtjs/i18n: 處理多語系
-  // @pinia/nuxt: 狀態管理
-  // @nuxt/image: 圖片最佳化
   modules: [
+    "@nuxt/image",
     "@nuxtjs/google-fonts",
     "@nuxtjs/i18n",
-    "@pinia/nuxt",
-    "@nuxt/image",
     "@nuxtjs/sitemap",
   ],
 
-  // 站台 URL（供 sitemap 與 SEO 使用），可由環境變數覆寫
+  runtimeConfig: {
+    fakeStoreApiBase:
+      process.env.NUXT_FAKESTORE_API_BASE || "https://fakestoreapi.com",
+    public: {
+      siteUrl,
+    },
+  },
+
   site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || "https://nuxt-fakestoreapi.worksbyaaron.com",
+    url: siteUrl,
+    name: "Storefront Lab",
   },
 
-  // Nuxt Image 相關配置
   image: {
-    // 放行外部圖片網域，IPX 才會對其進行 resize / 轉現代格式 / 壓縮
-    // fakestoreapi.com 為全站商品圖來源，務必納入否則 NuxtImg 形同 passthrough
-    domains: ["nuxt-fakestoreapi.worksbyaaron.com", "fakestoreapi.com"],
+    domains: ["fakestoreapi.com"],
   },
 
-  // Vite 配置：整合 Tailwind CSS v4
+  sitemap: {
+    zeroRuntime: true,
+  },
+
+  googleFonts: {
+    families: {
+      "Noto+Sans+TC": [400, 500, 600, 700],
+    },
+    display: "swap",
+    download: false,
+  },
+
+  i18n: {
+    baseUrl: siteUrl,
+    locales: [
+      { code: "zh", name: "繁體中文", language: "zh-TW", file: "zh.json" },
+      { code: "en", name: "English", language: "en-US", file: "en.json" },
+    ],
+    defaultLocale: "zh",
+    langDir: "../app/i18n/locales",
+    strategy: "prefix_except_default",
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: "storefront_locale",
+      redirectOn: "root",
+      fallbackLocale: "en",
+    },
+    vueI18n: "~/i18n.config.ts",
+  },
+
   vite: {
     plugins: [tailwindcss()],
   },
 
-  // 自動載入 components 資料夾下的元件，並移除資料夾前綴
-  // 例如 components/api/ProductsSection.vue 可以直接使用 <ProductsSection />
-  components: [
-    {
-      path: "~/components",
-      pathPrefix: false,
-    },
-  ],
+  css: ["~/assets/styles/main.css"],
 
-  // Google Fonts 的相關配置
-  googleFonts: {
-    families: {
-      // 定義要使用的字型 'Noto Sans TC'，包含不同的字重
-      "Noto+Sans+TC": [100, 300, 400, 500, 700, 900],
-    },
-    // 關閉下載功能，直接使用 CDN
-    download: false,
-    // 自動注入 CSS
-    inject: true,
-    // 使用 swap 策略，避免文字隱形
-    display: "swap",
-  },
-
-  // i18n 多語言設定
-  i18n: {
-    // 設定基礎 URL，用於 SEO 標籤
-    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    // 定義支援的語系
-    locales: [
-      { code: "zh", name: "中文", language: "zh-TW", file: "zh.json" },
-      { code: "en", name: "English", language: "en-US", file: "en.json" },
-    ],
-    defaultLocale: "zh", // 預設為中文介面（不出現 /zh 前綴），英語路徑才使用 /en
-    langDir: "../app/i18n/locales", // 語言文件的存放資料夾（相對於專案根目錄的 i18n 基底）
-    strategy: "prefix_except_default", // URL 前綴策略 (預設語言不加前綴)
-    // 瀏覽器語言偵測設定
-    detectBrowserLanguage: {
-      useCookie: true, // 使用 Cookie 紀錄使用者選擇
-      cookieKey: "i18n_redirected", // Cookie 名稱
-      redirectOn: "root", // 僅在根路徑進行重定向
-      // 非中文語系一律退回英文，以符合「中文顯示中文，其他顯示英文」需求
-      fallbackLocale: "en",
-    },
-    vueI18n: "~/i18n.config.ts", // Vue I18n 詳細設定檔
-  },
-
-  // 引入全域 CSS 檔案
-  css: ["~/assets/css/tailwind.css"],
-
-  // Nitro 伺服器設定 (安全性標頭)
-  nitro: {
-    routeRules: {
-      "/**": {
-        headers: {
-          // 設定 Content-Security-Policy 防止 XSS 等攻擊
-          "Content-Security-Policy": [
-            "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://vercel.live",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-            "font-src 'self' https://fonts.gstatic.com data:",
-            "img-src 'self' data: https:",
-            "frame-src 'self' https://vercel.live",
-            "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "frame-ancestors 'none'",
-            "object-src 'none'",
-            "upgrade-insecure-requests",
-          ].join("; "),
-          "Cross-Origin-Opener-Policy": "same-origin",
-          "Cross-Origin-Resource-Policy": "cross-origin",
-          "Permissions-Policy": [
-            "camera=()",
-            "microphone=()",
-            "geolocation=()",
-            "fullscreen=()",
-            "payment=()",
-          ].join(", "),
-          "Referrer-Policy": "strict-origin-when-cross-origin",
-          "Strict-Transport-Security":
-            "max-age=63072000; includeSubDomains; preload",
-          "X-Content-Type-Options": "nosniff",
-          "X-Frame-Options": "DENY",
-        },
+  routeRules: {
+    "/api/catalog": { swr: 300 },
+    "/api/products/**": { swr: 300 },
+    "/**": {
+      headers: {
+        "Content-Security-Policy": [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' data: https://fonts.gstatic.com",
+          "img-src 'self' data: https:",
+          "connect-src 'self'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "frame-ancestors 'none'",
+          "object-src 'none'",
+        ].join("; "),
+        "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
       },
     },
   },
-
-  // 實驗性功能設定
-  experimental: {
-    // 關閉 serverAppConfig 以修復 Nuxt 4 目前已知的 "Duplicated imports useAppConfig" 警告
-    // 該警告為 cosmetic 無害，但在開發階段會造成干擾
-    serverAppConfig: false,
-  },
-});
+})

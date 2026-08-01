@@ -1,138 +1,100 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
-import { useNotificationsStore } from "~/stores/notifications";
+import type { CartReceipt } from "~/composables/useCart"
 
-const authStore = useAuthStore();
-const cartStore = useCartStore();
-const notifications = useNotificationsStore();
-const { t } = useI18n();
-const localePath = useLocalePath();
-const checkoutLoading = ref(false);
+const { t } = useI18n()
+const localePath = useLocalePath()
+const route = useRoute()
+const { lines, itemCount, subtotal, isCheckingOut, setQuantity, remove, clear, checkout } = useCart()
+const { isSignedIn } = useSession()
+const checkoutError = ref("")
+const receipt = ref<CartReceipt | null>(null)
 
-/**
- * 監聽登入狀態以同步購物車，提供與 Fake Store API 對應的體驗。
- */
+const decrease = (productId: number) => {
+  const line = lines.value.find((item) => item.product.id === productId)
+  if (line) setQuantity(productId, line.quantity - 1)
+}
 
-onMounted(() => {
-  // 只在本地購物車為空時才從 API 初始載入，避免覆蓋使用者在其他頁面加入的商品
-  // （Fake Store API 是模擬 API，POST 不會真的持久化，GET 永遠回傳原始資料）
-  if (authStore.user && !cartStore.items.length) {
-    cartStore.fetchCart(authStore.user.id);
+const increase = (productId: number) => {
+  const line = lines.value.find((item) => item.product.id === productId)
+  if (line) setQuantity(productId, line.quantity + 1)
+}
+
+const submitOrder = async () => {
+  checkoutError.value = ""
+  if (!isSignedIn.value) {
+    await navigateTo({
+      path: localePath("/login"),
+      query: { redirect: route.fullPath },
+    })
+    return
   }
-});
 
-watch(
-  () => authStore.user?.id,
-  (userId, oldUserId) => {
-    if (userId && userId !== oldUserId) {
-      // 切換使用者時才重新載入
-      cartStore.fetchCart(userId);
-    } else if (!userId) {
-      cartStore.clear();
-    }
-  },
-);
-
-const handleClear = () => {
-  cartStore.clear({ preserveUser: true });
-  notifications.info(t("notifications.cartCleared"), 2000);
-};
-
-const handleIncrement = (id: number) => {
-  cartStore.increment(id);
-};
-
-const handleDecrement = (id: number) => {
-  cartStore.decrement(id);
-};
-
-const handleRemove = (id: number) => {
-  cartStore.removeItem(id);
-  notifications.info(t("notifications.cartItemRemoved"), 2000);
-};
-
-const handleCheckout = async () => {
-  if (!authStore.isAuthenticated) {
-    notifications.info(t("notifications.checkoutLogin"), 2500);
-    navigateTo(localePath("/login"));
-    return;
-  }
-  if (!cartStore.items.length) {
-    notifications.info(t("notifications.checkoutEmpty"), 2500);
-    return;
-  }
-  checkoutLoading.value = true;
   try {
-    const order = await cartStore.checkout();
-    if (order) {
-      notifications.success(
-        t("notifications.checkoutSuccess", { id: order.id }),
-        4000,
-      );
-    }
-  } catch (error) {
-    notifications.error(
-      error instanceof Error ? error.message : t("notifications.checkoutError"),
-      4000,
-    );
-  } finally {
-    checkoutLoading.value = false;
+    receipt.value = await checkout()
+  } catch {
+    checkoutError.value = t("cart.checkoutError")
   }
-};
+}
 
-usePageSeo(() => ({
-  title: t("seo.cart.title"),
-  description: t("seo.cart.description"),
-}));
+useSeoMeta({
+  title: () => t("cart.title"),
+  description: () => t("cart.description"),
+})
 </script>
 
 <template>
-  <section class="space-y-8" aria-labelledby="cart-heading">
-    <BaseSectionHeading
-      id="cart-heading"
-      :level="1"
-      :title="$t('cart.title')"
-      :description="$t('cart.subtitle')" />
+  <div class="space-y-8">
+    <header class="max-w-2xl">
+      <p class="eyebrow">{{ $t("navigation.cart") }}</p>
+      <h1 class="mt-3 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white">
+        {{ $t("cart.title") }}
+      </h1>
+      <p class="mt-3 text-base leading-7 text-slate-600 dark:text-slate-300">
+        {{ $t("cart.description") }}
+      </p>
+    </header>
 
-    <BaseAlert v-if="!authStore.isAuthenticated" variant="info">
-      <div
-        class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <span>{{ $t("cart.loginPrompt") }}</span>
-        <BaseButton :to="localePath('/login')" size="sm" class="shrink-0">
-          {{ $t("navigation.login") }}
-        </BaseButton>
+    <section v-if="receipt" class="success-panel" role="status">
+      <p class="eyebrow">{{ $t("cart.successTitle") }}</p>
+      <h2 class="mt-2 text-2xl font-semibold text-slate-950 dark:text-white">
+        {{ $t("cart.successDescription", { id: receipt.id }) }}
+      </h2>
+      <NuxtLink class="btn-primary mt-5" :to="localePath('/')">
+        {{ $t("cart.continueShopping") }}
+      </NuxtLink>
+    </section>
+
+    <section v-if="!itemCount" class="empty-state">
+      <div class="empty-state__icon" aria-hidden="true">□</div>
+      <h2>{{ $t("cart.emptyTitle") }}</h2>
+      <p>{{ $t("cart.emptyDescription") }}</p>
+      <NuxtLink class="btn-primary mt-5" :to="localePath('/')">
+        {{ $t("cart.continueShopping") }}
+      </NuxtLink>
+    </section>
+
+    <div v-else class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_21rem] lg:items-start">
+      <ul class="divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white px-5 dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900 sm:px-6">
+        <CartLineItem
+          v-for="line in lines"
+          :key="line.product.id"
+          :line="line"
+          @decrease="decrease"
+          @increase="increase"
+          @remove="remove" />
+      </ul>
+      <div>
+        <p v-if="!isSignedIn" class="notice mb-4" role="status">
+          {{ $t("cart.loginRequired") }}
+        </p>
+        <CartSummary
+          :item-count="itemCount"
+          :subtotal="subtotal"
+          :pending="isCheckingOut"
+          @checkout="submitOrder"
+          @clear="clear" />
+        <p v-if="checkoutError" class="form-error mt-4" role="alert">{{ checkoutError }}</p>
       </div>
-    </BaseAlert>
-
-    <div
-      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-      <section class="space-y-4" aria-labelledby="cart-items-heading">
-        <h2 id="cart-items-heading" class="sr-only">
-          {{ $t("cart.itemsHeading") }}
-        </h2>
-        <CartItemsList
-          :items="cartStore.items"
-          :loading="cartStore.loading"
-          @increment="handleIncrement"
-          @decrement="handleDecrement"
-          @remove="handleRemove" />
-        <BaseAlert v-if="cartStore.error" variant="error">
-          {{ cartStore.error }}
-        </BaseAlert>
-        <BaseAlert
-          v-if="!cartStore.items.length && !cartStore.loading"
-          variant="warning">
-          {{ $t("cart.empty") }}
-        </BaseAlert>
-      </section>
-      <CartSummary
-        :total="cartStore.total"
-        :item-count="cartStore.count"
-        :checkout-loading="checkoutLoading"
-        @clear="handleClear"
-        @checkout="handleCheckout" />
     </div>
-  </section>
+  </div>
 </template>
