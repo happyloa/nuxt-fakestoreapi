@@ -113,7 +113,7 @@ npm run build
 npm run preview
 ```
 
-## 設定與驗證
+## 設定與維護
 
 複製 `.env.example` 為 `.env`，依環境設定：
 
@@ -124,11 +124,11 @@ npm run preview
 
 ```bash
 npm ci
-npm run check
+npm run build
 npm audit
 ```
 
-`check` 執行型別檢查、購物車測試、production build，再啟動正式伺服器跑隔離的本機 mock API 整合測試。測試不使用真實帳戶，也不向外部服務寫入。`.github/workflows/ci.yml` 在 push／PR 時執行同樣的檢查。
+專案保持輕量，不配置自動化測試、CI 或 lint。需要時可手動執行建置或原有的 `npm run typecheck`。
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 

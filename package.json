@@ -14,10 +14,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck",
-    "test": "node --test tests/cart.test.mjs",
-    "test:integration": "node --test tests/server.test.mjs",
-    "check": "npm run typecheck && npm test && npm run build && npm run test:integration"
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@nuxt/image": "^2.1.0",

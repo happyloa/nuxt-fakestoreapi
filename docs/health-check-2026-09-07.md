@@ -35,9 +35,11 @@
 - layout 改用 slot，不再重複掛載 NuxtPage。canonical 交由 i18n 集中產生、分享圖使用絕對 URL，移除頁面標題的重複品牌後綴。
 - 手機篩選先於商品結果、桌面保留側欄；價格排序、錯誤重試、繼續購物及持續顯示的示範結帳完成提示。中英文文案明確說明本機購物車與非真實交易。
 - 手機導覽採原生 dialog，具有 modal 焦點管理、Esc 關閉與背景捲動鎖定；手機可直接進購物車。改善窄螢幕通知寬度、商品數量上限與停用連結行為。
-- 加入 Node 內建測試及 CI；GitHub Actions 使用已核對的最新版 checkout 7.0.1 / setup-node 7.0.0，鎖定 commit SHA，僅授予 contents:read，不保存 checkout 憑證。
+- 依專案的輕量定位，移除本次新增的自動化測試、CI 與整合檢查指令；不配置 lint，保留原有的建置與型別檢查指令。
 
-## 驗證範圍
+## 更新時已完成的檢查紀錄
+
+以下為套件更新當時的驗證結果。後續依使用者要求移除測試與 CI，不再維護或重跑自動化測試。
 
 - npm ci：驗證乾淨安裝，確認 deprecated、site URL、安裝腳本警告已消除。
 - npm audit：0 已知漏洞；npm outdated 僅剩 TypeScript 7 與 H3 2 RC 兩項有原因的相容例外。
@@ -52,8 +54,8 @@
 2. **正式交易與多實例部署**：session 保存在單一程序記憶體，重啟會失效，未提供跨實例 session、登入速率限制、集中日誌與監控。若升級成正式服務，應先補共享 TTL session、限流與部署層 request size 限制，再做安全測試；目前的 Content-Length 檢查不是完整串流大小限制。
 3. **CSP**：Nuxt hydration 與樣式仍使用 unsafe-inline；正式產品可評估 nonce/hash 整合。沒有為了消除警告而假裝已落實嚴格 CSP。
 4. **字型與圖片效能**：Noto Sans TC 字型仍來自 Google；可在需要離線／隱私限制時改自託管字型。圖片受上游與 IPX 服務影響，需實際量測後再決定預載與快取策略。
-5. **部署與 CI 狀態**：本次只完成本機提交，未要求 push 或部署；因此沒有宣稱遠端 CI／正式站已通過或發布。現有 public/_headers 是靜態平台的設定，不能取代 Node server routeRules；正式部署應使用 Node runtime 並確認反向代理設定。
-6. **長期維護**：TypeScript 7 要等 vue-tsc 支援才移除版本限制；兩項 scoped overrides 應在上游修正後移除。可再導入 lint、瀏覽器 E2E 與覆蓋率門檻，但不把只有格式一致視為功能正確。
+5. **部署狀態**：本次只完成本機提交，未要求 push 或部署。現有 public/_headers 是靜態平台的設定，不能取代 Node server routeRules；正式部署應使用 Node runtime 並確認反向代理設定。
+6. **長期維護**：TypeScript 7 要等 vue-tsc 支援才移除版本限制；兩項 scoped overrides 應在上游修正後移除。維持小專案的簡單配置，不加入 lint 或測試框架。
 
 ## 官方依據
 
@@ -63,4 +65,3 @@
 - [Nuxt i18n 安裝與 Vue I18n 11](https://i18n.nuxtjs.org/docs/getting-started)
 - [npm install-scripts 管理](https://docs.npmjs.com/cli/v11/commands/npm-install-scripts/)
 - [Nuxt Sitemap](https://github.com/nuxt-modules/sitemap)
-- [GitHub checkout](https://github.com/actions/checkout)、[setup-node](https://github.com/actions/setup-node)
