@@ -1,4 +1,4 @@
-import type { Product } from "~/types/fakestore";
+import type { Product } from "#shared/types/fakestore";
 
 /**
  * 統一管理商品列表的過濾邏輯與網址同步。
@@ -27,7 +27,7 @@ export const useProductFilters = (productsSource: () => Product[]) => {
       );
     }
     if (searchQuery.value) {
-      const keyword = searchQuery.value.toLowerCase();
+      const keyword = searchQuery.value.trim().toLowerCase();
       items = items.filter(
         (product) =>
           product.title.toLowerCase().includes(keyword) ||
@@ -35,12 +35,12 @@ export const useProductFilters = (productsSource: () => Product[]) => {
       );
     }
     return items.sort((a, b) =>
-      sortOrder.value === "asc" ? a.id - b.id : b.id - a.id,
+      sortOrder.value === "asc" ? a.price - b.price : b.price - a.price,
     );
   });
 
   const hasActiveFilters = computed(
-    () => selectedCategory.value !== "all" || searchQuery.value.trim() !== "",
+    () => selectedCategory.value !== "all" || searchQuery.value.trim() !== "" || sortOrder.value !== "asc",
   );
 
   // URL 同步加防抖：搜尋逐字輸入時不會每個字元都觸發 router.replace
@@ -50,6 +50,7 @@ export const useProductFilters = (productsSource: () => Product[]) => {
     queryTimer = setTimeout(() => {
       router.replace({
         query: {
+          ...route.query,
           category:
             selectedCategory.value !== "all"
               ? selectedCategory.value
@@ -62,6 +63,13 @@ export const useProductFilters = (productsSource: () => Product[]) => {
   };
 
   watch([selectedCategory, sortOrder, searchQuery], updateQuery);
+
+  watch(() => route.query, (query) => {
+    if (queryTimer) clearTimeout(queryTimer);
+    selectedCategory.value = qs(query.category) || "all";
+    sortOrder.value = qs(query.sort) === "desc" ? "desc" : "asc";
+    searchQuery.value = qs(query.q);
+  });
 
   onScopeDispose(() => {
     if (queryTimer) clearTimeout(queryTimer);

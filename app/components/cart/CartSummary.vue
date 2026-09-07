@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <BaseCard
     as="section"
-    class="space-y-4"
+    class="space-y-4 lg:sticky lg:top-28"
     aria-labelledby="cart-summary-heading">
     <BaseSectionHeading
       id="cart-summary-heading"
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
         @click="$emit('checkout')">
         {{ $t("cart.summary.checkout") }}
       </BaseButton>
-      <BaseButton variant="outline" block @click="$emit('clear')">
+      <BaseButton variant="outline" :disabled="!itemCount || checkoutLoading" block @click="$emit('clear')">
         {{ $t("cart.summary.clear") }}
       </BaseButton>
     </div>

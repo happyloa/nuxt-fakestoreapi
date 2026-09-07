@@ -13,7 +13,7 @@ import type {
   CreateProductPayload,
   Product,
   UpdateProductPayload,
-} from "~/types/fakestore";
+} from "#shared/types/fakestore";
 
 interface State {
   products: Product[];
@@ -98,7 +98,6 @@ export const useProductsStore = defineStore("products", {
       }
       try {
         const product = await getProductById(id);
-        this.products.push(product);
         return product;
       } catch (error) {
         this.error =

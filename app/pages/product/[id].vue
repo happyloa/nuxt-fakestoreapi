@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { Product } from "~/types/fakestore";
+import type { Product } from "#shared/types/fakestore";
 import { useCartStore } from "~/stores/cart";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
@@ -12,30 +12,13 @@ const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 
-const product = ref<Product | null>(null);
-const pending = ref(true);
-const errorMessage = ref("");
-
-/**
- * 動態載入商品細節並更新 SEO 資訊，保持作品的完整度。
- */
-const loadProduct = async () => {
-  const id = Number(route.params.id);
-  pending.value = true;
-  errorMessage.value = "";
-  try {
-    product.value = await productsStore.fetchProductById(id);
-  } catch (error) {
-    errorMessage.value = toErrorMessage(
-      error,
-      t("products.details.loadError"),
-    );
-  } finally {
-    pending.value = false;
-  }
-};
-
-await loadProduct();
+definePageMeta({ validate: (route) => /^[1-9]\d{0,5}$/.test(String(route.params.id)) });
+const { data: product, pending, error, refresh } = await useAsyncData(
+  () => `product-${route.params.id}`,
+  () => $fetch<Product>(`/api/products/${route.params.id}`),
+);
+if (error.value?.statusCode === 404) throw createError({ statusCode: 404, statusMessage: "Product not found" });
+const errorMessage = computed(() => error.value ? t("products.details.loadError") : "");
 
 usePageSeo(() => ({
   title: t("seo.productDetail.title", {
@@ -77,7 +60,7 @@ useHead(() => {
                 },
               }
             : {}),
-        }),
+        }).replace(/</g, "\\u003c"),
       },
     ],
   };
@@ -126,6 +109,7 @@ const addToCart = () => {
 
     <BaseAlert v-else-if="errorMessage" variant="error">
       {{ errorMessage }}
+      <BaseButton variant="outline" @click="refresh()">{{ $t('ui.retry') }}</BaseButton>
     </BaseAlert>
 
     <ProductDetail

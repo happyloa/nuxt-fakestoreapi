@@ -11,7 +11,7 @@ import type {
   Cart,
   CreateCartPayload,
   UpdateCartPayload,
-} from "~/types/fakestore";
+} from "#shared/types/fakestore";
 
 const { t } = useI18n();
 const adminCartsStore = useAdminCartsStore();

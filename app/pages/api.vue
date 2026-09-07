@@ -30,6 +30,7 @@ usePageSeo(() => ({
       :description="$t('api.subtitle')"
       data-aos="fade-up" />
 
+    <BaseAlert variant="info">{{ $t('api.demoNotice') }}</BaseAlert>
     <LazyProductsSection data-aos="fade-up" data-aos-delay="100" />
     <LazyCartsSection data-aos="fade-up" data-aos-delay="200" />
     <LazyUsersSection data-aos="fade-up" data-aos-delay="300" />

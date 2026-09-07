@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { Product } from "~/types/fakestore";
+import type { Product } from "#shared/types/fakestore";
 
 const emit = defineEmits<{
   (e: "add-to-cart", product: Product): void;
   (e: "reset"): void;
+  (e: "retry"): void;
 }>();
 
 interface Props {
@@ -39,13 +40,16 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
       <ProductGridSkeleton :count="6" />
     </div>
     <BaseAlert v-else-if="error" variant="error">
-      {{ error }}
+      <div class="space-y-3">
+        <p>{{ error }}</p>
+        <BaseButton variant="outline" @click="emit('retry')">{{ $t("ui.retry") }}</BaseButton>
+      </div>
     </BaseAlert>
     <ProductEmptyState
       v-else-if="!products.length"
       :has-active-filters="hasActiveFilters"
       @reset="emit('reset')" />
-    <ul v-else class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul v-else class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
       <li
         v-for="(product, index) in products"
         :key="product.id"

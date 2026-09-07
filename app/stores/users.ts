@@ -11,7 +11,7 @@ import type {
   CreateUserPayload,
   UpdateUserPayload,
   User,
-} from '~/types/fakestore'
+} from '#shared/types/fakestore'
 
 interface State {
   users: User[]

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 // 使用 i18n Head 設定，自動產生 html lang 屬性與 SEO 連結
-const head = useLocaleHead({
-  // addDirAttribute: true,
-  // identifierAttribute: 'id',
-  // addSeoAttributes: true,
-});
+const head = useLocaleHead({ seo: true });
 </script>
 
 <template>
@@ -40,12 +36,8 @@ const head = useLocaleHead({
         <main
           id="main-content"
           tabindex="-1"
-          class="container mx-auto px-4 py-8 focus:outline-none">
-          <NuxtPage
-            :transition="{
-              name: 'page',
-              mode: 'out-in',
-            }" />
+          class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 focus:outline-none">
+          <slot />
         </main>
         <!-- 網站頁尾 -->
         <SiteFooter />

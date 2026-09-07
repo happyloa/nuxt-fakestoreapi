@@ -70,6 +70,8 @@ const isButton = computed(() => {
     v-if="to"
     :to="to"
     :class="classes"
+    :tabindex="loading || disabled ? -1 : undefined"
+    @click="(loading || disabled) && $event.preventDefault()"
     :aria-disabled="loading || disabled ? 'true' : undefined">
     <svg
       v-if="loading"
@@ -123,6 +125,8 @@ const isButton = computed(() => {
     v-else-if="href"
     :href="href"
     :class="classes"
+    :tabindex="loading || disabled ? -1 : undefined"
+    @click="(loading || disabled) && $event.preventDefault()"
     :aria-disabled="loading || disabled ? 'true' : undefined">
     <svg
       v-if="loading"

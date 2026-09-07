@@ -4,7 +4,7 @@ import { useProductFilters } from "~/composables/useProductFilters";
 import { useCartStore } from "~/stores/cart";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
-import type { Product } from "~/types/fakestore";
+import type { Product } from "#shared/types/fakestore";
 
 const productsStore = useProductsStore();
 const cartStore = useCartStore();
@@ -14,32 +14,20 @@ const notifications = useNotificationsStore();
 /**
  * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
  */
-const { pending: isPageLoading, error: asyncError } = await useAsyncData(
+const { pending: isPageLoading, error: asyncError, refresh } = await useAsyncData(
   "homepageData",
   async () => {
     productsStore.error = "";
-    // 以 allSettled 確認兩個請求都完成後再決定是否拋出錯誤
-    const results = await Promise.allSettled([
-      productsStore.fetchProducts(),
-      productsStore.fetchCategories(),
-    ]);
-
-    const rejected = results.find((result) => result.status === "rejected") as
-      | PromiseRejectedResult
-      | undefined;
-
-    if (rejected) {
-      throw new Error(rejected.reason?.message || "Failed to load data");
-    } else if (productsStore.error) {
-      throw new Error(productsStore.error);
-    }
+    const catalog = await $fetch<import("#shared/types/storefront").CatalogPayload>("/api/catalog");
+    productsStore.products = catalog.products;
+    productsStore.categories = catalog.categories;
     return true;
   },
 );
 
 const pageError = computed(() => {
   if (asyncError.value)
-    return asyncError.value.message || t("api.errors.generic");
+    return t("errors.load");
   return "";
 });
 
@@ -81,15 +69,18 @@ usePageSeo(() => ({
       :categories-count="productsStore.categories.length" />
 
     <div
-      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,2.25fr)_minmax(0,1fr)]">
+      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,1fr)_18rem]">
       <ProductGrid
+        class="order-2 lg:order-1"
         :products="filteredProducts"
         :loading="isPageLoading"
         :error="pageError"
         :has-active-filters="hasActiveFilters"
         @add-to-cart="handleAddToCart"
-        @reset="resetFilters" />
+        @reset="resetFilters"
+        @retry="refresh()" />
       <ProductFilterPanel
+        class="order-1 lg:order-2"
         :categories="productsStore.categories"
         :selected-category="selectedCategory"
         :sort-order="sortOrder"

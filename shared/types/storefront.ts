@@ -4,18 +4,7 @@
  * These types intentionally exclude upstream credentials, JWTs, passwords,
  * geolocation, and any other data the browser does not need.
  */
-export interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
+import type { Product } from "./fakestore";
 
 export interface CatalogPayload {
   products: Product[];
@@ -27,11 +16,6 @@ export interface CartLine {
   quantity: number;
 }
 
-/** A local cart item includes the product snapshot needed to render it. */
-export interface CartItem {
-  product: Pick<Product, "id" | "title" | "price" | "image">;
-  quantity: number;
-}
 
 export interface LoginInput {
   username: string;

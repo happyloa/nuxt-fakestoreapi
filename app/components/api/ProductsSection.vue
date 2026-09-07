@@ -7,7 +7,7 @@
 import { useI18n } from "vue-i18n";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
-import type { Product, UpdateProductPayload } from "~/types/fakestore";
+import type { Product, UpdateProductPayload } from "#shared/types/fakestore";
 
 const { t } = useI18n();
 const productsStore = useProductsStore();

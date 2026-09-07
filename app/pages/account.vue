@@ -13,8 +13,11 @@ const localePath = useLocalePath();
 // 此頁需登入才能瀏覽；未登入者由 auth middleware 導向登入頁
 definePageMeta({ middleware: "auth" });
 
-const handleLogout = () => {
-  authStore.logoutUser();
+const handleLogout = async () => {
+  try { await authStore.logoutUser(); } catch {
+    notifications.error(t("api.errors.generic"));
+    return;
+  }
   notifications.info(t("notifications.loggedOut"), 2000);
   navigateTo(localePath("/"));
 };
@@ -22,21 +25,21 @@ const handleLogout = () => {
 // 取得使用者全名
 const fullName = computed(() => {
   if (!authStore.user?.name) return "";
-  const { firstname, lastname } = authStore.user.name;
-  return `${firstname} ${lastname}`;
+  const { firstName, lastName } = authStore.user.name;
+  return `${firstName} ${lastName}`;
 });
 
 // 取得使用者首字母 (用於頭像)
 const initials = computed(() => {
   if (!authStore.user?.name) return "?";
-  const f = authStore.user.name.firstname?.[0] ?? "";
-  const l = authStore.user.name.lastname?.[0] ?? "";
+  const f = authStore.user.name.firstName?.[0] ?? "";
+  const l = authStore.user.name.lastName?.[0] ?? "";
   return (f + l).toUpperCase();
 });
 
 // 訂單項目：優先顯示當前購物車，否則顯示上次結帳的紀錄
 const orderItems = computed(() =>
-  cartStore.items.length ? cartStore.items : cartStore.lastOrderItems,
+  cartStore.lastOrderItems,
 );
 
 usePageSeo(() => ({
@@ -74,9 +77,7 @@ usePageSeo(() => ({
           {{ $t("account.loginPrompt") }}
         </p>
       </div>
-      <NuxtLink :to="localePath('/login')">
-        <BaseButton>{{ $t("account.loginCta") }}</BaseButton>
-      </NuxtLink>
+      <BaseButton :to="localePath('/login')">{{ $t("account.loginCta") }}</BaseButton>
     </div>
 
     <!-- 已登入但使用者資料載入中 -->

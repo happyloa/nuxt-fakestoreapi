@@ -1,13 +1,9 @@
-import { createError, defineEventHandler, setResponseHeader } from "h3";
-import type { PublicUser } from "~/types/storefront";
+import { defineEventHandler, setResponseHeader } from "h3";
+import type { SessionResponse } from "#shared/types/storefront";
 import { getSessionUser } from "../../utils/session";
 
-export default defineEventHandler(async (event): Promise<PublicUser> => {
+export default defineEventHandler((event): SessionResponse => {
   setResponseHeader(event, "Cache-Control", "no-store");
   const user = getSessionUser(event);
-  if (!user) {
-    throw createError({ statusCode: 401, statusMessage: "Authentication is required" });
-  }
-
-  return user;
+  return { authenticated: user !== null, user };
 });

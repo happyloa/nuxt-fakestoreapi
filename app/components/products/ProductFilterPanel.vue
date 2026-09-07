@@ -53,7 +53,7 @@ const categoryOptions = computed(() => [
         :label="$t('products.filters.searchLabel')"
         :placeholder="$t('products.filters.searchPlaceholder')"
         @update:model-value="emit('update:search', $event as string)" />
-      <div class="grid gap-4 sm:grid-cols-2">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
         <BaseSelect
           :model-value="selectedCategory"
           :label="$t('products.filters.categoryLabel')"

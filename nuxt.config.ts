@@ -1,9 +1,8 @@
 import tailwindcss from "@tailwindcss/vite"
 
-const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000"
+const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || "https://nuxt-fakestoreapi.worksbyaaron.com"
 
 export default defineNuxtConfig({
-  srcDir: "app",
   compatibilityDate: "2026-08-01",
   devtools: { enabled: process.env.NODE_ENV !== "production" },
 
@@ -26,7 +25,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     fakeStoreApiBase:
-      process.env.NUXT_FAKESTORE_API_BASE || "https://fakestoreapi.com",
+      process.env.NUXT_FAKE_STORE_API_BASE || "https://fakestoreapi.com",
     public: {
       siteUrl,
     },
@@ -41,13 +40,20 @@ export default defineNuxtConfig({
     domains: ["fakestoreapi.com"],
   },
 
+  // Bundle the small Vue helper instead of asking Nitro to resolve its package
+  // directory; Node deprecates the trailing-slash export lookup (DEP0155).
+  nitro: {
+    externals: { inline: ["@vue/shared"] },
+  },
+
   sitemap: {
-    zeroRuntime: true,
+    sources: ["/api/__sitemap__/urls"],
+    exclude: ["/cart", "/account", "/login", "/api", "/users", "/products/new", "/en/cart", "/en/account", "/en/login", "/en/api", "/en/users", "/en/products/new"],
   },
 
   googleFonts: {
     families: {
-      "Noto+Sans+TC": [100, 300, 400, 500, 700, 900],
+      "Noto+Sans+TC": [400, 500, 700, 900],
     },
     display: "swap",
     download: false,
@@ -60,7 +66,6 @@ export default defineNuxtConfig({
       { code: "en", name: "English", language: "en-US", file: "en.json" },
     ],
     defaultLocale: "zh",
-    langDir: "../app/i18n/locales",
     strategy: "prefix_except_default",
     detectBrowserLanguage: {
       useCookie: true,
@@ -68,7 +73,6 @@ export default defineNuxtConfig({
       redirectOn: "root",
       fallbackLocale: "en",
     },
-    vueI18n: "~/i18n.config.ts",
   },
 
   vite: {
@@ -88,7 +92,7 @@ export default defineNuxtConfig({
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' data: https://fonts.gstatic.com",
           "img-src 'self' data: https:",
-          "connect-src 'self' https://fakestoreapi.com https://fonts.googleapis.com https://fonts.gstatic.com",
+          "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
           "base-uri 'self'",
           "form-action 'self'",
           "frame-ancestors 'none'",

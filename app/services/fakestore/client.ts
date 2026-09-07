@@ -1,16 +1,11 @@
-import { ofetch } from 'ofetch'
-
 /**
  * 建立 Fake Store API 的基礎客戶端
- * 設定了 baseURL 與預設的攔截器
+ * 使用 Nuxt 的 request-aware fetch，SSR 也能呼叫本站 BFF。
  */
-export const fakestoreClient = ofetch.create({
-  baseURL: 'https://fakestoreapi.com',
-  async onResponseError({ response }) {
-    // 統一處理 API 錯誤
-    console.error('API Error:', response.status, response._data)
-    // 可以在這裡加入錯誤回報邏輯
-  },
+export const fakestoreClient = $fetch.create({
+  baseURL: '/api/playground',
+  timeout: 10000,
+  retry: 0,
 })
 
 /**

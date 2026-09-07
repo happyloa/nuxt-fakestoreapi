@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
 import { useNotificationsStore } from "~/stores/notifications";
 
 const authStore = useAuthStore();
-const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
@@ -14,7 +12,7 @@ const route = useRoute();
 // 安全的重導目標：僅接受站內相對路徑，避免 open redirect
 const resolveRedirect = () => {
   const r = route.query.redirect;
-  if (typeof r === "string" && r.startsWith("/") && !r.startsWith("//")) {
+  if (typeof r === "string" && r.startsWith("/") && !r.startsWith("//") && !/[\\\x00-\x1f]/.test(r)) {
     return r;
   }
   return localePath("/account");
@@ -26,7 +24,7 @@ if (authStore.isAuthenticated) {
 }
 
 /**
- * Fake Store API 僅提供基本的帳密驗證，因此登入後立即同步購物車。
+ * 由本站伺服器建立工作階段；登入後保留訪客已選購的商品。
  */
 
 const handleSubmit = async ({
@@ -38,9 +36,7 @@ const handleSubmit = async ({
 }) => {
   await authStore.loginUser(username, password);
   if (authStore.isAuthenticated) {
-    if (authStore.user) {
-      cartStore.fetchCart(authStore.user.id);
-    }
+
     notifications.success(
       t("notifications.loggedIn", {
         name: authStore.user?.username ?? username,

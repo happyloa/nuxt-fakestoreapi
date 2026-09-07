@@ -11,7 +11,7 @@ import {
 import type {
   CreateCartPayload,
   UpdateCartPayload,
-} from "~/types/fakestore";
+} from "#shared/types/fakestore";
 
 /**
  * 管理員購物車 Store（API 操作台使用）。

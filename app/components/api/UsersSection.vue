@@ -11,7 +11,7 @@ import type {
   User,
   CreateUserPayload,
   UpdateUserPayload,
-} from "~/types/fakestore";
+} from "#shared/types/fakestore";
 
 const { t } = useI18n();
 const usersStore = useUsersStore();

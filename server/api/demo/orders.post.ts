@@ -4,7 +4,7 @@ import {
   readValidatedBody,
   setResponseHeader,
 } from "h3";
-import type { CartLine, DemoOrder } from "~/types/storefront";
+import type { CartLine, DemoOrder } from "#shared/types/storefront";
 import { getSessionUser } from "../../utils/session";
 
 type DemoOrderInput = {

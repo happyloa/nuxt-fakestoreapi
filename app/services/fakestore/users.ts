@@ -2,7 +2,7 @@ import type {
   CreateUserPayload,
   UpdateUserPayload,
   User,
-} from '~/types/fakestore'
+} from '#shared/types/fakestore'
 import { createQueryString, fakestoreClient } from './client'
 
 /**

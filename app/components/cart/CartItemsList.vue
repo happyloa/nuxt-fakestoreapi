@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CartItem } from "~/stores/cart";
+import type { CartItem } from "~/utils/cart";
 
 defineEmits<{
   (e: "increment", id: number): void;
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
         <li v-for="index in 3" :key="`cart-skeleton-${index}`">
           <BaseCard
             class="flex animate-pulse flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex items-center gap-4">
+            <div class="flex min-w-0 items-center gap-4">
               <div
                 class="h-20 w-20 shrink-0 rounded-xl bg-slate-200 dark:bg-slate-700" />
               <div class="space-y-2">
@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
                   class="h-3 w-20 rounded bg-slate-100 sm:w-24 dark:bg-slate-700" />
               </div>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex shrink-0 items-center gap-3">
               <div class="h-9 w-9 rounded-lg bg-slate-200 dark:bg-slate-700" />
               <div class="h-4 w-6 rounded bg-slate-200 dark:bg-slate-700" />
               <div class="h-9 w-9 rounded-lg bg-slate-200 dark:bg-slate-700" />
@@ -110,6 +110,7 @@ const props = withDefaults(defineProps<Props>(), {
                 variant="outline"
                 size="sm"
                 class="h-11 w-11 !p-0 shrink-0"
+                :disabled="item.quantity >= 99"
                 :aria-label="$t('cart.a11y.increaseQty', { title: item.title })"
                 @click="$emit('increment', item.id)"
                 >+</BaseButton

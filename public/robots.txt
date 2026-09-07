@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://nuxt-fakestoreapi.worksbyaaron.com/sitemap.xml

@@ -11,32 +11,8 @@ const { t } = useI18n();
 const localePath = useLocalePath();
 const checkoutLoading = ref(false);
 
-/**
- * 監聽登入狀態以同步購物車，提供與 Fake Store API 對應的體驗。
- */
-
-onMounted(() => {
-  // 只在本地購物車為空時才從 API 初始載入，避免覆蓋使用者在其他頁面加入的商品
-  // （Fake Store API 是模擬 API，POST 不會真的持久化，GET 永遠回傳原始資料）
-  if (authStore.user && !cartStore.items.length) {
-    cartStore.fetchCart(authStore.user.id);
-  }
-});
-
-watch(
-  () => authStore.user?.id,
-  (userId, oldUserId) => {
-    if (userId && userId !== oldUserId) {
-      // 切換使用者時才重新載入
-      cartStore.fetchCart(userId);
-    } else if (!userId) {
-      cartStore.clear();
-    }
-  },
-);
-
 const handleClear = () => {
-  cartStore.clear({ preserveUser: true });
+  cartStore.clear();
   notifications.info(t("notifications.cartCleared"), 2000);
 };
 
@@ -54,9 +30,10 @@ const handleRemove = (id: number) => {
 };
 
 const handleCheckout = async () => {
+  if (checkoutLoading.value) return;
   if (!authStore.isAuthenticated) {
     notifications.info(t("notifications.checkoutLogin"), 2500);
-    navigateTo(localePath("/login"));
+    navigateTo({ path: localePath("/login"), query: { redirect: localePath("/cart") } });
     return;
   }
   if (!cartStore.items.length) {
@@ -74,7 +51,7 @@ const handleCheckout = async () => {
     }
   } catch (error) {
     notifications.error(
-      error instanceof Error ? error.message : t("notifications.checkoutError"),
+      t("notifications.checkoutError"),
       4000,
     );
   } finally {
@@ -95,6 +72,12 @@ usePageSeo(() => ({
       :level="1"
       :title="$t('cart.title')"
       :description="$t('cart.subtitle')" />
+
+    <p class="text-sm text-slate-600 dark:text-slate-300">{{ $t('cart.demoNotice') }}</p>
+    <BaseAlert v-if="cartStore.lastOrderItems.length && !cartStore.items.length" variant="success">
+      {{ $t('cart.completed') }}
+    </BaseAlert>
+    <BaseButton :to="localePath('/')" variant="outline">{{ $t('cart.continueShopping') }}</BaseButton>
 
     <BaseAlert v-if="!authStore.isAuthenticated" variant="info">
       <div

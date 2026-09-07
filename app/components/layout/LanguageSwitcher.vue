@@ -18,9 +18,7 @@ const handleToggle = async () => {
   try {
     await setLocale(target);
   } finally {
-    setTimeout(() => {
-      isSwitching.value = false;
-    }, 300);
+    isSwitching.value = false;
   }
 };
 </script>

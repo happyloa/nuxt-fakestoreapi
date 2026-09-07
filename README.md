@@ -11,6 +11,7 @@ Storefront Lab 是以 [Fake Store API](https://fakestoreapi.com/) 為資料來�
 - Fake Store API 登入與帳戶資料展示
 - 繁體中文與 English 介面
 - 深色模式、響應式版面與基本無障礙支援
+- 公開假資料的 API 操作台與示範商品表單（CRUD 不會永久保存）
 
 ## 重要的資料與安全說明
 
@@ -27,15 +28,19 @@ Storefront Lab 是以 [Fake Store API](https://fakestoreapi.com/) 為資料來�
 ```text
 app/
   components/
-    catalog/          # 目錄、篩選、商品卡與詳情
+    products/         # 目錄、篩選、商品卡與詳情
     cart/             # 購物車明細與摘要
     auth/             # 示範登入表單
-    shell/            # Header、Footer、語言與主題控制
-  composables/        # local cart、session、URL query、theme
+    layout/           # Header、Footer、語言與主題控制
+    api/              # 公開假資料操作台
+  stores/             # Pinia 商品、購物車、session、主題與通知
+  plugins/            # session 初始化、本機購物車還原與動畫
+  composables/        # URL query、SEO 與共用操作
   pages/              # 薄頁面層：路由、SEO、頁面組裝
   layouts/            # 應用程式殼層
-  types/              # 瀏覽器可安全使用的 DTO
-  assets/styles/      # 設計 token 與全域樣式
+  assets/css/         # Tailwind v4 CSS-first 主題與樣式
+shared/types/         # 前後端共用 DTO，使用 #shared alias
+i18n/                 # Nuxt i18n 的標準設定與語言檔目錄
 server/
   api/               # 同源 BFF 端點
   utils/             # Fake Store upstream client、session cookie 與驗證
@@ -49,6 +54,7 @@ server/
 - 將上游錯誤轉為一致且不洩漏細節的應用程式錯誤。
 - 移除不該交給前端的欄位，例如密碼與原始 token。
 - 管理不透明的 `HttpOnly` session cookie，以及登入、登出與目前使用者資料。
+- `/api/playground/*` 只允許固定的 mock API 資源、方法與查詢，並移除回應內的密碼與 token。
 
 這讓元件不需要知道第三方 API 的 URL、token 格式或錯誤細節，也能避免直接把上游資料模型散落在 UI 中。
 
@@ -58,6 +64,7 @@ server/
 - 購物車、主題、通知與選單等純前端狀態才使用 client state。
 - 篩選條件同步到 URL，便於重新整理、分享與返回瀏覽。
 - 示範結帳只在本站建立收據，不對 Fake Store API 發送 mutation；這讓介面行為與上游的非持久化特性一致。
+- 登入不載入上游的固定購物車；會保留訪客商品。每項最多 99 件、每車最多 50 項；結帳失敗保留商品，登出清空購物車與本次收據。
 
 ## 介面與可近用性
 
@@ -105,6 +112,27 @@ npm run build
 ```bash
 npm run preview
 ```
+
+## 設定與驗證
+
+複製 `.env.example` 為 `.env`，依環境設定：
+
+- `NUXT_PUBLIC_SITE_URL`：正式公開網址，預設沿用專案原有的 `https://nuxt-fakestoreapi.worksbyaaron.com`，供 canonical、分享圖與 sitemap 使用；部署時應與 `NUXT_SITE_URL`、`NUXT_PUBLIC_I18N_BASE_URL` 設為相同網址。不要填 localhost。
+- `NUXT_FAKE_STORE_API_BASE`：伺服器端上游位址。注意這是 Nitro 對 `fakeStoreApiBase` 的標準命名；原本 `NUXT_FAKESTORE_API_BASE` 無法在 production runtime 正確覆寫。
+
+正式部署使用 `npm run build` 後執行 `node .output/server/index.mjs`，需要支援 Node 的伺服器。純靜態 `generate` 不提供登入、BFF 與示範結帳；完整功能不應以靜態站部署。HTTPS 是正式環境 session cookie 的必要條件。
+
+```bash
+npm ci
+npm run check
+npm audit
+```
+
+`check` 執行型別檢查、購物車測試、production build，再啟動正式伺服器跑隔離的本機 mock API 整合測試。測試不使用真實帳戶，也不向外部服務寫入。`.github/workflows/ci.yml` 在 push／PR 時執行同樣的檢查。
+
+套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
+
+目前 TypeScript 固定在 `~6.0.3`：最新 7.0.2 與 vue-tsc 3.3.11 實測不相容。H3 使用 Nitro 2 相容的穩定 1.x，未採用 2.x RC。詳見 [完整健檢報告](docs/health-check-2026-09-07.md)。
 
 ## 貢獻原則
 

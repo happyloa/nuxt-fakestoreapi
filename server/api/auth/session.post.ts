@@ -4,7 +4,7 @@ import {
   readValidatedBody,
   setResponseHeader,
 } from "h3";
-import type { SessionResponse } from "~/types/storefront";
+import type { SessionResponse } from "#shared/types/storefront";
 import {
   authenticateWithFakeStore,
   getPublicUserAfterUpstreamLogin,

@@ -22,7 +22,7 @@ const variantClasses: Record<string, string> = {
       role="status"
       aria-live="polite"
       aria-atomic="false"
-      class="fixed top-6 right-6 z-[60] flex max-w-sm flex-col gap-3">
+      class="fixed top-4 right-4 left-4 sm:left-auto sm:w-96 z-[60] flex max-w-sm flex-col gap-3">
       <div
         v-for="toast in toasts"
         :key="toast.id"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from "~/types/fakestore";
+import type { User } from "#shared/types/fakestore";
 
 defineProps<{ user: User }>();
 </script>

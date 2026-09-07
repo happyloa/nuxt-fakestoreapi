@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import type { CreateProductPayload } from "~/types/fakestore";
+import type { CreateProductPayload } from "#shared/types/fakestore";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateProductPayload } from "~/types/fakestore";
+import type { CreateProductPayload } from "#shared/types/fakestore";
 
 interface Props {
   categories?: string[];

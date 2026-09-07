@@ -1,10 +1,11 @@
 /**
  * 路由守衛 (auth)
- * 未登入（無 token）者導向登入頁，並以 redirect query 記住原本想去的頁面，
+ * 未經伺服器工作階段驗證者導向登入頁，並保留原本想去的頁面，
  * 登入成功後可導回。避免僅靠頁面內 v-if 隱藏 UI。
  */
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuthStore();
+  if (!auth.initialized) await auth.fetchUser();
   if (auth.isAuthenticated) return;
 
   const localePath = useLocalePath();

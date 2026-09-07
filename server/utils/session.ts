@@ -4,7 +4,7 @@ import {
   setCookie,
   type H3Event,
 } from "h3";
-import type { PublicUser } from "~/types/storefront";
+import type { PublicUser } from "#shared/types/storefront";
 
 const SESSION_COOKIE_NAME = "storefront_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;

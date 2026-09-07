@@ -1,10 +1,10 @@
+import type { Product } from "#shared/types/fakestore";
 import { createError } from "h3";
 import { $fetch } from "ofetch";
 import type {
   CatalogPayload,
-  Product,
   PublicUser,
-} from "~/types/storefront";
+} from "#shared/types/storefront";
 
 const DEFAULT_FAKE_STORE_API_URL = "https://fakestoreapi.com";
 const REQUEST_TIMEOUT_MS = 8_000;
@@ -261,11 +261,11 @@ export async function getCatalog(): Promise<CatalogPayload> {
 }
 
 export async function getProduct(id: number): Promise<Product> {
-  const product = normalizeProduct(
-    await requestFakeStore(`/products/${id}`, {
+  const response = await requestFakeStore(`/products/${id}`, {
       notFoundMessage: "Product not found",
-    }),
-  );
+    });
+  if (response === null) throw createError({ statusCode: 404, statusMessage: "Product not found" });
+  const product = normalizeProduct(response);
 
   if (product.id !== id) throw upstreamResponseError();
   return product;

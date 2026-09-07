@@ -12,7 +12,7 @@ export function toErrorMessage(error: unknown, fallback: string): string {
 
 /**
  * 取得在地化的通用錯誤訊息，供 store 在 API 失敗時設定使用者可見的訊息。
- * 原始錯誤已由 services 層攔截器 (client.ts) console.error，此處只負責顯示文案。
+ * 顯示通用錯誤文案，不記錄可能包含敏感欄位的原始回應。
  * 由 Nuxt 自動匯入，使用時無需 import。
  */
 const ERROR_FALLBACK: Record<string, string> = {

@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+/* Keep server-rendered content visible before animation initialization. */
+[data-aos]:not(.aos-init) {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* 自訂主題配置 - Tailwind CSS v4 CSS-first 配置方式 */
 @theme {
   /* 字型設定 */

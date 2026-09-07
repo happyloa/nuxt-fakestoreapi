@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Product } from "~/types/fakestore";
+import type { Product } from "#shared/types/fakestore";
 
 const emit = defineEmits<{
   (e: "add-to-cart", product: Product): void;

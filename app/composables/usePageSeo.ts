@@ -20,8 +20,10 @@ const DEFAULT_OG_IMAGE = "/og-image.webp";
  * 採用 useSeoMeta 以 meta key 去重，避免與 app.vue 的站台級預設重複。
  */
 export function usePageSeo(seo: () => PageSeoInput) {
-  const url = useRequestURL();
-  const canonical = `${url.origin}${url.pathname}`;
+  const route = useRoute();
+  const config = useRuntimeConfig();
+  const canonical = computed(() => new URL(route.path, config.public.siteUrl).href);
+  const socialImage = () => new URL(seo().image ?? DEFAULT_OG_IMAGE, config.public.siteUrl).href;
 
   useSeoMeta({
     title: () => seo().title,
@@ -32,14 +34,13 @@ export function usePageSeo(seo: () => PageSeoInput) {
     // valid at runtime but not included in Nuxt's narrowed literal union.
     ogType: () => (seo().type ?? "website") as "website",
     ogUrl: canonical,
-    ogImage: () => seo().image ?? DEFAULT_OG_IMAGE,
+    ogImage: socialImage,
     twitterCard: "summary_large_image",
     twitterTitle: () => seo().title,
     twitterDescription: () => seo().description,
-    twitterImage: () => seo().image ?? DEFAULT_OG_IMAGE,
+    twitterImage: socialImage,
   });
 
-  useHead({
-    link: [{ rel: "canonical", href: canonical }],
-  });
+  // Locale-aware canonical and alternate links are managed by useLocaleHead.
+  useSeoMeta({ robots: () => /\/(cart|account|login|api|users|products\/new)$/.test(route.path) ? "noindex, follow" : "index, follow" });
 }

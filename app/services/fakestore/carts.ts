@@ -2,7 +2,7 @@ import type {
   Cart,
   CreateCartPayload,
   UpdateCartPayload,
-} from '~/types/fakestore'
+} from '#shared/types/fakestore'
 import { createQueryString, fakestoreClient } from './client'
 
 /**

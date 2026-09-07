@@ -45,8 +45,8 @@
       "categoryLabel": "Category",
       "allCategories": "All categories",
       "sortLabel": "Sort by",
-      "sortAsc": "ID ↑",
-      "sortDesc": "ID ↓",
+      "sortAsc": "Price: low to high",
+      "sortDesc": "Price: high to low",
       "reset": "Reset filters"
     },
     "actions": {
@@ -73,7 +73,7 @@
     "form": {
       "back": "Back to catalogue",
       "heading": "Create a new product",
-      "subheading": "Fill in every detail and publish directly to the Fake Store API.",
+      "subheading": "Create a demo product. The upstream service does not persist changes.",
       "titleLabel": "Product title",
       "titlePlaceholder": "Sleek cotton t-shirt",
       "priceLabel": "Price (USD)",
@@ -89,8 +89,8 @@
   },
   "cart": {
     "title": "Shopping cart",
-    "subtitle": "Your cart stays in sync with the Fake Store API once you sign in.",
-    "loginPrompt": "Sign in to load your latest cart items and sync future changes.",
+    "subtitle": "Your cart is saved in this browser. Sign in to try demo checkout.",
+    "loginPrompt": "Shop first, then sign in to check out. Your cart will be kept.",
     "remove": "Remove",
     "a11y": {
       "increaseQty": "Increase quantity of {title}",
@@ -104,9 +104,12 @@
       "description": "Review the totals and proceed when you're ready.",
       "items": "Items: {count}",
       "total": "Total: {total}",
-      "checkout": "Checkout",
+      "checkout": "Demo checkout",
       "clear": "Clear cart"
-    }
+    },
+    "demoNotice": "Demo checkout only. No payment, shipping, or real order will be created.",
+    "continueShopping": "Continue shopping",
+    "completed": "Demo checkout complete"
   },
   "users": {
     "list": {
@@ -126,7 +129,7 @@
   "auth": {
     "login": {
       "title": "Authenticate",
-      "subtitle": "Use the demo credentials from Fake Store API to manage carts.",
+      "subtitle": "Use a public demo account to try checkout. Do not enter a real password.",
       "username": "Username",
       "password": "Password",
       "submit": "Sign in",
@@ -140,7 +143,7 @@
     "sections": {
       "profile": "Profile",
       "address": "Address",
-      "recentOrders": "Recent Orders"
+      "recentOrders": "Latest demo checkout in this session"
     },
     "fields": {
       "username": "Username",
@@ -268,13 +271,15 @@
         "limit": "Limit",
         "sort": "Sort"
       }
-    }
+    },
+    "demoNotice": "This playground uses public mock data. Changes are not persisted. Do not enter real personal data or passwords."
   },
   "ui": {
     "loading": "Loading...",
     "dismiss": "Dismiss",
     "backToTop": "Back to top",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "retry": "Try again"
   },
   "errors": {
     "load": "Failed to load data. Please try again.",
@@ -308,31 +313,31 @@
       "description": "Explore and manage Fake Store API products with filters, analytics and quick actions."
     },
     "cart": {
-      "title": "Shopping Cart | Fake Store Dashboard",
+      "title": "Shopping Cart",
       "description": "View and manage your Fake Store API shopping cart."
     },
     "login": {
-      "title": "Login | Fake Store Dashboard",
-      "description": "Authenticate with the Fake Store API to sync your shopping cart."
+      "title": "Login",
+      "description": "Sign in with a Fake Store API demo account to try checkout."
     },
     "api": {
-      "title": "API Playground | Fake Store Dashboard",
+      "title": "API Playground",
       "description": "Experiment with every Fake Store API endpoint directly from the dashboard."
     },
     "newProduct": {
-      "title": "Create Product | Fake Store Dashboard",
+      "title": "Create Product",
       "description": "Create a new Fake Store API product with full metadata."
     },
     "productDetail": {
-      "title": "{name} | Fake Store Dashboard",
+      "title": "{name}",
       "description": "Fake Store product details."
     },
     "users": {
-      "title": "Users | Fake Store Dashboard",
+      "title": "Users",
       "description": "Explore Fake Store API users with contact and address details."
     },
     "account": {
-      "title": "My Account | Fake Store Dashboard",
+      "title": "My Account",
       "description": "View and manage your account information and order history."
     }
   }
