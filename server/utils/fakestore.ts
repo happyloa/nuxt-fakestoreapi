@@ -9,6 +9,7 @@ import type {
 const DEFAULT_FAKE_STORE_API_URL = "https://fakestoreapi.com";
 const REQUEST_TIMEOUT_MS = 8_000;
 const MAX_PRODUCT_ID = 1_000_000;
+const STALE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1_000;
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -17,6 +18,28 @@ interface UpstreamRequestOptions {
   body?: Record<string, string>;
   notFoundMessage?: string;
   unauthorizedMessage?: string;
+}
+
+interface CacheEntry<T> {
+  value: T;
+  cachedAt: number;
+}
+
+// This is deliberately process-local: it never persists customer data, but it
+// lets a warm Nuxt/Nitro instance continue serving a previously validated
+// catalogue during a short upstream outage.
+let catalogCache: CacheEntry<CatalogPayload> | null = null;
+const productCache = new Map<number, CacheEntry<Product>>();
+
+function cacheValue<T>(value: T): CacheEntry<T> {
+  return { value, cachedAt: Date.now() };
+}
+
+function getStaleValue<T>(entry: CacheEntry<T> | null | undefined): T | null {
+  if (!entry || Date.now() - entry.cachedAt > STALE_CACHE_MAX_AGE_MS) {
+    return null;
+  }
+  return entry.value;
 }
 
 function isRecord(value: unknown): value is UnknownRecord {
@@ -188,7 +211,10 @@ async function requestFakeStore(
     return await $fetch<unknown>(`${baseUrl}${path}`, {
       method: options.method,
       body: options.body,
-      retry: 0,
+      // Retrying a GET masks brief DNS/network failures without retrying
+      // mutations or credential submissions.
+      retry: options.method ? 0 : 1,
+      retryDelay: 300,
       timeout: REQUEST_TIMEOUT_MS,
     });
   } catch (error) {
@@ -249,26 +275,45 @@ function getUserIdFromTrustedLoginToken(token: string): number | null {
 }
 
 export async function getCatalog(): Promise<CatalogPayload> {
-  const [products, categories] = await Promise.all([
-    requestFakeStore("/products"),
-    requestFakeStore("/products/categories"),
-  ]);
+  try {
+    const [products, categories] = await Promise.all([
+      requestFakeStore("/products"),
+      requestFakeStore("/products/categories"),
+    ]);
+    const catalog = {
+      products: normalizeProducts(products),
+      categories: normalizeCategories(categories),
+    };
 
-  return {
-    products: normalizeProducts(products),
-    categories: normalizeCategories(categories),
-  };
+    catalogCache = cacheValue(catalog);
+    for (const product of catalog.products) {
+      productCache.set(product.id, cacheValue(product));
+    }
+    return catalog;
+  } catch (error) {
+    const staleCatalog = getStaleValue(catalogCache);
+    if (staleCatalog) return staleCatalog;
+    throw error;
+  }
 }
 
 export async function getProduct(id: number): Promise<Product> {
-  const response = await requestFakeStore(`/products/${id}`, {
+  try {
+    const response = await requestFakeStore(`/products/${id}`, {
       notFoundMessage: "Product not found",
     });
-  if (response === null) throw createError({ statusCode: 404, statusMessage: "Product not found" });
-  const product = normalizeProduct(response);
+    if (response === null) throw createError({ statusCode: 404, statusMessage: "Product not found" });
+    const product = normalizeProduct(response);
 
-  if (product.id !== id) throw upstreamResponseError();
-  return product;
+    if (product.id !== id) throw upstreamResponseError();
+    productCache.set(product.id, cacheValue(product));
+    return product;
+  } catch (error) {
+    if (getErrorStatus(error) === 404) throw error;
+    const staleProduct = getStaleValue(productCache.get(id));
+    if (staleProduct) return staleProduct;
+    throw error;
+  }
 }
 
 export async function authenticateWithFakeStore(

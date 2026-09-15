@@ -68,7 +68,8 @@
       "rating": "Rating {rate}",
       "reviews": "{count} review | {count} reviews",
       "missing": "We could not find this product. Please try again from the catalogue.",
-      "loadError": "Unable to load product details."
+      "loadError": "Unable to load product details.",
+      "upstreamUnavailable": "The product service is temporarily unavailable. Please try again shortly."
     },
     "form": {
       "back": "Back to catalogue",
@@ -283,6 +284,7 @@
   },
   "errors": {
     "load": "Failed to load data. Please try again.",
+    "catalogUnavailable": "The product service is temporarily unavailable. Please try again shortly.",
     "save": "Failed to save. Please try again.",
     "delete": "Failed to delete. Please try again.",
     "login": "Login failed. Please check your username and password.",

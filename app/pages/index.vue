@@ -26,8 +26,11 @@ const { pending: isPageLoading, error: asyncError, refresh } = await useAsyncDat
 );
 
 const pageError = computed(() => {
-  if (asyncError.value)
-    return t("errors.load");
+  if (asyncError.value) {
+    return asyncError.value.statusCode === 502
+      ? t("errors.catalogUnavailable")
+      : t("errors.load");
+  }
   return "";
 });
 

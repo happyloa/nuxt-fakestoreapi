@@ -18,7 +18,12 @@ const { data: product, pending, error, refresh } = await useAsyncData(
   () => $fetch<Product>(`/api/products/${route.params.id}`),
 );
 if (error.value?.statusCode === 404) throw createError({ statusCode: 404, statusMessage: "Product not found" });
-const errorMessage = computed(() => error.value ? t("products.details.loadError") : "");
+const errorMessage = computed(() => {
+  if (!error.value) return "";
+  return error.value.statusCode === 502
+    ? t("products.details.upstreamUnavailable")
+    : t("products.details.loadError");
+});
 
 usePageSeo(() => ({
   title: t("seo.productDetail.title", {

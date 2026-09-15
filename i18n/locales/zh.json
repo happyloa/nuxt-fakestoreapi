@@ -68,7 +68,8 @@
       "rating": "評分 {rate}",
       "reviews": "{count} 則評價",
       "missing": "找不到這項商品，請回到列表重新選擇。",
-      "loadError": "無法載入商品詳細資訊。"
+      "loadError": "無法載入商品詳細資訊。",
+      "upstreamUnavailable": "商品服務暫時無法使用，請稍後重試。"
     },
     "form": {
       "back": "回到商品列表",
@@ -167,6 +168,7 @@
   },
   "errors": {
     "load": "載入資料失敗，請稍後再試。",
+    "catalogUnavailable": "商品服務暫時無法使用，請稍後重試。",
     "save": "儲存失敗，請稍後再試。",
     "delete": "刪除失敗，請稍後再試。",
     "login": "登入失敗，請確認帳號與密碼。",
