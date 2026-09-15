@@ -23,7 +23,7 @@
     "@pinia/nuxt": "^1.0.2",
     "@tailwindcss/vite": "^4.3.3",
     "aos": "^2.3.4",
-    "h3": "^1.15.11",
+    "h3": "^2.0.1-rc.32",
     "nuxt": "^4.5.2",
     "ofetch": "^1.5.1",
     "pinia": "^4.0.3",
@@ -33,11 +33,11 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
-    "@nuxtjs/sitemap": "^8.5.0",
+    "@nuxtjs/sitemap": "^8.5.1",
     "@tailwindcss/forms": "^0.5.11",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.5.1",
     "esbuild": "^0.28.2",
-    "typescript": "~6.0.3",
+    "typescript": "^5.9.3",
     "vue-tsc": "^3.3.11"
   },
   "allowScripts": {
