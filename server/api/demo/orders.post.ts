@@ -1,11 +1,11 @@
 import {
   createError,
   defineEventHandler,
-  readValidatedBody,
   setResponseHeader,
 } from "h3";
 import type { CartLine, DemoOrder } from "#shared/types/storefront";
 import { getSessionUser } from "../../utils/session";
+import { readBoundedJsonBody } from "../../utils/request-body";
 
 type DemoOrderInput = {
   lines: CartLine[];
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event): Promise<DemoOrder> => {
     throw createError({ statusCode: 401, statusMessage: "Authentication is required" });
   }
 
-  const { lines } = await readValidatedBody(event, parseDemoOrderInput);
+  const { lines } = parseDemoOrderInput(await readBoundedJsonBody(event));
   const itemCount = lines.reduce((total, line) => total + line.quantity, 0);
 
   return {

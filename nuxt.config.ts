@@ -8,7 +8,6 @@ export default defineNuxtConfig({
 
   modules: [
     "@nuxt/image",
-    "@nuxtjs/google-fonts",
     "@nuxtjs/i18n",
     "@pinia/nuxt",
     "@nuxtjs/sitemap",
@@ -51,14 +50,6 @@ export default defineNuxtConfig({
     exclude: ["/cart", "/account", "/login", "/api", "/users", "/products/new", "/en/cart", "/en/account", "/en/login", "/en/api", "/en/users", "/en/products/new"],
   },
 
-  googleFonts: {
-    families: {
-      "Noto+Sans+TC": [400, 500, 700, 900],
-    },
-    display: "swap",
-    download: false,
-  },
-
   i18n: {
     baseUrl: siteUrl,
     locales: [
@@ -89,10 +80,10 @@ export default defineNuxtConfig({
         "Content-Security-Policy": [
           "default-src 'self'",
           "script-src 'self' 'unsafe-inline'",
-          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-          "font-src 'self' data: https://fonts.gstatic.com",
+          "style-src 'self' 'unsafe-inline'",
+          "font-src 'self' data:",
           "img-src 'self' data: https:",
-          "connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
+          "connect-src 'self'",
           "base-uri 'self'",
           "form-action 'self'",
           "frame-ancestors 'none'",
@@ -100,6 +91,8 @@ export default defineNuxtConfig({
         ].join("; "),
         "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
         "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+        "Cross-Origin-Opener-Policy": "same-origin",
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
       },

@@ -1,4 +1,5 @@
 import { createError, defineEventHandler, getHeader, getRequestURL, setResponseHeader } from "h3";
+import { MAX_API_BODY_BYTES } from "../utils/request-body";
 
 export default defineEventHandler((event) => {
   if (!event.path.startsWith("/api/")) return;
@@ -14,7 +15,7 @@ export default defineEventHandler((event) => {
   if (!getHeader(event, "content-type")?.toLowerCase().startsWith("application/json") && event.method !== "DELETE") {
     throw createError({ statusCode: 415, statusMessage: "JSON input is required" });
   }
-  if (Number(getHeader(event, "content-length")) > 32_768) {
+  if (Number(getHeader(event, "content-length")) > MAX_API_BODY_BYTES) {
     throw createError({ statusCode: 413, statusMessage: "Request body is too large" });
   }
 });

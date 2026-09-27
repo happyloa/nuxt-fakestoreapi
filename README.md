@@ -19,7 +19,7 @@ Storefront Lab 是以 [Fake Store API](https://fakestoreapi.com/) 為資料來�
 - 訂單僅為示範收據；不會建立真實訂單，也不保證上游 API 的 mutation 會持久化。
 - 購物車以瀏覽器本機儲存為主，讓示範流程在重新整理後仍可延續；它不是跨裝置同步的訂單系統。
 - 前端不保存、顯示或回傳使用者密碼。登入資料只會用於向上游 API 建立工作階段。
-- 上游 token 只在伺服器登入流程中短暫使用；BFF 會改寫為隨機、不透明的伺服器端 demo session，並以 `HttpOnly`、`Secure`、`SameSite=Lax` cookie 保存識別碼，瀏覽器 JavaScript 無法直接讀取或偽造使用者身分。示範 session 只留在目前伺服器程序的記憶體中，重新部署或重啟後會失效。
+- 上游 token 只在伺服器登入流程中短暫使用；BFF 會改寫為隨機、不透明的伺服器端 demo session，並以 `HttpOnly`、`Secure`、`SameSite=Lax` cookie 保存識別碼，瀏覽器 JavaScript 無法直接讀取或偽造使用者身分。示範 session 只留在目前伺服器程序的記憶體中，最多保留 10,000 筆；重新部署或重啟後會失效。
 
 ## 架構原則
 

@@ -1,7 +1,6 @@
 import {
   createError,
   defineEventHandler,
-  readValidatedBody,
   setResponseHeader,
 } from "h3";
 import type { SessionResponse } from "#shared/types/storefront";
@@ -10,6 +9,7 @@ import {
   getPublicUserAfterUpstreamLogin,
 } from "../../utils/fakestore";
 import { createSession } from "../../utils/session";
+import { readBoundedJsonBody } from "../../utils/request-body";
 
 type LoginInput = {
   username: string;
@@ -45,7 +45,7 @@ function parseLoginInput(value: unknown): LoginInput {
 
 export default defineEventHandler(async (event): Promise<SessionResponse> => {
   setResponseHeader(event, "Cache-Control", "no-store");
-  const { username, password } = await readValidatedBody(event, parseLoginInput);
+  const { username, password } = parseLoginInput(await readBoundedJsonBody(event));
   const token = await authenticateWithFakeStore(username, password);
   const user = await getPublicUserAfterUpstreamLogin(token);
 

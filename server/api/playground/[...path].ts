@@ -1,5 +1,6 @@
-import { createError, defineEventHandler, getQuery, getRouterParam, readBody, setResponseHeader } from "h3";
+import { createError, defineEventHandler, getQuery, getRouterParam, setResponseHeader } from "h3";
 import { $fetch } from "ofetch";
+import { readBoundedJsonBody } from "../../utils/request-body";
 
 /** Restricted public mock API playground. Never forward cookies or upstream secrets. */
 export default defineEventHandler(async (event) => {
@@ -24,8 +25,8 @@ export default defineEventHandler(async (event) => {
   }
   let body: Record<string, unknown> | undefined;
   if (["POST", "PUT", "PATCH"].includes(method)) {
-    const input: unknown = await readBody(event);
-    if (!input || typeof input !== "object" || Array.isArray(input) || JSON.stringify(input).length > 32_768) {
+    const input = await readBoundedJsonBody(event);
+    if (!input || typeof input !== "object" || Array.isArray(input)) {
       throw createError({ statusCode: 400, statusMessage: "Invalid demo input" });
     }
     body = input as Record<string, unknown>;

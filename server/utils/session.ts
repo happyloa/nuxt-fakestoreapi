@@ -8,6 +8,7 @@ import type { PublicUser } from "#shared/types/storefront";
 
 const SESSION_COOKIE_NAME = "storefront_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
+const MAX_ACTIVE_SESSIONS = 10_000;
 const SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface StoredSession {
@@ -75,6 +76,12 @@ export function createSession(event: H3Event, user: PublicUser): void {
 
   const previousSessionId = getSessionId(event);
   if (previousSessionId) sessionStore.delete(previousSessionId);
+
+  // Bound process memory even when valid demo credentials are used repeatedly.
+  if (sessionStore.size >= MAX_ACTIVE_SESSIONS) {
+    const oldestSessionId = sessionStore.keys().next().value;
+    if (oldestSessionId) sessionStore.delete(oldestSessionId);
+  }
 
   const sessionId = crypto.randomUUID();
   sessionStore.set(sessionId, {
