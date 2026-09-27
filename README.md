@@ -132,7 +132,7 @@ npm audit
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
-目前 TypeScript 固定在 `~6.0.3`：最新 7.0.2 與 vue-tsc 3.3.11 實測不相容。H3 使用 Nitro 2 相容的穩定 1.x，未採用 2.x RC。詳見 [完整健檢報告](docs/health-check-2026-09-07.md)。
+目前 TypeScript 固定在 `~6.0.3`：最新 7.0.2 與 vue-tsc 3.3.11 實測不相容。H3 使用 Nitro 2 相容的穩定 1.x，未採用 2.x RC。詳見 [完整健檢報告](docs/health-check-2026-09-27.md)。
 
 ## 貢獻原則
 
