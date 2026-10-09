@@ -9,63 +9,72 @@ interface Props {
   product?: Product | null;
 }
 
+const categoryLabel = useCategoryLabel();
 const props = withDefaults(defineProps<Props>(), {
   product: null,
 });
 </script>
 
 <template>
-  <BaseCard
+  <article
     v-if="product"
-    as="article"
-    class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
-    <div class="space-y-4">
-      <div
-        class="flex items-center flex-wrap gap-3 text-slate-500 dark:text-slate-300">
-        <BaseBadge variant="brand">{{ product.category }}</BaseBadge>
-        <BaseBadge v-if="product.rating" variant="accent">{{
-          $t("products.details.rating", { rate: product.rating.rate })
-        }}</BaseBadge>
-        <span v-if="product.rating" class="text-xs">
-          {{
-            $t(
-              "products.details.reviews",
-              { count: product.rating.count },
-              product.rating.count,
-            )
-          }}
-        </span>
-      </div>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
+    class="grid items-start gap-8 lg:grid-cols-2 lg:gap-16"
+  >
+    <figure
+      class="flex aspect-square items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 dark:border-slate-800"
+    >
+      <NuxtImg
+        :src="product.image"
+        :alt="product.title"
+        width="600"
+        height="600"
+        sizes="(max-width: 1024px) 90vw, 550px"
+        format="webp"
+        fetchpriority="high"
+        class="h-full w-full object-contain"
+      />
+    </figure>
+    <div class="space-y-6 lg:py-8">
+      <p class="text-sm text-slate-500 dark:text-slate-400">
+        {{ categoryLabel(product.category) }}
+      </p>
+      <h1
+        class="wrap-anywhere text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl"
+      >
         {{ product.title }}
       </h1>
-      <p class="text-lg text-slate-600 dark:text-slate-300">
+      <div v-if="product.rating" class="flex items-center gap-2 text-sm">
+        <SiteIcon
+          name="star"
+          class="h-4 w-4 fill-accent text-accent dark:fill-accent-light dark:text-accent-light"
+        /><span>{{
+          $t("products.details.rating", { rate: product.rating.rate })
+        }}</span
+        ><span class="text-slate-500 dark:text-slate-400">{{
+          $t(
+            "products.details.reviews",
+            { count: product.rating.count },
+            product.rating.count,
+          )
+        }}</span>
+      </div>
+      <p class="text-3xl font-extrabold">{{ $n(product.price, "currency") }}</p>
+      <p
+        class="border-t border-slate-200 pt-6 text-sm leading-7 text-slate-600 dark:border-slate-800 dark:text-slate-300"
+      >
         {{ product.description }}
       </p>
-      <div class="flex items-center gap-6">
-        <span class="text-3xl font-semibold text-brand dark:text-brand-light">{{
-          $n(Number(product.price), "currency")
-        }}</span>
-        <BaseButton @click="$emit('add-to-cart', product)">
-          {{ $t("products.actions.addToCart") }}
-        </BaseButton>
-      </div>
+      <BaseButton block size="lg" @click="$emit('add-to-cart', product)"
+        ><SiteIcon name="bag" class="h-5 w-5" />{{
+          $t("products.actions.addToCart")
+        }}</BaseButton
+      >
+      <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">
+        {{ $t("cart.demoNotice") }}
+      </p>
     </div>
-    <figure class="flex flex-col items-center justify-center">
-      <div
-        class="overflow-hidden rounded-3xl bg-gradient-to-br from-brand/10 via-white to-accent/15 p-6 transition-colors duration-200 dark:from-slate-900 dark:via-brand/20 dark:to-accent/25">
-        <NuxtImg
-          :src="product.image"
-          :alt="product.title"
-          width="400"
-          height="400"
-          sizes="(max-width: 768px) 90vw, 400px"
-          format="webp"
-          class="mx-auto h-72 w-auto object-contain" />
-      </div>
-    </figure>
-  </BaseCard>
-  <BaseAlert v-else variant="warning">
-    {{ $t("products.details.missing") }}
-  </BaseAlert>
+  </article>
+  <BaseAlert v-else variant="warning">{{
+    $t("products.details.missing")
+  }}</BaseAlert>
 </template>

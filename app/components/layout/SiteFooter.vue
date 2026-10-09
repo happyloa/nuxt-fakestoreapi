@@ -1,111 +1,95 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n();
-
-// 區塊標題與可譯連結文字走 i18n；品牌專有名詞（Fake Store API 等）維持原文
-const links = computed(() => [
-  {
-    title: t("footer.sections.api"),
-    items: [
-      { label: "Fake Store API", href: "https://fakestoreapi.com" },
-      { label: "API Reference", href: "https://fakestoreapi.com/docs" },
-    ],
-  },
-  {
-    title: t("footer.sections.project"),
-    items: [
-      {
-        label: t("footer.links.sourceCode"),
-        href: "https://github.com/happyloa/nuxt-fakestoreapi",
-      },
-      { label: "Nuxt Documentation", href: "https://nuxt.com/docs" },
-    ],
-  },
-]);
+const localePath = useLocalePath();
+const year = useState("footerYear", () => new Date().getFullYear());
 </script>
-
 <template>
   <footer
-    class="relative mt-16 border-t border-slate-200/60 bg-white transition-colors duration-300 dark:border-slate-800/60 dark:bg-slate-950">
-    <!-- 頂部漸層裝飾線 -->
-    <div
-      class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
-    <div
-      class="mx-auto max-w-7xl px-4 py-12 text-slate-600 sm:px-6 lg:px-8 xl:px-10 dark:text-slate-300">
-      <div class="grid gap-10 md:grid-cols-3">
+    class="mt-16 border-t border-slate-200 bg-slate-100/60 dark:border-slate-800 dark:bg-slate-900/40"
+  >
+    <div class="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
+      <div class="grid gap-8 sm:grid-cols-[1fr_auto_auto] sm:gap-14">
         <div>
-          <h3
-            class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <span
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-brand-dark text-xs font-bold text-white shadow-md shadow-brand/20"
-              >FS</span
-            >
-            {{ $t("footer.title") }}
-          </h3>
+          <NuxtLink
+            :to="localePath('/')"
+            class="text-xl font-extrabold tracking-tight"
+            >Storefront<span class="ml-1 text-brand dark:text-brand-light"
+              >lab</span
+            ></NuxtLink
+          >
           <p
-            class="mt-3 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+            class="mt-3 max-w-sm text-sm leading-6 text-slate-600 dark:text-slate-400"
+          >
             {{ $t("footer.description") }}
           </p>
         </div>
-        <div v-for="section in links" :key="section.title" class="space-y-4">
-          <h4
-            class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
-            {{ section.title }}
-          </h4>
-          <ul class="space-y-2 text-sm">
-            <li v-for="item in section.items" :key="item.href">
+        <div>
+          <h2 class="mb-3 text-sm font-bold">
+            {{ $t("footer.sections.shop") }}
+          </h2>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>
+              <NuxtLink
+                :to="localePath('/')"
+                class="hover:text-brand dark:hover:text-brand-light"
+                >{{ $t("navigation.products") }}</NuxtLink
+              >
+            </li>
+            <li>
+              <NuxtLink
+                :to="localePath('/cart')"
+                class="hover:text-brand dark:hover:text-brand-light"
+                >{{ $t("navigation.cart") }}</NuxtLink
+              >
+            </li>
+            <li>
+              <NuxtLink
+                :to="localePath('/api')"
+                class="hover:text-brand dark:hover:text-brand-light"
+                >{{ $t("navigation.apiPlayground") }}</NuxtLink
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2 class="mb-3 text-sm font-bold">
+            {{ $t("footer.sections.project") }}
+          </h2>
+          <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+            <li>
               <a
-                :href="item.href"
+                href="https://github.com/happyloa/nuxt-fakestoreapi"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group inline-flex items-center gap-1.5 transition-all duration-200 hover:text-brand hover:translate-x-0.5 dark:hover:text-brand-light">
-                {{ item.label }}
-                <svg
-                  class="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-                </svg>
-              </a>
+                class="hover:text-brand dark:hover:text-brand-light"
+                >{{ $t("footer.links.sourceCode") }}</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fakestoreapi.com/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-brand dark:hover:text-brand-light"
+                >Fake Store API</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://nuxt.com/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-brand dark:hover:text-brand-light"
+                >Nuxt</a
+              >
             </li>
           </ul>
         </div>
       </div>
       <div
-        class="mt-12 flex flex-col gap-5 border-t border-slate-200/60 pt-8 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800/60 dark:text-slate-400">
-        <p>
-          {{ $t("footer.copyright", { year: new Date().getFullYear() }) }}
-        </p>
-        <div class="flex gap-5">
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
-            >Twitter</a
-          >
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
-            >GitHub</a
-          >
-          <a
-            href="https://www.linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="transition-all duration-200 hover:text-brand hover:scale-110 dark:hover:text-brand-light"
-            >LinkedIn</a
-          >
-        </div>
+        class="mt-8 flex flex-col gap-2 border-t border-slate-200 pt-5 text-xs leading-5 text-slate-500 sm:flex-row sm:justify-between dark:border-slate-800 dark:text-slate-400"
+      >
+        <p>{{ $t("footer.copyright", { year }) }}</p>
+        <p>{{ $t("footer.demoNotice") }}</p>
       </div>
     </div>
   </footer>

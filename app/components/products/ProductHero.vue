@@ -1,78 +1,93 @@
 <script setup lang="ts">
-// Hero 區塊：CTA 連結需經 localePath 以維持 /en 語系前綴
+const store = useProductsStore();
 const localePath = useLocalePath();
+const featured = computed(() =>
+  store.products.find((product) => product.id === 1),
+);
 </script>
-
 <template>
   <section
     id="dashboard-hero"
-    class="gradient-mesh relative overflow-hidden rounded-3xl border border-slate-200/60 p-8 transition-colors duration-300 sm:p-12 dark:border-slate-800/60"
-    data-aos="fade-up"
-    data-aos-duration="800">
-    <!-- 背景裝飾 -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div
-        class="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-brand/5 blur-3xl dark:bg-brand/10" />
-      <div
-        class="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-accent/5 blur-3xl dark:bg-accent/10" />
+    class="grid overflow-hidden rounded-[1.75rem] bg-[#eef0e7] dark:bg-[#2c3326] lg:grid-cols-[1.05fr_1fr]"
+    aria-labelledby="hero-title"
+  >
+    <div
+      class="flex flex-col items-start px-7 py-10 sm:px-12 sm:py-14 lg:py-16"
+    >
+      <p
+        class="mb-5 flex items-center gap-2 text-sm font-semibold text-accent dark:text-accent-light"
+      >
+        <span
+          class="h-2 w-2 rounded-full bg-accent dark:bg-accent-light"
+          aria-hidden="true"
+        />{{ $t("products.hero.badge") }}
+      </p>
+      <h1
+        id="hero-title"
+        class="max-w-lg whitespace-pre-line text-[2.6rem] font-extrabold leading-[1.2] tracking-[-0.04em] sm:text-6xl lg:text-[4.25rem]"
+      >
+        {{ $t("products.hero.title") }}
+      </h1>
+      <p
+        class="mt-6 max-w-sm text-sm leading-7 text-slate-600 sm:text-base dark:text-slate-300"
+      >
+        {{ $t("products.hero.subtitle") }}
+      </p>
+      <BaseButton href="#catalog" size="lg" class="mt-8"
+        >{{ $t("products.hero.ctaPrimary")
+        }}<SiteIcon name="arrow" class="h-4 w-4"
+      /></BaseButton>
+      <p class="mt-6 text-xs leading-5 text-slate-500 dark:text-slate-300">
+        {{ $t("products.hero.demoNotice") }}
+      </p>
     </div>
-    <div class="relative grid gap-8 md:grid-cols-2 md:items-center">
-      <div class="space-y-6">
-        <p
-          class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-brand shadow-sm backdrop-blur-sm dark:bg-slate-800/80 dark:text-brand-light"
-          data-aos="fade-right"
-          data-aos-delay="200">
-          {{ $t("products.hero.badge") }}
-        </p>
-        <h1
-          class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-4xl lg:text-5xl"
-          data-aos="fade-right"
-          data-aos-delay="300">
-          {{ $t("products.hero.title") }}
-        </h1>
-        <p
-          class="text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300"
-          data-aos="fade-right"
-          data-aos-delay="400">
-          {{ $t("products.hero.subtitle") }}
-        </p>
-        <div
-          class="flex flex-col gap-3 sm:flex-row"
-          data-aos="fade-right"
-          data-aos-delay="500">
-          <BaseButton
-            :to="localePath('/products/new')"
-            class="w-full sm:w-auto">
-            {{ $t("products.hero.ctaPrimary") }}
-          </BaseButton>
-          <BaseButton
-            :to="localePath('/users')"
-            variant="outline"
-            class="w-full sm:w-auto">
-            {{ $t("products.hero.ctaSecondary") }}
-          </BaseButton>
-        </div>
-      </div>
-      <div class="relative">
-        <div
-          class="absolute -left-12 -top-12 hidden h-24 w-24 animate-float rounded-full border-2 border-brand/20 md:block" />
-        <div
-          class="absolute -right-10 bottom-10 hidden h-20 w-20 animate-float rounded-full border-2 border-accent/20 md:block"
-          style="animation-delay: -3s" />
-        <div
-          class="absolute right-4 top-4 hidden h-12 w-12 animate-float rounded-full bg-brand/5 blur-sm md:block"
-          style="animation-delay: -1.5s" />
+    <div
+      class="relative flex min-h-80 items-center justify-center overflow-hidden px-8 pb-10 pt-4 sm:min-h-96 lg:py-12"
+    >
+      <div
+        class="absolute h-64 w-64 rounded-full border-[36px] border-[#e0e5d5] sm:h-80 sm:w-80 dark:border-[#3a4431]"
+        aria-hidden="true"
+      />
+      <NuxtLink
+        v-if="featured"
+        :to="localePath('/product/' + featured.id)"
+        :aria-label="featured.title"
+        class="group relative z-10 flex h-full w-full items-center justify-center pb-20 lg:pb-14"
+      >
         <img
-          src="/hero-products.svg"
-          :alt="$t('products.hero.illustrationAlt')"
-          width="512"
-          height="512"
-          loading="eager"
+          src="/images/featured-backpack.png"
+          :alt="featured.title"
+          width="640"
+          height="640"
           fetchpriority="high"
-          class="relative z-10 mx-auto h-48 w-auto drop-shadow-2xl transition-transform duration-500 hover:scale-105 sm:h-56"
-          data-aos="zoom-in"
-          data-aos-delay="400" />
-      </div>
+          class="h-64 w-64 object-contain drop-shadow-2xl transition-transform duration-300 group-hover:-rotate-3 sm:h-80 sm:w-80 lg:h-96 lg:w-96"
+        />
+      </NuxtLink>
+      <img
+        v-else
+        src="/images/featured-backpack.png"
+        :alt="$t('products.hero.illustrationAlt')"
+        width="640"
+        height="640"
+        fetchpriority="high"
+        class="relative h-64 w-64 object-contain drop-shadow-xl sm:h-80 sm:w-80"
+      />
+      <NuxtLink
+        v-if="featured"
+        :to="localePath('/product/' + featured.id)"
+        class="absolute inset-x-6 bottom-6 z-20 flex items-center gap-4 rounded-xl bg-white/95 p-4 shadow-card sm:inset-x-12 dark:bg-slate-900/95"
+      >
+        <div class="min-w-0 flex-1">
+          <p class="mb-1 text-xs text-slate-500 dark:text-slate-400">
+            {{ $t("products.hero.featured") }}
+          </p>
+          <p class="truncate text-sm font-bold">{{ featured.title }}</p>
+        </div>
+        <span class="shrink-0 text-sm font-bold">{{
+          $n(featured.price, "currency")
+        }}</span
+        ><SiteIcon name="arrow" class="h-4 w-4 shrink-0" />
+      </NuxtLink>
     </div>
   </section>
 </template>

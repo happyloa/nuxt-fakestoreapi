@@ -20,11 +20,13 @@ const formatted = computed(() =>
   <figure class="space-y-2">
     <figcaption
       v-if="label"
-      class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      class="text-xs font-semibold text-slate-500 dark:text-slate-400"
+    >
       {{ label }}
     </figcaption>
     <pre
-      class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100">
+      class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100"
+    >
       <code>{{ formatted }}</code>
     </pre>
   </figure>

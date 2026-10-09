@@ -10,8 +10,8 @@
     }
   },
   "navigation": {
-    "products": "Products",
-    "newProduct": "New product",
+    "products": "Shop",
+    "newProduct": "Create product",
     "cart": "Cart",
     "users": "Users",
     "apiPlayground": "API playground",
@@ -24,12 +24,14 @@
   },
   "products": {
     "hero": {
-      "badge": "Powered by Fake Store API",
-      "title": "Manage every product in one modern workspace",
-      "subtitle": "Browse, filter, create and inspect catalogue items with live data coming from the Fake Store API.",
-      "ctaPrimary": "Create product",
+      "badge": "A storefront to explore",
+      "title": "Everyday finds.\nA little more you.",
+      "subtitle": "Explore clothing, jewelry and tech. Find something you like, add it to your bag, and try the shopping experience.",
+      "ctaPrimary": "Explore the collection",
       "ctaSecondary": "Meet the users",
-      "illustrationAlt": "Product illustration"
+      "illustrationAlt": "Fjallraven everyday backpack",
+      "featured": "In the collection",
+      "demoNotice": "Demo store. No payment or shipping."
     },
     "stats": {
       "sectionTitle": "Catalogue highlights",
@@ -41,18 +43,19 @@
       "title": "Smart filters",
       "description": "Combine search, category and sorting to find the exact product you need.",
       "searchLabel": "Search",
-      "searchPlaceholder": "Search by name or description...",
+      "searchPlaceholder": "Search products...",
       "categoryLabel": "Category",
-      "allCategories": "All categories",
+      "allCategories": "All products",
       "sortLabel": "Sort by",
       "sortAsc": "Price: low to high",
       "sortDesc": "Price: high to low",
       "reset": "Reset filters"
     },
     "actions": {
-      "addToCart": "Add to cart"
+      "addToCart": "Add to cart",
+      "addNamedToCart": "Add {title} to cart"
     },
-    "listingTitle": "Product catalogue",
+    "listingTitle": "Find your everyday.",
     "empty": {
       "title": "No products found",
       "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
@@ -86,7 +89,15 @@
       "categoryLabel": "Category",
       "categoryPlaceholder": "Select a category",
       "submit": "Publish product"
-    }
+    },
+    "categories": {
+      "men": "Men's clothing",
+      "women": "Women's clothing",
+      "jewelry": "Jewelry",
+      "electronics": "Electronics"
+    },
+    "listingDescription": "Browse the full collection, or start with a category.",
+    "resultsCount": "{count} products"
   },
   "cart": {
     "title": "Shopping cart",
@@ -129,12 +140,14 @@
   },
   "auth": {
     "login": {
-      "title": "Authenticate",
+      "title": "Sign in",
       "subtitle": "Use a public demo account to try checkout. Do not enter a real password.",
       "username": "Username",
       "password": "Password",
       "submit": "Sign in",
-      "demoHint": "Demo credentials are pre-filled (mor_2314 / 83r5^_) — just sign in."
+      "demoHint": "The public demo account is filled in. Select Sign in to continue.",
+      "welcome": "Your next find\nis waiting.",
+      "welcomeDescription": "Your bag stays with you when you sign in. Use the demo account to try checkout and view your receipt."
     }
   },
   "account": {
@@ -292,27 +305,29 @@
   },
   "error": {
     "title404": "404",
-    "titleGeneric": "Oops! Something went wrong",
+    "titleGeneric": "Unable to load this page",
     "desc404": "The page you are looking for does not exist, might have been removed, or the URL is incorrect.",
     "descGeneric": "An unexpected error occurred on the server. Please try again later.",
     "backToHome": "Back to Home"
   },
   "footer": {
     "title": "About this project",
-    "description": "Built with Nuxt 4, Tailwind CSS and the Fake Store API.",
-    "copyright": "© {year} Fake Store Dashboard. All rights reserved.",
+    "description": "A small storefront for exploring products and trying the shopping experience. Built with Nuxt and Fake Store API.",
+    "copyright": "© {year} Storefront Lab",
     "sections": {
       "api": "API",
-      "project": "Project"
+      "project": "Project",
+      "shop": "Explore"
     },
     "links": {
       "sourceCode": "Source Code"
-    }
+    },
+    "demoNotice": "Public demo data. No real transactions."
   },
   "seo": {
     "home": {
-      "title": "Fake Store Dashboard",
-      "description": "Explore and manage Fake Store API products with filters, analytics and quick actions."
+      "title": "Storefront Lab | Everyday finds",
+      "description": "Explore clothing, jewelry and electronics. Browse products and try the demo shopping experience at Storefront Lab."
     },
     "cart": {
       "title": "Shopping Cart",

@@ -14,7 +14,9 @@ const localePath = useLocalePath();
 definePageMeta({ middleware: "auth" });
 
 const handleLogout = async () => {
-  try { await authStore.logoutUser(); } catch {
+  try {
+    await authStore.logoutUser();
+  } catch {
     notifications.error(t("api.errors.generic"));
     return;
   }
@@ -38,9 +40,7 @@ const initials = computed(() => {
 });
 
 // 訂單項目：優先顯示當前購物車，否則顯示上次結帳的紀錄
-const orderItems = computed(() =>
-  cartStore.lastOrderItems,
-);
+const orderItems = computed(() => cartStore.lastOrderItems);
 
 usePageSeo(() => ({
   title: t("seo.account.title"),
@@ -49,242 +49,126 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <div class="space-y-8" data-aos="fade-up">
-    <!-- 未登入提示（auth middleware 已守衛，此為防禦性後備） -->
-    <div
-      v-if="!authStore.isAuthenticated"
-      class="flex flex-col items-center gap-6 py-12">
+  <div class="space-y-8">
+    <template v-if="authStore.user">
       <div
-        class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-        <svg
-          class="h-10 w-10 text-slate-400"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.5">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-        </svg>
-      </div>
-      <div class="space-y-2 text-center">
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
-          {{ $t("account.title") }}
-        </h1>
-        <p class="text-slate-500 dark:text-slate-400">
-          {{ $t("account.loginPrompt") }}
-        </p>
-      </div>
-      <BaseButton :to="localePath('/login')">{{ $t("account.loginCta") }}</BaseButton>
-    </div>
-
-    <!-- 已登入但使用者資料載入中 -->
-    <div v-else-if="!authStore.user" class="flex justify-center py-20">
-      <BaseLoader />
-    </div>
-
-    <!-- 已登入帳號頁面 -->
-    <template v-else>
-      <!-- Hero 區塊 -->
-      <div
-        class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand/10 via-blue-50 to-indigo-50/50 p-8 dark:from-brand/5 dark:via-slate-900 dark:to-indigo-950/20"
-        data-aos="zoom-in">
-        <!-- 裝飾圓形 -->
+        class="grid grid-cols-[4rem_minmax(0,1fr)] items-center gap-5 rounded-2xl bg-[#eef0e7] p-7 sm:flex sm:flex-wrap sm:p-10 dark:bg-[#2c3326]"
+      >
         <div
-          class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand/5 blur-2xl" />
-        <div
-          class="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-indigo-500/5 blur-2xl" />
-
-        <div class="relative flex flex-col items-center gap-5 sm:flex-row">
-          <!-- 頭像 -->
-          <div
-            class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-dark text-2xl font-bold text-white shadow-lg shadow-brand/25">
-            {{ initials }}
-          </div>
-          <div class="text-center sm:text-left">
-            <h1
-              class="text-2xl font-bold capitalize text-slate-900 dark:text-white">
-              {{ fullName }}
-            </h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400">
-              @{{ authStore.user.username }}
-            </p>
-            <p class="mt-1 text-xs text-slate-400 dark:text-slate-500">
-              {{ authStore.user.email }}
-            </p>
-          </div>
+          class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent text-xl font-bold text-white"
+        >
+          {{ initials }}
         </div>
+        <div class="min-w-0 flex-1">
+          <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            {{ $t("account.title") }}
+          </h1>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
+            {{ fullName }} ({{ authStore.user.username }})
+          </p>
+        </div>
+        <BaseButton
+          class="col-start-2 justify-self-start sm:ml-auto"
+          variant="outline"
+          @click="handleLogout"
+          >{{ $t("account.logout") }}</BaseButton
+        >
       </div>
-
-      <!-- 資訊卡片網格 -->
-      <div class="grid gap-6 md:grid-cols-2">
-        <!-- 個人資料卡片 -->
-        <BaseCard class="space-y-4" data-aos="fade-up" data-aos-delay="100">
-          <h2
-            class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <svg
-              class="h-5 w-5 text-brand"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-            </svg>
+      <div class="grid items-start gap-6 md:grid-cols-2">
+        <BaseCard class="space-y-5"
+          ><h2 class="text-xl font-extrabold">
             {{ $t("account.sections.profile") }}
           </h2>
           <dl class="space-y-3 text-sm">
-            <AccountInfoRow :label="$t('account.fields.username')">
-              {{ authStore.user.username }}
-            </AccountInfoRow>
-            <AccountInfoRow :label="$t('account.fields.fullName')" capitalize>
-              {{ fullName }}
-            </AccountInfoRow>
-            <AccountInfoRow :label="$t('account.fields.email')">
-              {{ authStore.user.email }}
-            </AccountInfoRow>
-            <AccountInfoRow
+            <AccountInfoRow :label="$t('account.fields.username')">{{
+              authStore.user.username
+            }}</AccountInfoRow
+            ><AccountInfoRow
+              :label="$t('account.fields.fullName')"
+              capitalize
+              >{{ fullName }}</AccountInfoRow
+            ><AccountInfoRow :label="$t('account.fields.email')">{{
+              authStore.user.email
+            }}</AccountInfoRow
+            ><AccountInfoRow
               :label="$t('account.fields.phone')"
-              :divider="false">
-              {{ authStore.user.phone }}
-            </AccountInfoRow>
-          </dl>
-        </BaseCard>
-
-        <!-- 地址卡片 -->
-        <BaseCard class="space-y-4" data-aos="fade-up" data-aos-delay="200">
-          <h2
-            class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <svg
-              class="h-5 w-5 text-emerald-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
+              :divider="false"
+              >{{ authStore.user.phone }}</AccountInfoRow
+            >
+          </dl></BaseCard
+        >
+        <BaseCard class="space-y-5"
+          ><h2 class="text-xl font-extrabold">
             {{ $t("account.sections.address") }}
           </h2>
           <dl class="space-y-3 text-sm">
-            <AccountInfoRow :label="$t('account.fields.city')">
-              {{ authStore.user.address.city }}
-            </AccountInfoRow>
-            <AccountInfoRow :label="$t('account.fields.street')">
-              {{ authStore.user.address.street }}
-              {{ authStore.user.address.number }}
-            </AccountInfoRow>
-            <AccountInfoRow
+            <AccountInfoRow :label="$t('account.fields.city')">{{
+              authStore.user.address.city
+            }}</AccountInfoRow
+            ><AccountInfoRow :label="$t('account.fields.street')"
+              >{{ authStore.user.address.street }}
+              {{ authStore.user.address.number }}</AccountInfoRow
+            ><AccountInfoRow
               :label="$t('account.fields.zipcode')"
-              :divider="false">
-              {{ authStore.user.address.zipcode }}
-            </AccountInfoRow>
-          </dl>
-        </BaseCard>
-
-        <!-- 最近訂單卡片 -->
-        <BaseCard class="space-y-4" data-aos="fade-up" data-aos-delay="300">
-          <h2
-            class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <svg
-              class="h-5 w-5 text-amber-500"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-            </svg>
+              :divider="false"
+              >{{ authStore.user.address.zipcode }}</AccountInfoRow
+            >
+          </dl></BaseCard
+        >
+        <BaseCard class="space-y-5 md:col-span-2"
+          ><h2 class="text-xl font-extrabold">
             {{ $t("account.sections.recentOrders") }}
           </h2>
-          <div v-if="orderItems.length" class="space-y-3">
-            <div
-              v-for="item in orderItems.slice(0, 3)"
+          <ul
+            v-if="orderItems.length"
+            class="divide-y divide-slate-200 dark:divide-slate-800"
+          >
+            <li
+              v-for="item in orderItems"
               :key="item.id"
-              class="flex items-center gap-3 rounded-lg border border-slate-100 p-3 dark:border-slate-800">
+              class="grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-3 py-4 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
+            >
               <NuxtImg
                 :src="item.image"
                 :alt="item.title"
-                width="40"
-                height="40"
-                sizes="40px"
+                width="64"
+                height="64"
+                sizes="64px"
                 format="webp"
                 loading="lazy"
-                class="h-10 w-10 shrink-0 rounded-lg bg-white object-contain p-1" />
+                class="h-12 w-12 rounded-lg bg-white object-contain p-2 sm:h-16 sm:w-16"
+              />
               <div class="min-w-0 flex-1">
-                <p class="text-sm font-medium text-slate-900 dark:text-white">
+                <p class="wrap-anywhere text-sm font-semibold">
                   {{ item.title }}
                 </p>
-                <p class="text-xs text-slate-500 dark:text-slate-400">
-                  × {{ item.quantity }} ·
-                  {{ $n(item.price * item.quantity, "currency") }}
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  {{ item.quantity }} × {{ $n(item.price, "currency") }}
                 </p>
               </div>
-            </div>
-            <p
-              v-if="orderItems.length > 3"
-              class="text-center text-xs text-slate-400 dark:text-slate-500">
-              {{ $t("account.orderItems", { count: orderItems.length }) }}
-            </p>
-          </div>
-          <div
+              <span class="col-start-2 text-sm font-bold sm:col-start-auto">{{
+                $n(item.price * item.quantity, "currency")
+              }}</span>
+            </li>
+          </ul>
+          <p
             v-else
-            class="flex flex-col items-center gap-2 py-4 text-center text-sm text-slate-400 dark:text-slate-500">
-            <svg
-              class="h-8 w-8"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-            </svg>
+            class="py-8 text-center text-sm text-slate-500 dark:text-slate-400"
+          >
             {{ $t("account.noOrders") }}
-          </div>
-        </BaseCard>
-      </div>
-
-      <!-- 登出按鈕 -->
-      <div
-        class="flex justify-center pt-4"
-        data-aos="fade-up"
-        data-aos-delay="400">
-        <BaseButton variant="outline" @click="handleLogout">
-          <span class="flex items-center gap-2">
-            <svg
-              class="h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-            </svg>
-            {{ $t("account.logout") }}
-          </span>
-        </BaseButton>
+          </p></BaseCard
+        >
       </div>
     </template>
+    <BaseLoader v-else-if="authStore.isAuthenticated" />
+    <div v-else class="space-y-5 py-12 text-center">
+      <h1 class="text-3xl font-extrabold">{{ $t("account.title") }}</h1>
+      <p class="text-slate-500 dark:text-slate-400">
+        {{ $t("account.loginPrompt") }}
+      </p>
+      <BaseButton :to="localePath('/login')">{{
+        $t("account.loginCta")
+      }}</BaseButton>
+    </div>
   </div>
 </template>

@@ -51,11 +51,12 @@ const errorId = useId();
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="error ? errorId : undefined"
       :class="[
-        'w-full rounded-lg border bg-white px-4 py-2 text-sm text-slate-900 shadow-sm focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100',
+        'w-full rounded-lg border bg-white min-h-12 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100',
         error
           ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-400/40 dark:border-rose-500'
           : 'border-slate-200 focus:border-brand focus:ring-brand/40 dark:border-slate-700',
-      ]" />
+      ]"
+    />
     <span
       v-if="error"
       :id="errorId"

@@ -33,21 +33,24 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <div class="space-y-8" data-aos="fade-up">
+  <div class="space-y-8">
     <NuxtLink
       :to="localePath('/')"
-      class="inline-flex items-center gap-2 text-sm font-medium text-brand">
+      class="inline-flex items-center gap-2 text-sm font-medium text-brand"
+    >
       <svg
         class="h-4 w-4"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke="currentColor">
+        stroke="currentColor"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="1.5"
-          d="M15 19l-7-7 7-7" />
+          d="M15 19l-7-7 7-7"
+        />
       </svg>
       {{ $t("products.form.back") }}
     </NuxtLink>
@@ -55,13 +58,15 @@ usePageSeo(() => ({
     <BaseSectionHeading
       :level="1"
       :title="$t('products.form.heading')"
-      :description="$t('products.form.subheading')" />
+      :description="$t('products.form.subheading')"
+    />
 
     <ProductForm
       :key="formKey"
       :categories="productsStore.categories"
       :loading="productsStore.loading"
-      @submit="handleSubmit" />
+      @submit="handleSubmit"
+    />
 
     <BaseAlert v-if="productsStore.error" variant="error">
       {{ productsStore.error }}

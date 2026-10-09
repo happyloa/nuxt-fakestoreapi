@@ -1,75 +1,65 @@
 <script setup lang="ts">
 import type { Product } from "#shared/types/fakestore";
-
-const emit = defineEmits<{
-  (e: "add-to-cart", product: Product): void;
-}>();
-
-const props = defineProps<{ product: Product }>();
-
-const product = computed(() => props.product);
+defineProps<{ product: Product }>();
+defineEmits<{ (e: "add-to-cart", product: Product): void }>();
 const localePath = useLocalePath();
-
-/**
- * 單一商品卡片，負責呈現封面、分類與價格資訊。
- * 加入 group hover 效果：圖片放大、標題變色。
- */
-const handleAddToCart = () => emit("add-to-cart", product.value);
+const categoryLabel = useCategoryLabel();
 </script>
-
 <template>
-  <BaseCard
-    class="group flex h-full flex-col space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-premium focus-within:ring-2 focus-within:ring-brand/50">
+  <article class="group flex h-full flex-col">
     <NuxtLink
-      :to="localePath(`/product/${product.id}`)"
-      class="flex flex-col space-y-3">
+      :to="localePath('/product/' + product.id)"
+      class="block rounded-xl"
+    >
       <figure
-        class="relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-800/50">
+        class="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-slate-200/70 bg-white p-6 sm:p-8 dark:border-slate-700"
+      >
         <NuxtImg
           :src="product.image"
           :alt="product.title"
-          width="280"
-          height="280"
+          width="360"
+          height="360"
           sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
           format="webp"
           loading="lazy"
-          class="mx-auto h-48 w-auto object-contain p-4 transition-transform duration-500 group-hover:scale-110" />
+          class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+        />
       </figure>
-      <div>
-        <p
-          class="inline-flex items-center rounded-full bg-brand/5 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand dark:bg-brand/10 dark:text-brand-light">
-          {{ product.category }}
-        </p>
-        <h3
-          class="mt-2 line-clamp-2 text-lg font-semibold text-slate-900 transition-colors duration-200 group-hover:text-brand dark:text-white dark:group-hover:text-brand-light">
-          {{ product.title }}
-        </h3>
-      </div>
+      <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
+        {{ categoryLabel(product.category) }}
+      </p>
+      <h3
+        class="mt-1.5 line-clamp-2 min-h-10 text-sm font-semibold leading-5 transition-colors group-hover:text-brand sm:text-base sm:leading-6 dark:group-hover:text-brand-light"
+      >
+        {{ product.title }}
+      </h3>
     </NuxtLink>
-    <footer
-      class="flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
-      <BaseBadge variant="brand">{{
-        $n(Number(product.price), "currency")
-      }}</BaseBadge>
-      <div class="flex items-center gap-1 text-xs font-medium">
-        <svg
-          class="h-4 w-4 text-amber-400"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true">
-          <path
-            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-        </svg>
-        <span
-          >{{ product.rating?.rate ?? 0 }} ({{
-            product.rating?.count ?? 0
-          }})</span
-        >
-      </div>
-    </footer>
-    <BaseButton class="mt-auto" block @click="handleAddToCart">
-      {{ $t("products.actions.addToCart") }}
-    </BaseButton>
-  </BaseCard>
+    <div
+      class="mt-2 flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"
+    >
+      <SiteIcon
+        name="star"
+        class="h-3.5 w-3.5 fill-accent text-accent dark:fill-accent-light dark:text-accent-light"
+      /><span>{{ product.rating?.rate ?? 0 }}</span
+      ><span class="ml-1">({{ product.rating?.count ?? 0 }})</span>
+    </div>
+    <div
+      class="mt-auto flex flex-wrap items-center justify-between gap-1 pt-4 sm:gap-2"
+    >
+      <span class="text-base font-extrabold tracking-tight sm:text-lg">{{
+        $n(product.price, "currency")
+      }}</span
+      ><button
+        type="button"
+        :aria-label="
+          $t('products.actions.addNamedToCart', { title: product.title })
+        "
+        :title="$t('products.actions.addToCart')"
+        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-transparent transition-colors hover:border-brand hover:bg-brand hover:text-white dark:border-slate-700 dark:hover:border-brand"
+        @click="$emit('add-to-cart', product)"
+      >
+        <SiteIcon name="plus" class="h-5 w-5" />
+      </button>
+    </div>
+  </article>
 </template>

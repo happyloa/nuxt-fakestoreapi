@@ -14,16 +14,20 @@ const notifications = useNotificationsStore();
 /**
  * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
  */
-const { pending: isPageLoading, error: asyncError, refresh } = await useAsyncData(
-  "homepageData",
-  async () => {
-    productsStore.error = "";
-    const catalog = await $fetch<import("#shared/types/storefront").CatalogPayload>("/api/catalog");
-    productsStore.products = catalog.products;
-    productsStore.categories = catalog.categories;
-    return true;
-  },
-);
+const {
+  pending: isPageLoading,
+  error: asyncError,
+  refresh,
+} = await useAsyncData("homepageData", async () => {
+  productsStore.error = "";
+  const catalog =
+    await $fetch<import("#shared/types/storefront").CatalogPayload>(
+      "/api/catalog",
+    );
+  productsStore.products = catalog.products;
+  productsStore.categories = catalog.categories;
+  return true;
+});
 
 const pageError = computed(() => {
   if (asyncError.value) {
@@ -63,27 +67,34 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <section class="space-y-12" aria-labelledby="dashboard-hero">
+  <div class="space-y-12 sm:space-y-16">
     <ProductHero />
-
-    <ProductStats
-      :total-products="productsStore.total"
-      :average-price="productsStore.averagePrice"
-      :categories-count="productsStore.categories.length" />
-
-    <div
-      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,1fr)_18rem]">
-      <ProductGrid
-        class="order-2 lg:order-1"
-        :products="filteredProducts"
-        :loading="isPageLoading"
-        :error="pageError"
-        :has-active-filters="hasActiveFilters"
-        @add-to-cart="handleAddToCart"
-        @reset="resetFilters"
-        @retry="refresh()" />
+    <section
+      id="catalog"
+      class="scroll-mt-28 space-y-6"
+      aria-labelledby="catalog-heading"
+    >
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2
+            id="catalog-heading"
+            class="text-3xl font-extrabold tracking-tight sm:text-4xl"
+          >
+            {{ $t("products.listingTitle") }}
+          </h2>
+          <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+            {{ $t("products.listingDescription") }}
+          </p>
+        </div>
+        <p
+          v-if="!isPageLoading && !pageError"
+          aria-live="polite"
+          class="text-sm text-slate-500 dark:text-slate-400"
+        >
+          {{ $t("products.resultsCount", { count: filteredProducts.length }) }}
+        </p>
+      </div>
       <ProductFilterPanel
-        class="order-1 lg:order-2"
         :categories="productsStore.categories"
         :selected-category="selectedCategory"
         :sort-order="sortOrder"
@@ -91,7 +102,22 @@ usePageSeo(() => ({
         @update:category="selectedCategory = $event"
         @update:sort="sortOrder = $event"
         @update:search="searchQuery = $event"
-        @refresh="resetFilters" />
-    </div>
-  </section>
+        @refresh="resetFilters"
+      />
+      <ProductGrid
+        :products="filteredProducts"
+        :loading="isPageLoading"
+        :error="pageError"
+        :has-active-filters="hasActiveFilters"
+        @add-to-cart="handleAddToCart"
+        @reset="resetFilters"
+        @retry="refresh()"
+      />
+    </section>
+    <ProductStats
+      :total-products="productsStore.total"
+      :average-price="productsStore.averagePrice"
+      :categories-count="productsStore.categories.length"
+    />
+  </div>
 </template>

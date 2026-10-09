@@ -35,12 +35,13 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <div class="space-y-6" data-aos="fade-up">
+  <div class="space-y-6">
     <UserList
       :users="filteredUsers"
       :loading="usersStore.loading"
       :error="usersStore.error"
       :search="search"
-      @update:search="search = $event" />
+      @update:search="search = $event"
+    />
   </div>
 </template>

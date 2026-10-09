@@ -24,15 +24,19 @@ const props = withDefaults(defineProps<Props>(), {
       <ul class="space-y-4">
         <li v-for="index in 3" :key="`cart-skeleton-${index}`">
           <BaseCard
-            class="flex animate-pulse flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            class="flex animate-pulse flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
             <div class="flex min-w-0 items-center gap-4">
               <div
-                class="h-20 w-20 shrink-0 rounded-xl bg-slate-200 dark:bg-slate-700" />
+                class="h-20 w-20 shrink-0 rounded-xl bg-slate-200 dark:bg-slate-700"
+              />
               <div class="space-y-2">
                 <div
-                  class="h-4 w-32 rounded bg-slate-200 sm:w-40 dark:bg-slate-700" />
+                  class="h-4 w-32 rounded bg-slate-200 sm:w-40 dark:bg-slate-700"
+                />
                 <div
-                  class="h-3 w-20 rounded bg-slate-100 sm:w-24 dark:bg-slate-700" />
+                  class="h-3 w-20 rounded bg-slate-100 sm:w-24 dark:bg-slate-700"
+                />
               </div>
             </div>
             <div class="flex shrink-0 items-center gap-3">
@@ -40,7 +44,8 @@ const props = withDefaults(defineProps<Props>(), {
               <div class="h-4 w-6 rounded bg-slate-200 dark:bg-slate-700" />
               <div class="h-9 w-9 rounded-lg bg-slate-200 dark:bg-slate-700" />
               <div
-                class="h-9 w-16 rounded-lg bg-slate-100 sm:w-20 dark:bg-slate-700" />
+                class="h-9 w-16 rounded-lg bg-slate-100 sm:w-20 dark:bg-slate-700"
+              />
             </div>
           </BaseCard>
         </li>
@@ -50,8 +55,9 @@ const props = withDefaults(defineProps<Props>(), {
       <ul class="space-y-4">
         <li v-for="item in items" :key="item.id">
           <BaseCard
-            class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div class="flex items-center gap-4">
+            class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="flex min-w-0 items-center gap-4">
               <NuxtImg
                 :src="item.image"
                 :alt="item.title"
@@ -60,10 +66,12 @@ const props = withDefaults(defineProps<Props>(), {
                 sizes="80px"
                 format="webp"
                 loading="lazy"
-                class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800" />
-              <div>
+                class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800"
+              />
+              <div class="min-w-0">
                 <h3
-                  class="text-sm font-semibold text-slate-900 dark:text-white sm:text-base">
+                  class="text-sm font-semibold text-slate-900 dark:text-white sm:text-base"
+                >
                   {{ item.title }}
                 </h3>
                 <p class="mt-1 text-sm text-slate-500 dark:text-slate-300">
@@ -85,7 +93,8 @@ const props = withDefaults(defineProps<Props>(), {
                   item.quantity === 1
                     ? $emit('remove', item.id)
                     : $emit('decrement', item.id)
-                ">
+                "
+              >
                 <svg
                   v-if="item.quantity === 1"
                   xmlns="http://www.w3.org/2000/svg"
@@ -94,11 +103,13 @@ const props = withDefaults(defineProps<Props>(), {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   stroke-width="2"
-                  aria-hidden="true">
+                  aria-hidden="true"
+                >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
                 <span v-else>-</span>
               </BaseButton>
@@ -118,7 +129,8 @@ const props = withDefaults(defineProps<Props>(), {
               <BaseButton
                 variant="ghost"
                 size="sm"
-                @click="$emit('remove', item.id)">
+                @click="$emit('remove', item.id)"
+              >
                 {{ $t("cart.remove") }}
               </BaseButton>
             </div>

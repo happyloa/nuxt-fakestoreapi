@@ -34,15 +34,15 @@ const props = withDefaults(
 const classes = computed(() => {
   // 根據尺寸、樣式與寬度設定組合 Tailwind class。
   const base =
-    "cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
+    "cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-2 rounded-full font-bold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
   const sizes: Record<Size, string> = {
-    sm: "px-3.5 py-1.5 text-sm",
-    md: "px-5 py-2.5 text-sm sm:text-base",
-    lg: "px-7 py-3.5 text-base sm:text-lg",
+    sm: "min-h-10 px-4 py-2 text-sm",
+    md: "min-h-11 px-5 py-3 text-sm",
+    lg: "min-h-12 px-7 py-3.5 text-sm sm:text-base",
   };
   const variants: Record<Variant, string> = {
     primary:
-      "bg-gradient-to-r from-brand to-brand-dark text-white shadow-md shadow-brand/20 hover:shadow-lg hover:shadow-brand/30 hover:brightness-110 focus-visible:outline-brand",
+      "bg-brand text-white hover:bg-brand-dark focus-visible:outline-brand",
     secondary:
       "bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:outline-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:outline-slate-500",
     outline:
@@ -72,24 +72,28 @@ const isButton = computed(() => {
     :class="classes"
     :tabindex="loading || disabled ? -1 : undefined"
     @click="(loading || disabled) && $event.preventDefault()"
-    :aria-disabled="loading || disabled ? 'true' : undefined">
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
     <svg
       v-if="loading"
       class="h-4 w-4 animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24">
+      viewBox="0 0 24 24"
+    >
       <circle
         class="opacity-25"
         cx="12"
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"></circle>
+        stroke-width="4"
+      ></circle>
       <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
     </svg>
     <slot />
   </NuxtLink>
@@ -100,24 +104,28 @@ const isButton = computed(() => {
     :to="to"
     :href="href"
     :class="classes"
-    :disabled="isButton ? disabled || loading : undefined">
+    :disabled="isButton ? disabled || loading : undefined"
+  >
     <svg
       v-if="loading"
       class="h-4 w-4 animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24">
+      viewBox="0 0 24 24"
+    >
       <circle
         class="opacity-25"
         cx="12"
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"></circle>
+        stroke-width="4"
+      ></circle>
       <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
     </svg>
     <slot />
   </component>
@@ -127,24 +135,28 @@ const isButton = computed(() => {
     :class="classes"
     :tabindex="loading || disabled ? -1 : undefined"
     @click="(loading || disabled) && $event.preventDefault()"
-    :aria-disabled="loading || disabled ? 'true' : undefined">
+    :aria-disabled="loading || disabled ? 'true' : undefined"
+  >
     <svg
       v-if="loading"
       class="h-4 w-4 animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24">
+      viewBox="0 0 24 24"
+    >
       <circle
         class="opacity-25"
         cx="12"
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"></circle>
+        stroke-width="4"
+      ></circle>
       <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
     </svg>
     <slot />
   </a>
@@ -153,24 +165,28 @@ const isButton = computed(() => {
     :type="type"
     :class="classes"
     :disabled="disabled || loading"
-    :aria-busy="loading ? 'true' : undefined">
+    :aria-busy="loading ? 'true' : undefined"
+  >
     <svg
       v-if="loading"
       class="h-4 w-4 animate-spin"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      viewBox="0 0 24 24">
+      viewBox="0 0 24 24"
+    >
       <circle
         class="opacity-25"
         cx="12"
         cy="12"
         r="10"
         stroke="currentColor"
-        stroke-width="4"></circle>
+        stroke-width="4"
+      ></circle>
       <path
         class="opacity-75"
         fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      ></path>
     </svg>
     <slot />
   </button>

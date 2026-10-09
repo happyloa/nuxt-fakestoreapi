@@ -14,17 +14,17 @@ const props = withDefaults(
     as: "article",
     padding: "p-6",
     background: "bg-white dark:bg-slate-900",
-    shadow: "shadow-card dark:shadow-black/30",
-    border: "border border-slate-100/80 dark:border-slate-700/60",
+    shadow: "",
+    border: "border border-slate-200 dark:border-slate-800",
     interactive: false,
   },
 );
 
 const classes = computed(() =>
   [
-    "rounded-2xl transition-all duration-300",
+    "rounded-xl transition-colors duration-200",
     props.interactive
-      ? "hover:-translate-y-1 hover:scale-[1.01] hover:shadow-card-hover dark:hover:shadow-brand/5"
+      ? "hover:border-slate-400 dark:hover:border-slate-600"
       : "",
     props.background,
     props.border,

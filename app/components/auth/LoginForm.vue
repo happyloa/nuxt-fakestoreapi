@@ -24,13 +24,16 @@ const submit = () => {
 </script>
 
 <template>
-  <BaseCard class="max-w-md space-y-6">
+  <div class="w-full space-y-6">
     <BaseSectionHeading
       :level="1"
       :title="$t('auth.login.title')"
       :description="$t('auth.login.subtitle')"
-      align="center" />
-    <p class="text-center text-xs text-slate-500 dark:text-slate-400">
+      align="left"
+    />
+    <p
+      class="rounded-lg bg-slate-100 p-4 text-xs leading-6 dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+    >
       {{ $t("auth.login.demoHint") }}
     </p>
     <form class="space-y-4" @submit.prevent="submit">
@@ -38,13 +41,15 @@ const submit = () => {
         v-model="form.username"
         autocomplete="username"
         :label="$t('auth.login.username')"
-        required />
+        required
+      />
       <BaseInput
         v-model="form.password"
         type="password"
         autocomplete="current-password"
         :label="$t('auth.login.password')"
-        required />
+        required
+      />
       <BaseButton type="submit" :loading="loading" block>
         {{ $t("auth.login.submit") }}
       </BaseButton>
@@ -52,5 +57,5 @@ const submit = () => {
     <BaseAlert v-if="error" variant="error">
       {{ error }}
     </BaseAlert>
-  </BaseCard>
+  </div>
 </template>

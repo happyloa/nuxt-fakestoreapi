@@ -34,7 +34,7 @@ app/
     layout/           # Header、Footer、語言與主題控制
     api/              # 公開假資料操作台
   stores/             # Pinia 商品、購物車、session、主題與通知
-  plugins/            # session 初始化、本機購物車還原與動畫
+  plugins/            # session 初始化、本機購物車還原與主題
   composables/        # URL query、SEO 與共用操作
   pages/              # 薄頁面層：路由、SEO、頁面組裝
   layouts/            # 應用程式殼層
@@ -68,6 +68,8 @@ server/
 
 ## 介面與可近用性
 
+介面使用暖白底色、橄欖色主視覺與橘色操作按鈕。Manrope 字型與首頁背包圖片由本站提供；樣式使用 Tailwind v4，圖示採用共用 SVG 元件。重做範圍與瀏覽器驗證方式見 [UI 更新紀錄](docs/ui-redesign-2026-10-09.md)。
+
 介面以語意化 HTML 與可重用的領域元件建立，並遵守下列原則：
 
 - 可使用鍵盤操作導覽、表單、drawer、對話框與通知。
@@ -80,7 +82,7 @@ server/
 
 套件升級、相容性限制與本機漏洞修補見 [套件安全紀錄](docs/dependencies-2026-10-09.md)。
 
-- Node.js `^22.19.0 || ^24.11.0 || >=26.0.0`
+- Node.js `^22.22.3 || ^24.15.0 || >=26.0.0`
 - npm（隨 Node.js 安裝）
 
 建議使用目前支援中的 Node.js LTS 版本。可先以 `node --version` 確認版本。
@@ -126,15 +128,17 @@ npm run preview
 
 ```bash
 npm ci
+npm run test:security
+npm run audit:security
+npm run typecheck
 npm run build
-npm audit
 ```
 
-專案保持輕量，不配置自動化測試、CI 或 lint。需要時可手動執行建置或原有的 `npm run typecheck`。
+`test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:ui` 使用 Playwright 與 axe-core 檢查正式預覽的購物流程、響應式版面與無障礙規則；執行前需啟動伺服器並安裝測試瀏覽器，步驟見 UI 更新紀錄。目前未配置 CI 或 lint。
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
-目前 TypeScript 固定在 `~6.0.3`：最新 7.0.2 與 vue-tsc 3.3.11 實測不相容。H3 使用 Nitro 2 相容的穩定 1.x，未採用 2.x RC。詳見 [完整健檢報告](docs/health-check-2026-09-27.md)。
+目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.12 實測不相容。H3 使用 Nitro 2 相容的 1.x。此次升級限制與修補詳見 [套件安全紀錄](docs/dependencies-2026-10-09.md)；較早的檢查保留在 [完整健檢報告](docs/health-check-2026-09-27.md)。
 
 ## 貢獻原則
 

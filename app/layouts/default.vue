@@ -6,73 +6,44 @@ const head = useLocaleHead({ seo: true });
 <template>
   <Html :lang="head.htmlAttrs.lang" :dir="head.htmlAttrs.dir">
     <Head>
-      <!-- 注入 i18n 相關的 link 與 meta 標籤 -->
-      <template v-for="link in head.link" :key="link.id">
-        <Link
+      <template v-for="link in head.link" :key="link.id"
+        ><Link
           :id="link.id"
           :rel="link.rel"
           :href="link.href"
-          :hreflang="'hreflang' in link ? link.hreflang : undefined" />
-      </template>
-      <template v-for="meta in head.meta" :key="meta.id">
-        <Meta
+          :hreflang="'hreflang' in link ? link.hreflang : undefined"
+      /></template>
+      <template v-for="meta in head.meta" :key="meta.id"
+        ><Meta
           :id="meta.id"
           :property="meta.property"
-          :content="String(meta.content ?? '')" />
-      </template>
+          :content="String(meta.content ?? '')"
+      /></template>
     </Head>
     <Body>
       <div
-        class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-        <!-- 跳過導覽，直達主要內容 (WCAG 2.4.1) -->
+        class="flex min-h-screen flex-col bg-paper text-slate-900 dark:bg-slate-950 dark:text-slate-100"
+      >
         <a
           href="#main-content"
-          class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
-          {{ $t("ui.skipToContent") }}
-        </a>
-        <!-- 網站頁首 -->
+          class="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-3 focus:text-white"
+          >{{ $t("ui.skipToContent") }}</a
+        >
         <SiteHeader />
-        <!-- 主要內容區域 -->
         <main
           id="main-content"
           tabindex="-1"
-          class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 focus:outline-none">
+          class="mx-auto w-full max-w-7xl flex-1 px-5 py-8 focus:outline-none sm:px-8 sm:py-12 lg:px-10"
+        >
           <slot />
         </main>
-        <!-- 網站頁尾 -->
         <SiteFooter />
-        <ClientOnly>
-          <Teleport to="body">
-            <div class="fixed bottom-6 right-6 z-[60] flex flex-col gap-3">
-              <BackToTop />
-              <ThemeToggle variant="floating" />
-            </div>
-          </Teleport>
-        </ClientOnly>
+        <ClientOnly
+          ><Teleport to="body"
+            ><div class="fixed bottom-5 right-5 z-30">
+              <BackToTop /></div></Teleport
+        ></ClientOnly>
       </div>
     </Body>
   </Html>
 </template>
-
-<style>
-/* 頁面過渡動畫 */
-.page-enter-active,
-.page-leave-active {
-  transition:
-    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(16px) scale(0.98);
-  filter: blur(4px);
-}
-
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(-12px) scale(0.98);
-  filter: blur(4px);
-}
-</style>

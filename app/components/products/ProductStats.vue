@@ -14,28 +14,28 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <section
-    class="grid gap-4 sm:grid-cols-3"
-    aria-labelledby="product-statistics-heading">
-    <h2 id="product-statistics-heading" class="sr-only">
-      {{ $t("products.stats.sectionTitle") }}
-    </h2>
-    <BaseStatCard
-      :label="$t('products.stats.totalProducts')"
-      :value="totalProducts"
-      accent-color="from-brand to-blue-500"
-      data-aos="fade-up"
-      data-aos-delay="0" />
-    <BaseStatCard
-      :label="$t('products.stats.averagePrice')"
-      :value="`$${averagePrice.toFixed(2)}`"
-      accent-color="from-emerald-500 to-teal-500"
-      data-aos="fade-up"
-      data-aos-delay="100" />
-    <BaseStatCard
-      :label="$t('products.stats.categories')"
-      :value="categoriesCount"
-      accent-color="from-accent to-pink-500"
-      data-aos="fade-up"
-      data-aos-delay="200" />
+    class="flex flex-wrap justify-between gap-x-8 gap-y-5 border-y border-slate-200 py-6 dark:border-slate-800"
+    :aria-label="$t('products.stats.sectionTitle')"
+  >
+    <div class="flex items-baseline gap-3">
+      <span class="text-2xl font-extrabold">{{ totalProducts }}</span
+      ><span class="text-sm text-slate-500 dark:text-slate-400">{{
+        $t("products.stats.totalProducts")
+      }}</span>
+    </div>
+    <div class="flex items-baseline gap-3">
+      <span class="text-2xl font-extrabold">{{ categoriesCount }}</span
+      ><span class="text-sm text-slate-500 dark:text-slate-400">{{
+        $t("products.stats.categories")
+      }}</span>
+    </div>
+    <div class="flex items-baseline gap-3">
+      <span class="text-2xl font-extrabold">{{
+        $n(averagePrice, "currency")
+      }}</span
+      ><span class="text-sm text-slate-500 dark:text-slate-400">{{
+        $t("products.stats.averagePrice")
+      }}</span>
+    </div>
   </section>
 </template>

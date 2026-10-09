@@ -1,114 +1,71 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
-/* Keep server-rendered content visible before animation initialization. */
-[data-aos]:not(.aos-init) {
-  opacity: 1 !important;
-  transform: none !important;
+@font-face {
+  font-family: Manrope;
+  src: url("../fonts/manrope-latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
 }
 
-/* 自訂主題配置 - Tailwind CSS v4 CSS-first 配置方式 */
 @theme {
-  /* 字型設定 */
-  --font-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", ui-sans-serif, system-ui;
-
-  /* Brand 品牌色 */
-  --color-brand: #2563eb;
+  --font-sans:
+    Manrope, "PingFang TC", "Microsoft JhengHei", ui-sans-serif, system-ui,
+    sans-serif;
+  --color-brand: #c74116;
+  --color-brand-dark: #a53512;
+  --color-brand-light: #ffb193;
   --color-brand-foreground: #ffffff;
-  --color-brand-dark: #1d4ed8;
-  --color-brand-light: #93c5fd;
-
-  /* Accent 強調色 */
-  --color-accent: #f43f5e;
-  --color-accent-dark: #be123c;
-  --color-accent-light: #fda4af;
-
-  --shadow-card: 0 4px 24px -6px rgba(37, 99, 235, 0.12);
-  --shadow-card-hover: 0 12px 40px -8px rgba(37, 99, 235, 0.25);
-  --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.1);
-
-  /* 自訂動畫（僅保留實際使用的 float） */
-  --animate-float: float 6s ease-in-out infinite;
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-12px);
-    }
-  }
+  --color-accent: #566843;
+  --color-accent-dark: #3e4e2f;
+  --color-accent-light: #bdd2a7;
+  --color-paper: #fafaf7;
+  --color-slate-50: #f8f8f5;
+  --color-slate-100: #f1f1ed;
+  --color-slate-200: #e3e3dc;
+  --color-slate-300: #cecec5;
+  --color-slate-400: #93958a;
+  --color-slate-500: #6c6e63;
+  --color-slate-600: #55574e;
+  --color-slate-700: #3e4038;
+  --color-slate-800: #292c25;
+  --color-slate-900: #1d201a;
+  --color-slate-950: #141710;
+  --shadow-card: 0 2px 6px rgb(29 32 26 / 0.03);
+  --shadow-card-hover: 0 6px 18px rgb(29 32 26 / 0.07);
+  --shadow-premium: 0 8px 24px rgb(29 32 26 / 0.08);
 }
-
-/* 啟用基於 .dark class 的 dark mode */
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   :root {
-    color-scheme: dark light;
+    color-scheme: light;
   }
-
+  .dark {
+    color-scheme: dark;
+  }
   body {
-    @apply bg-slate-50 text-slate-900 antialiased font-sans;
+    @apply bg-paper font-sans text-slate-900 antialiased;
   }
-
   .dark body {
     @apply bg-slate-950 text-slate-100;
   }
-
-  /* Slim, low-contrast scrollbars for Firefox and Chromium browsers. */
+  button:not(:disabled),
+  select {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 4px;
+  }
+  ::selection {
+    @apply bg-brand/20;
+  }
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(148 163 184 / 0.72) transparent;
+    scrollbar-color: var(--color-slate-400) transparent;
   }
-
-  .dark * {
-    scrollbar-color: rgb(100 116 139 / 0.78) transparent;
-  }
-
-  *::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background: rgb(148 163 184 / 0.72);
-    background-clip: padding-box;
-    border: 2px solid transparent;
-    border-radius: 999px;
-  }
-
-  *::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(71 85 105 / 0.88);
-  }
-
-  .dark *::-webkit-scrollbar-thumb {
-    background-color: rgb(100 116 139 / 0.78);
-  }
-
-  .dark *::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(148 163 184 / 0.92);
-  }
-
-  /* 防止首次載入的 transition 閃爍 */
-  html:not(.transition-ready) * {
-    transition: none !important;
-  }
-
-  /* 啟用 transition 後才生效 */
-  html.transition-ready body {
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
-  }
-
-  /* 尊重使用者「減少動態」偏好 (WCAG 2.3.3 / 2.2.2)：
-     幾乎關閉所有動畫與過渡，避免前庭功能障礙使用者不適 */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -118,37 +75,5 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
-  }
-}
-
-@layer utilities {
-  /* 漸層背景 */
-  .gradient-brand {
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-  }
-
-  .gradient-brand-text {
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .gradient-mesh {
-    background-color: #f8fafc;
-    background-image:
-      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.1) 0px, transparent 50%);
-  }
-
-  .dark .gradient-mesh {
-    background-color: #020617;
-    background-image:
-      radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.2) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.2) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.15) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, rgba(37, 99, 235, 0.15) 0px, transparent 50%);
   }
 }

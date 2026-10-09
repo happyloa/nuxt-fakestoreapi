@@ -35,27 +35,29 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
     <div
       v-if="loading"
       class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
-      aria-busy="true">
+      aria-busy="true"
+    >
       <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
-      <ProductGridSkeleton :count="6" />
+      <ProductGridSkeleton :count="8" />
     </div>
     <BaseAlert v-else-if="error" variant="error">
       <div class="space-y-3">
         <p>{{ error }}</p>
-        <BaseButton variant="outline" @click="emit('retry')">{{ $t("ui.retry") }}</BaseButton>
+        <BaseButton variant="outline" @click="emit('retry')">{{
+          $t("ui.retry")
+        }}</BaseButton>
       </div>
     </BaseAlert>
     <ProductEmptyState
       v-else-if="!products.length"
       :has-active-filters="hasActiveFilters"
-      @reset="emit('reset')" />
-    <ul v-else class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-      <li
-        v-for="(product, index) in products"
-        :key="product.id"
-        class="h-full"
-        data-aos="fade-up"
-        :data-aos-delay="(index % 6) * 80">
+      @reset="emit('reset')"
+    />
+    <ul
+      v-else
+      class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 sm:gap-x-7 sm:gap-y-12"
+    >
+      <li v-for="product in products" :key="product.id" class="h-full">
         <ProductCard :product="product" @add-to-cart="handleAddToCart" />
       </li>
     </ul>

@@ -12,12 +12,20 @@ const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 
-definePageMeta({ validate: (route) => /^[1-9]\d{0,5}$/.test(String(route.params.id)) });
-const { data: product, pending, error, refresh } = await useAsyncData(
+definePageMeta({
+  validate: (route) => /^[1-9]\d{0,5}$/.test(String(route.params.id)),
+});
+const {
+  data: product,
+  pending,
+  error,
+  refresh,
+} = await useAsyncData(
   () => `product-${route.params.id}`,
   () => $fetch<Product>(`/api/products/${route.params.id}`),
 );
-if (error.value?.statusCode === 404) throw createError({ statusCode: 404, statusMessage: "Product not found" });
+if (error.value?.statusCode === 404)
+  throw createError({ statusCode: 404, statusMessage: "Product not found" });
 const errorMessage = computed(() => {
   if (!error.value) return "";
   return error.value.statusCode === 502
@@ -29,8 +37,7 @@ usePageSeo(() => ({
   title: t("seo.productDetail.title", {
     name: product.value?.title ?? "Product",
   }),
-  description:
-    product.value?.description ?? t("seo.productDetail.description"),
+  description: product.value?.description ?? t("seo.productDetail.description"),
   image: product.value?.image,
   type: "product",
 }));
@@ -88,21 +95,24 @@ const addToCart = () => {
 </script>
 
 <template>
-  <div class="space-y-6" data-aos="fade-up">
+  <div class="space-y-6">
     <NuxtLink
       :to="localePath('/')"
-      class="inline-flex items-center gap-2 text-sm font-medium text-brand">
+      class="inline-flex items-center gap-2 text-sm font-medium text-brand"
+    >
       <svg
         class="h-4 w-4"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke="currentColor">
+        stroke="currentColor"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="1.5"
-          d="M15 19l-7-7 7-7" />
+          d="M15 19l-7-7 7-7"
+        />
       </svg>
       {{ $t("products.details.back") }}
     </NuxtLink>
@@ -114,12 +124,15 @@ const addToCart = () => {
 
     <BaseAlert v-else-if="errorMessage" variant="error">
       {{ errorMessage }}
-      <BaseButton variant="outline" @click="refresh()">{{ $t('ui.retry') }}</BaseButton>
+      <BaseButton variant="outline" @click="refresh()">{{
+        $t("ui.retry")
+      }}</BaseButton>
     </BaseAlert>
 
     <ProductDetail
       v-else-if="product"
       :product="product"
-      @add-to-cart="addToCart" />
+      @add-to-cart="addToCart"
+    />
   </div>
 </template>
