@@ -13,6 +13,20 @@ export default defineNuxtConfig({
 
   modules: ["@nuxt/image", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxtjs/sitemap"],
 
+  app: {
+    head: {
+      link: [
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          sizes: "16x16 32x32 48x48 64x64",
+          href: "/favicon.ico?v=storefront-lab",
+        },
+        { rel: "icon", type: "image/svg+xml", sizes: "any", href: "/favicon.svg" },
+      ],
+    },
+  },
+
   // The restored interface uses unprefixed component names such as
   // <SiteHeader>, <ProductGrid>, and the Base* UI kit.
   components: [
