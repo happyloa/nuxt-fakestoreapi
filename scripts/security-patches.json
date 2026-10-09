@@ -1,0 +1,20 @@
+{
+  "braces": {
+    "version": "3.0.3",
+    "advisory": "GHSA-vfj7-8cjw-p6xm",
+    "files": {
+      "lib/parse.js": "06b3eb30ee943d0cb76c129680ba44aed9bb3d042e2944d869076b75d9adb555",
+      "lib/compile.js": "7afb2446707f01664fb86da09525cedfae7b6f7f2d9775104f1e823a18079498",
+      "lib/expand.js": "b00c5a7e2142247333b4f4e326b23aa0d62ad7d6f9f43838bd982dc9595e88e5",
+      "lib/stringify.js": "203f44c90611101883fdb8793fe8ea708a8815a934cae75334dc1a34a9325f79",
+      "lib/utils.js": "fbc288b6a64f44ce8d59a54544ebc51512a92f6a2ad304626e44a9c07d78fced"
+    }
+  },
+  "node-forge": {
+    "version": "1.4.0",
+    "advisory": "GHSA-86w9-cpqp-85rv",
+    "files": {
+      "lib/rsa.js": "cf7c6b5d78f5a50956b618a0d441d12d226b3c679142dfadd2b294005001d7ad"
+    }
+  }
+}

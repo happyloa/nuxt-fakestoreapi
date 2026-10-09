@@ -3,7 +3,7 @@
   "description": "A secure-by-default Nuxt storefront demo powered by Fake Store API.",
   "private": true,
   "type": "module",
-  "packageManager": "npm@11.19.1",
+  "packageManager": "npm@12.2.0",
   "engines": {
     "node": "^22.19.0 || ^24.11.0 || >=26.0.0",
     "npm": ">=11"
@@ -13,8 +13,10 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "typecheck": "nuxt typecheck"
+    "postinstall": "patch-package --error-on-fail && nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "test:security": "node --test tests/security.test.mjs",
+    "audit:security": "node scripts/audit-security.mjs"
   },
   "dependencies": {
     "@nuxt/image": "^2.1.0",
@@ -23,27 +25,29 @@
     "@tailwindcss/vite": "^4.3.3",
     "aos": "^2.3.4",
     "h3": "^1.15.11",
-    "nuxt": "^4.5.2",
+    "nuxt": "^4.6.0",
     "ofetch": "^1.5.1",
     "pinia": "^4.0.3",
     "tailwindcss": "^4.3.3",
     "vue": "^3.5.43",
-    "vue-i18n": "^11.4.12",
-    "vue-router": "^5.3.1"
+    "vue-i18n": "^11.4.13",
+    "vue-router": "^5.4.0"
   },
   "devDependencies": {
-    "@nuxtjs/sitemap": "^8.5.1",
+    "@nuxtjs/sitemap": "^8.6.1",
     "@tailwindcss/forms": "^0.5.11",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "esbuild": "^0.28.2",
+    "patch-package": "^8.0.1",
     "typescript": "~6.0.3",
-    "vue-tsc": "^3.3.11"
+    "vue-tsc": "^3.3.12"
   },
   "allowScripts": {
     "esbuild@0.25.12": true,
     "esbuild@0.28.2": true
   },
   "overrides": {
+    "simple-git": "4.0.2",
     "@intlify/unplugin-vue-i18n": {
       "@intlify/vue-i18n-extensions": "^9.0.0"
     },
