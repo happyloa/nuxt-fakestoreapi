@@ -24,10 +24,33 @@ try {
   const page = await context.newPage();
   page.setDefaultTimeout(20000);
   const errors = [];
+  const consoleErrors = [];
+  const responseChecks = [];
+  const declinedPrefetches = new Set();
   page.on("pageerror", (error) => errors.push(error.message));
+  page.on("response", (response) => {
+    if (response.status() < 400) return;
+    responseChecks.push((async () => {
+      const request = response.request();
+      const purpose = await request.headerValue("sec-purpose");
+      // Speed Brain returns empty 503s when it cannot prefetch a Worker route.
+      // Verify the request and response markers; ordinary 503s still fail.
+      if (response.status() === 503
+        && purpose?.split(/[;,\s]+/).includes("prefetch")
+        && request.resourceType() === "other"
+        && new URL(response.url()).origin === new URL(base).origin
+        && response.headers()["cf-ray"]
+        && response.headers()["content-length"] === "0") {
+        declinedPrefetches.add(response.url());
+        console.log(`Cloudflare declined background prefetch (503): ${response.url()}`);
+        return;
+      }
+      errors.push(`HTTP ${response.status()} ${response.url()}`);
+    })());
+  });
   page.on("console", (message) => {
     if (message.type() === "error" || /hydration/i.test(message.text()))
-      errors.push(message.text());
+      consoleErrors.push({ message: message.text(), url: message.location().url });
   });
   const screenshot = (name) =>
     page.screenshot({ path: `${output}/${name}.png`, fullPage: true });
@@ -252,6 +275,13 @@ try {
     "English 320px overflow",
   );
   await screenshot("home-320");
+  await Promise.all(responseChecks);
+  for (const error of consoleErrors) {
+    if (/^Failed to load resource: the server responded with a status of 503/.test(error.message)
+      && declinedPrefetches.has(error.url)) continue;
+    errors.push(error.message);
+  }
+  writeFileSync(`${output}/declined-prefetches.json`, JSON.stringify([...declinedPrefetches], null, 2));
   assert.deepEqual(errors, [], "Browser errors or hydration mismatches");
   writeFileSync(
     `${output}/browser-errors.json`,

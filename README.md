@@ -135,6 +135,8 @@ npm run preview
 
 `build:cloudflare` 在載入 Nuxt 設定前指定 Nitro 的 `cloudflare_pages` preset，產出 `dist/_worker.js` 與靜態資源。Pages 的圖片 provider 使用 `none`，直接載入原圖；IPX 的原生 Sharp 僅用於 Node 部署。Pages 專案設定以官方 `cf` CLI 管理；此專案沒有 Wrangler 設定檔，也沒有改為 Workers 部署。
 
+CSP 允許既有 Cloudflare Web Analytics 從 `https://static.cloudflareinsights.com` 載入分析腳本；自動注入的 beacon 使用本站 `/cdn-cgi/rum`，由 `connect-src 'self'` 允許。參考 [Cloudflare Web Analytics CSP 說明](https://developers.cloudflare.com/web-analytics/faq/#what-do-i-need-to-add-to-my-content-security-policy-csp)。
+
 Pages 的 Node 版本亦可由 `NODE_VERSION` 覆寫。調整 Node 時，請同步更新 `.node-version` 與 Pages production、preview 的環境設定，並確認 npm 的 engine 要求。參考 [Pages build image 文件](https://developers.cloudflare.com/pages/configuration/build-image/)。
 
 目前 demo session 存在單一執行個體的記憶體中。Cloudflare 不保證後續請求使用同一執行個體，因此登入狀態可能失效。若要穩定的多執行個體登入，需將 session 改為共用的持久儲存；目前的示範登入不具備此保證。
@@ -153,6 +155,8 @@ npm run build
 ```
 
 `test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:server` 檢查 Pages adapter 的 JSON 讀取與 Node chunked request 的大小限制。`test:ui` 使用 Playwright 與 axe-core 檢查購物流程、響應式版面與無障礙規則。先啟動正式版伺服器、以 `npx playwright install chromium` 安裝測試瀏覽器，再將 `UI_TEST_URL` 設為伺服器網址並執行 `npm run test:ui`；預設網址為 `http://127.0.0.1:3008`。目前未配置 CI 或 lint。
+
+正式網域啟用 Cloudflare Speed Brain 時，無法從快取提供的背景預取會回傳空的 503。瀏覽器測試會核對 `Sec-Purpose: prefetch`、Cloudflare 回應標記與空 body，將這類回應記錄在 `.cache/ui-screenshots/declined-prefetches.json`；正常導覽的 503 與其他錯誤仍會讓測試失敗。參考 [Speed Brain 文件](https://developers.cloudflare.com/speed/optimization/content/speed-brain/)。
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
