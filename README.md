@@ -68,7 +68,7 @@ server/
 
 ## 介面與可近用性
 
-介面使用暖白底色、橄欖色主視覺與橘色操作按鈕。Manrope 字型與首頁背包圖片由本站提供；樣式使用 Tailwind v4，圖示採用共用 SVG 元件。重做範圍與瀏覽器驗證方式見 [UI 更新紀錄](docs/ui-redesign-2026-10-09.md)。
+介面使用暖白底色、橄欖色主視覺與橘色操作按鈕。Manrope 字型與首頁背包圖片由本站提供；樣式使用 Tailwind v4，圖示採用共用 SVG 元件。
 
 介面以語意化 HTML 與可重用的領域元件建立，並遵守下列原則：
 
@@ -80,12 +80,10 @@ server/
 
 ## 系統需求
 
-套件升級、相容性限制與本機漏洞修補見 [套件安全紀錄](docs/dependencies-2026-10-09.md)。
-
 - Node.js `^22.22.3 || ^24.15.0 || >=26.0.0`
-- npm（隨 Node.js 安裝）
+- npm `12.2.0`（`packageManager` 指定的版本）
 
-建議使用目前支援中的 Node.js LTS 版本。可先以 `node --version` 確認版本。
+本機與 Pages 建置使用 `.node-version` 指定的 Node.js `24.21.0`。可先以 `node --version` 確認版本；Pages v3 不會依 `package.json` 的 `engines` 切換 Node 版本。
 
 ## 開始使用
 
@@ -124,21 +122,41 @@ npm run preview
 - `NUXT_PUBLIC_SITE_URL`：正式公開網址，預設沿用專案原有的 `https://nuxt-fakestoreapi.worksbyaaron.com`，供 canonical、分享圖與 sitemap 使用；部署時應與 `NUXT_SITE_URL`、`NUXT_PUBLIC_I18N_BASE_URL` 設為相同網址。不要填 localhost。
 - `NUXT_FAKE_STORE_API_BASE`：伺服器端上游位址。注意這是 Nitro 對 `fakeStoreApiBase` 的標準命名；原本 `NUXT_FAKESTORE_API_BASE` 無法在 production runtime 正確覆寫。
 
-正式部署使用 `npm run build` 後執行 `node .output/server/index.mjs`，需要支援 Node 的伺服器。純靜態 `generate` 不提供登入、BFF 與示範結帳；完整功能不應以靜態站部署。HTTPS 是正式環境 session cookie 的必要條件。
+### Cloudflare Pages
+
+既有 Pages 專案使用 GitHub 的 `main` 分支自動部署，設定如下：
+
+| 設定 | 值 |
+| --- | --- |
+| Build command | `npm run build:cloudflare` |
+| Build output directory | `dist` |
+| Node version | `.node-version` 的 `24.21.0` |
+| Production / preview compatibility flag | `nodejs_compat` |
+
+`build:cloudflare` 在載入 Nuxt 設定前指定 Nitro 的 `cloudflare_pages` preset，產出 `dist/_worker.js` 與靜態資源。Pages 的圖片 provider 使用 `none`，直接載入原圖；IPX 的原生 Sharp 僅用於 Node 部署。Pages 專案設定以官方 `cf` CLI 管理；此專案沒有 Wrangler 設定檔，也沒有改為 Workers 部署。
+
+Pages 的 Node 版本亦可由 `NODE_VERSION` 覆寫。調整 Node 時，請同步更新 `.node-version` 與 Pages production、preview 的環境設定，並確認 npm 的 engine 要求。參考 [Pages build image 文件](https://developers.cloudflare.com/pages/configuration/build-image/)。
+
+目前 demo session 存在單一執行個體的記憶體中。Cloudflare 不保證後續請求使用同一執行個體，因此登入狀態可能失效。若要穩定的多執行個體登入，需將 session 改為共用的持久儲存；目前的示範登入不具備此保證。
+
+### Node 伺服器
+
+使用 `npm run build` 後執行 `node .output/server/index.mjs`。純靜態 `generate` 不提供登入、BFF 與示範結帳；HTTPS 是正式環境 session cookie 的必要條件。
 
 ```bash
 npm ci
 npm run test:security
+npm run test:server
 npm run audit:security
 npm run typecheck
 npm run build
 ```
 
-`test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:ui` 使用 Playwright 與 axe-core 檢查正式預覽的購物流程、響應式版面與無障礙規則；執行前需啟動伺服器並安裝測試瀏覽器，步驟見 UI 更新紀錄。目前未配置 CI 或 lint。
+`test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:server` 檢查 Pages adapter 的 JSON 讀取與 Node chunked request 的大小限制。`test:ui` 使用 Playwright 與 axe-core 檢查購物流程、響應式版面與無障礙規則。先啟動正式版伺服器、以 `npx playwright install chromium` 安裝測試瀏覽器，再將 `UI_TEST_URL` 設為伺服器網址並執行 `npm run test:ui`；預設網址為 `http://127.0.0.1:3008`。目前未配置 CI 或 lint。
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
-目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.12 實測不相容。H3 使用 Nitro 2 相容的 1.x。此次升級限制與修補詳見 [套件安全紀錄](docs/dependencies-2026-10-09.md)；較早的檢查保留在 [完整健檢報告](docs/health-check-2026-09-27.md)。
+目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.12 實測不相容。H3 使用 Nitro 2 相容的 1.x。`braces` 與 `node-forge` 的已知漏洞尚無上游修復版；專案透過 `patch-package` 在安裝時套用版本限定的修補，並用 `test:security`、`audit:security` 驗證。原始 `npm audit` 依套件版本判斷，仍會列出這兩項 advisory 與其相依鏈。
 
 ## 貢獻原則
 

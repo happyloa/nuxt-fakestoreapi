@@ -10,12 +10,14 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "patch-package --error-on-fail && nuxt prepare",
     "typecheck": "nuxt typecheck",
     "test:security": "node --test tests/security.test.mjs",
+    "test:server": "node --test tests/request-body.test.mjs",
     "audit:security": "node scripts/audit-security.mjs",
     "test:ui": "node tests/ui-smoke.mjs"
   },

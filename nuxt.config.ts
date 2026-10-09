@@ -4,6 +4,9 @@ const siteUrl =
   process.env.NUXT_PUBLIC_SITE_URL ||
   "https://nuxt-fakestoreapi.worksbyaaron.com";
 
+const isCloudflarePages =
+  process.env.NITRO_PRESET === "cloudflare_pages" || process.env.CF_PAGES === "1";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-08-01",
   devtools: { enabled: process.env.NODE_ENV !== "production" },
@@ -33,12 +36,19 @@ export default defineNuxtConfig({
   },
 
   image: {
+    // IPX uses native Sharp binaries. Pages serves the original images instead.
+    provider: isCloudflarePages ? "none" : "ipx",
     domains: ["fakestoreapi.com"],
   },
 
   // Bundle the small Vue helper instead of asking Nitro to resolve its package
   // directory; Node deprecates the trailing-slash export lookup (DEP0155).
   nitro: {
+    cloudflare: {
+      nodeCompat: true,
+      // Keep the existing Pages settings managed through the cf CLI.
+      deployConfig: false,
+    },
     externals: {
       // Nuxt 4.6 renderer paths need separator-independent matching on Windows.
       inline: [
