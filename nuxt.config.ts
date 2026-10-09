@@ -1,17 +1,14 @@
-import tailwindcss from "@tailwindcss/vite"
+import tailwindcss from "@tailwindcss/vite";
 
-const siteUrl = process.env.NUXT_PUBLIC_SITE_URL || "https://nuxt-fakestoreapi.worksbyaaron.com"
+const siteUrl =
+  process.env.NUXT_PUBLIC_SITE_URL ||
+  "https://nuxt-fakestoreapi.worksbyaaron.com";
 
 export default defineNuxtConfig({
   compatibilityDate: "2026-08-01",
   devtools: { enabled: process.env.NODE_ENV !== "production" },
 
-  modules: [
-    "@nuxt/image",
-    "@nuxtjs/i18n",
-    "@pinia/nuxt",
-    "@nuxtjs/sitemap",
-  ],
+  modules: ["@nuxt/image", "@nuxtjs/i18n", "@pinia/nuxt", "@nuxtjs/sitemap"],
 
   // The restored interface uses unprefixed component names such as
   // <SiteHeader>, <ProductGrid>, and the Base* UI kit.
@@ -44,13 +41,32 @@ export default defineNuxtConfig({
   nitro: {
     externals: {
       // Nuxt 4.6 renderer paths need separator-independent matching on Windows.
-      inline: ["@vue/shared", /[\\/]node_modules[\\/]nuxt[\\/]dist[\\/]/],
+      inline: [
+        "@vue/shared",
+        // Vite emits both absolute and bare Pinia imports on Windows. Bundle
+        // both paths so the Nuxt plugin and stores use the same instance.
+        "pinia",
+        /[\\/]node_modules[\\/]nuxt[\\/]dist[\\/]/,
+      ],
     },
   },
 
   sitemap: {
     sources: ["/api/__sitemap__/urls"],
-    exclude: ["/cart", "/account", "/login", "/api", "/users", "/products/new", "/en/cart", "/en/account", "/en/login", "/en/api", "/en/users", "/en/products/new"],
+    exclude: [
+      "/cart",
+      "/account",
+      "/login",
+      "/api",
+      "/users",
+      "/products/new",
+      "/en/cart",
+      "/en/account",
+      "/en/login",
+      "/en/api",
+      "/en/users",
+      "/en/products/new",
+    ],
   },
 
   i18n: {
@@ -95,11 +111,12 @@ export default defineNuxtConfig({
         ].join("; "),
         "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
         "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+        "Strict-Transport-Security":
+          "max-age=63072000; includeSubDomains; preload",
         "Cross-Origin-Opener-Policy": "same-origin",
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
       },
     },
   },
-})
+});

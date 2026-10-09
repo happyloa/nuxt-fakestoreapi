@@ -10,6 +10,7 @@ Nuxt 更新至 4.6.0、Sitemap 至 8.6.1、Vue Router 至 5.4.0、Vue i18n 至 1
 - `patches/@nuxt+devtools+3.4.2.patch` 將 DevTools 的 `simple-git` 預設匯入改為 4.x 支援的具名 `simpleGit` 匯入，讓開發模式能使用安全版本。
 - Nitro 的 inline 規則加入同時支援 Windows 與 Unix 路徑分隔符的 Nuxt renderer 匹配，避開 Nuxt 4.6.0 在 Windows 將 renderer 留為 external、導致 SSR 500 的問題，見 [Nuxt #36467](https://github.com/nuxt/nuxt/issues/36467)。
 - Vite 排除 `@nuxtjs/i18n` 的 dependency pre-bundling，避開 4.6.0 在 dependency scan 解析 `#components` 失敗的問題，見 [i18n #4162](https://github.com/nuxt-modules/i18n/issues/4162)。
+- 正式建置的 Nitro inline 規則也包含 `pinia`。Windows 上 Vite 將 Nuxt plugin 的 Pinia 匯入解析成絕對路徑，stores 則保留套件名稱；若只內嵌其中一份，會形成兩份執行個體並在 SSR 出現 `getActivePinia()` 錯誤。瀏覽器驗證會檢查正式首頁回應 200。
 
 ## 未有官方修正版的漏洞
 
