@@ -7,6 +7,9 @@ Nuxt 更新至 4.6.0、Sitemap 至 8.6.1、Vue Router 至 5.4.0、Vue i18n 至 1
 - `h3` 保留 1.15.11：Nuxt 4.6.0 的 Nitro 整合仍使用 H3 1.x。本站的 request body 與 session 處理也依賴這個版本的事件介面。
 - TypeScript 保留 6.0.3：7.0.2 搭配 vue-tsc 3.3.12 實測會出現 `ERR_PACKAGE_PATH_NOT_EXPORTED`，因為 vue-tsc 仍讀取 `typescript/lib/tsc`。
 - `simple-git` 透過 override 使用 4.0.2，修復 Nuxt DevTools 間接引入的命令執行漏洞。其 argv-parser 使用修正版 2.0.1。
+- `patches/@nuxt+devtools+3.4.2.patch` 將 DevTools 的 `simple-git` 預設匯入改為 4.x 支援的具名 `simpleGit` 匯入，讓開發模式能使用安全版本。
+- Nitro 的 inline 規則加入同時支援 Windows 與 Unix 路徑分隔符的 Nuxt renderer 匹配，避開 Nuxt 4.6.0 在 Windows 將 renderer 留為 external、導致 SSR 500 的問題，見 [Nuxt #36467](https://github.com/nuxt/nuxt/issues/36467)。
+- Vite 排除 `@nuxtjs/i18n` 的 dependency pre-bundling，避開 4.6.0 在 dependency scan 解析 `#components` 失敗的問題，見 [i18n #4162](https://github.com/nuxt-modules/i18n/issues/4162)。
 
 ## 未有官方修正版的漏洞
 

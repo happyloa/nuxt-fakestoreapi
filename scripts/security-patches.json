@@ -16,5 +16,11 @@
     "files": {
       "lib/rsa.js": "cf7c6b5d78f5a50956b618a0d441d12d226b3c679142dfadd2b294005001d7ad"
     }
+  },
+  "@nuxt/devtools": {
+    "version": "3.4.2",
+    "files": {
+      "dist/chunks/module-main.mjs": "5f6cf91993c1610f61776e7cc0ca5155dd46ceac0a3329ace5d146e533e8645d"
+    }
   }
 }

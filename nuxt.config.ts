@@ -42,7 +42,10 @@ export default defineNuxtConfig({
   // Bundle the small Vue helper instead of asking Nitro to resolve its package
   // directory; Node deprecates the trailing-slash export lookup (DEP0155).
   nitro: {
-    externals: { inline: ["@vue/shared"] },
+    externals: {
+      // Nuxt 4.6 renderer paths need separator-independent matching on Windows.
+      inline: ["@vue/shared", /[\\/]node_modules[\\/]nuxt[\\/]dist[\\/]/],
+    },
   },
 
   sitemap: {
@@ -68,6 +71,7 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: { exclude: ["@nuxtjs/i18n"] },
   },
 
   css: ["~/assets/css/tailwind.css"],

@@ -8,6 +8,12 @@ const require = createRequire(import.meta.url);
 const braces = require('braces');
 const forge = require('node-forge');
 
+test('the safe simple-git version provides the DevTools named API', async () => {
+  const { simpleGit } = await import('simple-git');
+  assert.equal(typeof simpleGit, 'function');
+  assert.equal(await simpleGit().checkIsRepo(), true);
+});
+
 test('all lockfile copies contain the reviewed patches', () => verifyPatchedDependencies());
 test('ordinary braces, ranges, escaped and literal patterns still work', () => {
   assert.deepEqual(braces.expand('app/{pages,components}/*.{ts,vue}'), ['app/pages/*.ts', 'app/pages/*.vue', 'app/components/*.ts', 'app/components/*.vue']);
