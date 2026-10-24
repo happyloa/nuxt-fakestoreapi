@@ -15,8 +15,7 @@ export function verifyPatchedDependencies(root = new URL('../', import.meta.url)
         throw new Error(`Review the patch for ${path}@${entry.version}`);
       }
       for (const [file, expected] of Object.entries(patch.files)) {
-        // patch-package preserves the patch file's line endings. Git may check
-        // those files out as CRLF on Windows; verify the same source on both OSes.
+        // Compare source consistently across Windows and Unix checkouts.
         const source = readFileSync(new URL(`${path}/${file}`, root), 'utf8').replace(/\r\n/g, '\n');
         const hash = createHash('sha256').update(source).digest('hex');
         if (hash !== expected) throw new Error(`Missing or changed security patch: ${path}/${file}`);

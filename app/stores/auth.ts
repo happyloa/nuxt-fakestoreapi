@@ -37,7 +37,7 @@ export const useAuthStore = defineStore("auth", () => {
   const logoutUser = async () => {
     await $fetch("/api/auth/session", { method: "DELETE" });
     user.value = null;
-    useCartStore().clear();
+    useCartStore().reset();
   };
   return { user, loading, error, initialized, isAuthenticated, fetchUser, loginUser, logoutUser };
 });

@@ -3,7 +3,13 @@ import type { DemoOrder } from "#shared/types/storefront";
 import { parseStoredCart, type CartItem } from "~/utils/cart";
 
 export const useCartStore = defineStore("cart", {
-  state: () => ({ items: [] as CartItem[], lastOrderItems: [] as CartItem[], loading: false, error: "" }),
+  state: () => ({
+    items: [] as CartItem[],
+    lastOrderItems: [] as CartItem[],
+    loading: false,
+    error: "",
+    checkoutGeneration: 0,
+  }),
   getters: {
     total: (state) => state.items.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100,
     count: (state) => state.items.reduce((sum, item) => sum + item.quantity, 0),
@@ -32,11 +38,19 @@ export const useCartStore = defineStore("cart", {
     },
     clear() {
       if (this.loading) return;
+      this.reset();
+    },
+    reset() {
+      // Invalidate pending checkout responses when the session is cleared.
+      this.checkoutGeneration++;
       this.items = [];
       this.lastOrderItems = [];
+      this.loading = false;
+      this.error = "";
     },
     async checkout() {
       if (this.loading || !this.items.length) return null;
+      const generation = this.checkoutGeneration;
       this.loading = true;
       try {
         const snapshot = this.items.map((item) => ({ ...item }));
@@ -44,10 +58,16 @@ export const useCartStore = defineStore("cart", {
           method: "POST",
           body: { lines: snapshot.map((item) => ({ productId: item.id, quantity: item.quantity })) },
         });
+        if (generation !== this.checkoutGeneration) return null;
         this.lastOrderItems = snapshot;
         this.items = [];
         return order;
-      } finally { this.loading = false; }
+      } catch (error) {
+        if (generation !== this.checkoutGeneration) return null;
+        throw error;
+      } finally {
+        if (generation === this.checkoutGeneration) this.loading = false;
+      }
     },
   },
 });

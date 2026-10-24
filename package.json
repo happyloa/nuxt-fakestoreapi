@@ -13,10 +13,11 @@
     "build:cloudflare": "node scripts/build-cloudflare.mjs",
     "dev": "nuxt dev",
     "preview": "nuxt preview",
-    "postinstall": "patch-package --error-on-fail && nuxt prepare",
+    "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
     "test:security": "node --test tests/security.test.mjs",
     "test:server": "node --test tests/request-body.test.mjs",
+    "test:cart": "node --test tests/cart.test.mjs",
     "audit:security": "node scripts/audit-security.mjs"
   },
   "dependencies": {
@@ -31,7 +32,6 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.19.2",
-    "patch-package": "^8.0.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
     "vue-tsc": "^3.3.13"
@@ -47,5 +47,9 @@
     "archiver-utils": {
       "glob": "^13.0.6"
     }
+  },
+  "patchedDependencies": {
+    "node-forge@1.4.0": "patches/node-forge@1.4.0.patch",
+    "braces@3.0.3": "patches/braces@3.0.3.patch"
   }
 }

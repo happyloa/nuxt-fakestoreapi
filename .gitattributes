@@ -1,0 +1,2 @@
+# Unified diff context and npm patch headers contain intentional whitespace.
+patches/*.patch text eol=lf whitespace=-blank-at-eol
