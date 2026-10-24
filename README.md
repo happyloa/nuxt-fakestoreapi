@@ -81,7 +81,7 @@ server/
 ## 系統需求
 
 - Node.js `^22.22.3 || ^24.15.0 || >=26.0.0`
-- npm `12.2.0`（`packageManager` 指定的版本）
+- npm `12.2.1`（`packageManager` 指定的版本）
 
 本機與 Pages 建置使用 `.node-version` 指定的 Node.js `24.21.0`。可先以 `node --version` 確認版本；Pages v3 不會依 `package.json` 的 `engines` 切換 Node 版本。
 
@@ -160,7 +160,11 @@ npm run build
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
-目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.12 實測不相容。H3 使用 Nitro 2 相容的 1.x。`braces` 與 `node-forge` 的已知漏洞尚無上游修復版；專案透過 `patch-package` 在安裝時套用版本限定的修補，並用 `test:security`、`audit:security` 驗證。原始 `npm audit` 依套件版本判斷，仍會列出這兩項 advisory 與其相依鏈。
+目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.13 實測不相容，型別檢查會因 `typescript/lib/tsc` 未匯出而失敗。H3 保留 Nitro 2 使用的 1.x；`@types/node` 使用與 `.node-version` 相符的 24.x。
+
+Sitemap 已升至 9.x，伺服器 helper 與型別改由 `#sitemap/server` 匯入。既有 `sources`、排除路徑與多語系商品網址沿用原設定。參考 [Sitemap v9 升級說明](https://nuxtseo.com/docs/sitemap/releases/v9)。更新 `vue-i18n` 時，也要更新 lockfile 中相容的 `@intlify/*` 相依；Nuxt i18n 的 alias 若解析到舊版 core 或 shared，正式版建置可能因缺少匯出而失敗。新版 DevTools 已移除 `simple-git` 相依，因此專案也移除舊版 DevTools 的補丁與 `simple-git` override。
+
+`braces` 與 `node-forge` 仍透過 `patch-package` 在安裝時套用版本限定的修補，並以 `test:security`、`audit:security` 驗證所有 lockfile 副本。雜湊驗證會統一 LF／CRLF 換行，其餘內容異動仍會失敗。目前原始 `npm audit` 剩下 `node-forge` 的 `GHSA-86w9-cpqp-85rv` 與其相依鏈；1.4.0 尚無上游修復版，專案已保留 RSA 驗證補丁與回歸測試。`audit:security` 會檢查補丁內容，並拒絕未修補或新增的 advisory；它不代表原始 `npm audit` 為零漏洞。
 
 ## 貢獻原則
 

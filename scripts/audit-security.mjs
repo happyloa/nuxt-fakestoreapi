@@ -3,8 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-export function verifyPatchedDependencies() {
-  const root = new URL('../', import.meta.url);
+export function verifyPatchedDependencies(root = new URL('../', import.meta.url)) {
   const patches = JSON.parse(readFileSync(new URL('scripts/security-patches.json', root), 'utf8'));
   const lock = JSON.parse(readFileSync(new URL('package-lock.json', root), 'utf8'));
   for (const [name, patch] of Object.entries(patches)) {
@@ -16,7 +15,10 @@ export function verifyPatchedDependencies() {
         throw new Error(`Review the patch for ${path}@${entry.version}`);
       }
       for (const [file, expected] of Object.entries(patch.files)) {
-        const hash = createHash('sha256').update(readFileSync(new URL(`${path}/${file}`, root))).digest('hex');
+        // patch-package preserves the patch file's line endings. Git may check
+        // those files out as CRLF on Windows; verify the same source on both OSes.
+        const source = readFileSync(new URL(`${path}/${file}`, root), 'utf8').replace(/\r\n/g, '\n');
+        const hash = createHash('sha256').update(source).digest('hex');
         if (hash !== expected) throw new Error(`Missing or changed security patch: ${path}/${file}`);
       }
     }
@@ -63,7 +65,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const findings = reviewAudit(report, patches);
     console.log(`Raw npm audit: ${JSON.stringify(report.metadata.vulnerabilities)}`);
     for (const finding of findings) console.log(`Verified local patch: ${finding.name} (${finding.url})`);
-    console.log('Security audit passed: no unmitigated advisories. npm still reports the patched upstream versions.');
+    console.log('Security audit passed: no unmitigated advisories.');
+    if (findings.length) console.log('npm audit still reports locally patched upstream versions and their dependency chains.');
   } catch (error) {
     console.error(error.message);
     process.exitCode = 1;

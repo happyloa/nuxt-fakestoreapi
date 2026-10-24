@@ -3,10 +3,10 @@
   "description": "A secure-by-default Nuxt storefront demo powered by Fake Store API.",
   "private": true,
   "type": "module",
-  "packageManager": "npm@12.2.0",
+  "packageManager": "npm@12.2.1",
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0",
-    "npm": ">=11"
+    "npm": ">=12.2.1"
   },
   "scripts": {
     "build": "nuxt build",
@@ -22,36 +22,35 @@
     "test:ui": "node tests/ui-smoke.mjs"
   },
   "dependencies": {
-    "@nuxt/image": "^2.1.0",
+    "@nuxt/image": "^2.2.0",
     "@nuxtjs/i18n": "^10.6.0",
-    "@pinia/nuxt": "^1.0.2",
+    "@pinia/nuxt": "^1.0.3",
     "@tailwindcss/vite": "^4.3.3",
     "h3": "^1.15.11",
-    "nuxt": "^4.6.0",
+    "nuxt": "^4.6.2",
     "ofetch": "^1.5.1",
-    "pinia": "^4.0.3",
+    "pinia": "^4.1.0",
     "tailwindcss": "^4.3.3",
-    "vue": "^3.5.43",
-    "vue-i18n": "^11.4.13",
+    "vue": "^3.5.44",
+    "vue-i18n": "^11.4.16",
     "vue-router": "^5.4.0"
   },
   "devDependencies": {
-    "@axe-core/playwright": "4.13.0",
-    "@nuxtjs/sitemap": "^8.6.1",
+    "@axe-core/playwright": "4.14.0",
+    "@nuxtjs/sitemap": "^9.1.0",
     "@tailwindcss/forms": "^0.5.11",
-    "@types/node": "^26.6.4",
+    "@types/node": "^24.19.2",
     "esbuild": "^0.28.2",
     "patch-package": "^8.0.1",
-    "playwright": "1.64.0",
+    "playwright": "1.64.1",
     "typescript": "~6.0.3",
-    "vue-tsc": "^3.3.12"
+    "vue-tsc": "^3.3.13"
   },
   "allowScripts": {
     "esbuild@0.25.12": true,
     "esbuild@0.28.2": true
   },
   "overrides": {
-    "simple-git": "4.0.2",
     "@intlify/unplugin-vue-i18n": {
       "@intlify/vue-i18n-extensions": "^9.0.0"
     },

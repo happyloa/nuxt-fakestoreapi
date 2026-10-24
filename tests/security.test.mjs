@@ -1,20 +1,47 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { generateKeyPairSync } from 'node:crypto';
+import { createHash, generateKeyPairSync } from 'node:crypto';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
+import { join, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { verifyPatchedDependencies, reviewAudit } from '../scripts/audit-security.mjs';
 
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const forge = require('node-forge');
 
-test('the safe simple-git version provides the DevTools named API', async () => {
-  const { simpleGit } = await import('simple-git');
-  assert.equal(typeof simpleGit, 'function');
-  assert.equal(await simpleGit().checkIsRepo(), true);
-});
-
 test('all lockfile copies contain the reviewed patches', () => verifyPatchedDependencies());
+test('patch verification accepts LF and CRLF but rejects changed or missing source in every copy', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'storefront-patch-'));
+  const root = pathToFileURL(directory + sep);
+  const source = 'const depth = 128;\nthrow new SyntaxError();\n';
+  const locations = ['node_modules/example', 'node_modules/parent/node_modules/example'];
+  const write = (path, content) => writeFileSync(new URL(path, root), content);
+  try {
+    mkdirSync(new URL('scripts/', root));
+    write('scripts/security-patches.json', JSON.stringify({ example: {
+      version: '1.0.0',
+      files: { 'index.js': createHash('sha256').update(source).digest('hex') },
+    } }));
+    write('package-lock.json', JSON.stringify({ packages: Object.fromEntries(locations.map(path => [path, { version: '1.0.0' }])) }));
+    for (const path of locations) {
+      mkdirSync(new URL(`${path}/`, root), { recursive: true });
+      write(`${path}/package.json`, JSON.stringify({ version: '1.0.0' }));
+    }
+    for (const content of [source, source.replace(/\n/g, '\r\n')]) {
+      for (const path of locations) write(`${path}/index.js`, content);
+      assert.doesNotThrow(() => verifyPatchedDependencies(root));
+    }
+    write(`${locations[1]}/index.js`, source.replace('128', '999'));
+    assert.throws(() => verifyPatchedDependencies(root), /Missing or changed security patch/);
+    rmSync(new URL(`${locations[1]}/index.js`, root));
+    assert.throws(() => verifyPatchedDependencies(root), /ENOENT/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
 test('ordinary braces, ranges, escaped and literal patterns still work', () => {
   assert.deepEqual(braces.expand('app/{pages,components}/*.{ts,vue}'), ['app/pages/*.ts', 'app/pages/*.vue', 'app/components/*.ts', 'app/components/*.vue']);
   assert.deepEqual(braces.expand('{1..3}'), ['1', '2', '3']);
