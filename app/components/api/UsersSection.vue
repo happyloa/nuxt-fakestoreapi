@@ -4,7 +4,6 @@
  * 提供使用者的單一取得、建立、更新與刪除功能
  */
 
-import { useI18n } from "vue-i18n";
 import { useUsersStore } from "~/stores/users";
 import { useNotificationsStore } from "~/stores/notifications";
 import type {

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import type { Product } from "#shared/types/fakestore";
 import { useCartStore } from "~/stores/cart";
 import { useProductsStore } from "~/stores/products";

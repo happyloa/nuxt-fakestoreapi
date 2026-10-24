@@ -23,13 +23,11 @@ const props = withDefaults(defineProps<Props>(), {
     <figure
       class="flex aspect-square items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 dark:border-slate-800"
     >
-      <NuxtImg
+      <img
         :src="product.image"
         :alt="product.title"
         width="600"
         height="600"
-        sizes="(max-width: 1024px) 90vw, 550px"
-        format="webp"
         fetchpriority="high"
         class="h-full w-full object-contain"
       />

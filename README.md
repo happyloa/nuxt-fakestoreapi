@@ -23,7 +23,7 @@ Storefront Lab 是以 [Fake Store API](https://fakestoreapi.com/) 為資料來�
 
 ## 架構原則
 
-專案採用以領域分組的模組化單體架構：頁面只負責路由與組裝，商品、購物車、帳戶與站台殼層各自擁有清楚的元件與互動邏輯；共用 DTO 則集中管理。
+這是一個 Nuxt 示範專案。頁面、元件與 Pinia store 處理介面，`server/api` 負責第三方 API 請求與登入，共用型別放在 `shared/types`。
 
 ```text
 app/
@@ -119,7 +119,7 @@ npm run preview
 
 複製 `.env.example` 為 `.env`，依環境設定：
 
-- `NUXT_PUBLIC_SITE_URL`：正式公開網址，預設沿用專案原有的 `https://nuxt-fakestoreapi.worksbyaaron.com`，供 canonical、分享圖與 sitemap 使用；部署時應與 `NUXT_SITE_URL`、`NUXT_PUBLIC_I18N_BASE_URL` 設為相同網址。不要填 localhost。
+- `NUXT_PUBLIC_SITE_URL`：正式公開網址，預設沿用專案原有的 `https://nuxt-fakestoreapi.worksbyaaron.com`，供 canonical、分享圖與語系連結使用；部署時應與 `NUXT_PUBLIC_I18N_BASE_URL` 設為相同網址。不要填 localhost。
 - `NUXT_FAKE_STORE_API_BASE`：伺服器端上游位址。注意這是 Nitro 對 `fakeStoreApiBase` 的標準命名；原本 `NUXT_FAKESTORE_API_BASE` 無法在 production runtime 正確覆寫。
 
 ### Cloudflare Pages
@@ -133,7 +133,7 @@ npm run preview
 | Node version | `.node-version` 的 `24.21.0` |
 | Production / preview compatibility flag | `nodejs_compat` |
 
-`build:cloudflare` 在載入 Nuxt 設定前指定 Nitro 的 `cloudflare_pages` preset，產出 `dist/_worker.js` 與靜態資源。Pages 的圖片 provider 使用 `none`，直接載入原圖；IPX 的原生 Sharp 僅用於 Node 部署。Pages 專案設定以官方 `cf` CLI 管理；此專案沒有 Wrangler 設定檔，也沒有改為 Workers 部署。
+`build:cloudflare` 在載入 Nuxt 設定前指定 Nitro 的 `cloudflare_pages` preset，產出 `dist/_worker.js` 與靜態資源。圖片以原生 `<img>` 載入，保留尺寸、替代文字與延遲載入。Pages 專案設定以官方 `cf` CLI 管理；此專案沒有 Wrangler 設定檔，也沒有改為 Workers 部署。
 
 CSP 允許既有 Cloudflare Web Analytics 從 `https://static.cloudflareinsights.com` 載入分析腳本；自動注入的 beacon 使用本站 `/cdn-cgi/rum`，由 `connect-src 'self'` 允許。參考 [Cloudflare Web Analytics CSP 說明](https://developers.cloudflare.com/web-analytics/faq/#what-do-i-need-to-add-to-my-content-security-policy-csp)。
 
@@ -143,7 +143,7 @@ Pages 的 Node 版本亦可由 `NODE_VERSION` 覆寫。調整 Node 時，請同�
 
 ### Node 伺服器
 
-使用 `npm run build` 後執行 `node .output/server/index.mjs`。純靜態 `generate` 不提供登入、BFF 與示範結帳；HTTPS 是正式環境 session cookie 的必要條件。
+使用 `npm run build` 後執行 `node .output/server/index.mjs`。登入、BFF 與示範結帳需要伺服器，因此不提供純靜態產生指令；HTTPS 是正式環境 session cookie 的必要條件。
 
 ```bash
 npm ci
@@ -154,15 +154,17 @@ npm run typecheck
 npm run build
 ```
 
-`test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:server` 檢查 Pages adapter 的 JSON 讀取與 Node chunked request 的大小限制。`test:ui` 使用 Playwright 與 axe-core 檢查購物流程、響應式版面與無障礙規則。先啟動正式版伺服器、以 `npx playwright install chromium` 安裝測試瀏覽器，再將 `UI_TEST_URL` 設為伺服器網址並執行 `npm run test:ui`；預設網址為 `http://127.0.0.1:3008`。目前未配置 CI 或 lint。
+`test:security` 檢查已修補套件與異常輸入，`audit:security` 驗證修補內容並拒絕其他漏洞。`test:server` 檢查 Pages adapter 的 JSON 讀取與 Node chunked request 的大小限制。測試使用 Node.js 內建 runner；目前未配置 CI 或 lint。
 
-正式網域啟用 Cloudflare Speed Brain 時，無法從快取提供的背景預取會回傳空的 503。瀏覽器測試會核對 `Sec-Purpose: prefetch`、Cloudflare 回應標記與空 body，將這類回應記錄在 `.cache/ui-screenshots/declined-prefetches.json`；正常導覽的 503 與其他錯誤仍會讓測試失敗。參考 [Speed Brain 文件](https://developers.cloudflare.com/speed/optimization/content/speed-brain/)。
+### 套件範圍
+
+保留 Nuxt／Vue、Pinia、i18n 與 Tailwind，支援現有頁面、購物車、登入與雙語介面。Tailwind 工具放在 `devDependencies`。圖片使用原生 `<img>`，表單使用現有元件樣式與原生控制項；不另外維護圖片處理、Sitemap 或瀏覽器測試套件。`$fetch` 使用 Nuxt 內建功能，`useI18n` 使用 i18n 模組的自動匯入；`ofetch`、`vue-i18n` 與 `esbuild` 由對應框架管理，專案不再直接宣告。
 
 套件更新時用 `npm outdated` 與 `npm audit` 查核；esbuild 的安裝腳本採精確版本 allowlist。升級 esbuild 時先檢查新腳本，再執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`，不要全域停用警告或開放所有腳本。
 
 目前 TypeScript 固定在 `~6.0.3`：7.0.2 與 vue-tsc 3.3.13 實測不相容，型別檢查會因 `typescript/lib/tsc` 未匯出而失敗。H3 保留 Nitro 2 使用的 1.x；`@types/node` 使用與 `.node-version` 相符的 24.x。
 
-Sitemap 已升至 9.x，伺服器 helper 與型別改由 `#sitemap/server` 匯入。既有 `sources`、排除路徑與多語系商品網址沿用原設定。參考 [Sitemap v9 升級說明](https://nuxtseo.com/docs/sitemap/releases/v9)。更新 `vue-i18n` 時，也要更新 lockfile 中相容的 `@intlify/*` 相依；Nuxt i18n 的 alias 若解析到舊版 core 或 shared，正式版建置可能因缺少匯出而失敗。新版 DevTools 已移除 `simple-git` 相依，因此專案也移除舊版 DevTools 的補丁與 `simple-git` override。
+更新 i18n 模組時，也要更新 lockfile 中相容的 `vue-i18n` 與 `@intlify/*` 相依，避免新舊版本混用。
 
 `braces` 與 `node-forge` 仍透過 `patch-package` 在安裝時套用版本限定的修補，並以 `test:security`、`audit:security` 驗證所有 lockfile 副本。雜湊驗證會統一 LF／CRLF 換行，其餘內容異動仍會失敗。目前原始 `npm audit` 剩下 `node-forge` 的 `GHSA-86w9-cpqp-85rv` 與其相依鏈；1.4.0 尚無上游修復版，專案已保留 RSA 驗證補丁與回歸測試。`audit:security` 會檢查補丁內容，並拒絕未修補或新增的 advisory；它不代表原始 `npm audit` 為零漏洞。
 

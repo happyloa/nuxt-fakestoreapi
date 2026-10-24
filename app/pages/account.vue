@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
 import { useCartStore } from "~/stores/cart";
 import { useNotificationsStore } from "~/stores/notifications";
@@ -128,13 +127,11 @@ usePageSeo(() => ({
               :key="item.id"
               class="grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-3 py-4 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
             >
-              <NuxtImg
+              <img
                 :src="item.image"
                 :alt="item.title"
                 width="64"
                 height="64"
-                sizes="64px"
-                format="webp"
                 loading="lazy"
                 class="h-12 w-12 rounded-lg bg-white object-contain p-2 sm:h-16 sm:w-16"
               />

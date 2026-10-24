@@ -14,13 +14,11 @@ const categoryLabel = useCategoryLabel();
       <figure
         class="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-slate-200/70 bg-white p-6 sm:p-8 dark:border-slate-700"
       >
-        <NuxtImg
+        <img
           :src="product.image"
           :alt="product.title"
           width="360"
           height="360"
-          sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 280px"
-          format="webp"
           loading="lazy"
           class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
         />

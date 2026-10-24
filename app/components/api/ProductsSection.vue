@@ -4,7 +4,6 @@
  * 提供產品的查詢、單一取得、更新與刪除功能
  */
 
-import { useI18n } from "vue-i18n";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
 import type { Product, UpdateProductPayload } from "#shared/types/fakestore";

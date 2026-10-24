@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useProductsStore } from "~/stores/products";
 // ProductsSection / CartsSection / UsersSection 由 Nuxt 自動匯入，無需顯式 import
 

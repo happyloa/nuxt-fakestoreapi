@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
 import { useNotificationsStore } from "~/stores/notifications";
 

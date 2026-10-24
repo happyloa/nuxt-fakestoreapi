@@ -4,7 +4,6 @@
  * 提供購物車的查詢、單一取得、依使用者取得、建立、更新與刪除功能
  */
 
-import { useI18n } from "vue-i18n";
 import { useAdminCartsStore } from "~/stores/adminCarts";
 import { useNotificationsStore } from "~/stores/notifications";
 import type {

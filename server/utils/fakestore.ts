@@ -1,6 +1,5 @@
 import type { Product } from "#shared/types/fakestore";
 import { createError } from "h3";
-import { $fetch } from "ofetch";
 import type {
   CatalogPayload,
   PublicUser,

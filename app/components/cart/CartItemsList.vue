@@ -58,13 +58,11 @@ const props = withDefaults(defineProps<Props>(), {
             class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div class="flex min-w-0 items-center gap-4">
-              <NuxtImg
+              <img
                 :src="item.image"
                 :alt="item.title"
                 width="80"
                 height="80"
-                sizes="80px"
-                format="webp"
                 loading="lazy"
                 class="h-20 w-20 p-1 shrink-0 rounded-xl border border-slate-100 bg-white object-contain dark:border-slate-700 dark:bg-slate-800"
               />

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useProductFilters } from "~/composables/useProductFilters";
 import { useCartStore } from "~/stores/cart";
 import { useProductsStore } from "~/stores/products";

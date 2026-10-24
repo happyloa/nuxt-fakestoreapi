@@ -1,9 +1,8 @@
 import { createError, defineEventHandler, getQuery, getRouterParam, setResponseHeader } from "h3";
-import { $fetch } from "ofetch";
 import { readBoundedJsonBody } from "../../utils/request-body";
 
 /** Restricted public mock API playground. Never forward cookies or upstream secrets. */
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event): Promise<unknown> => {
   setResponseHeader(event, "Cache-Control", "no-store");
   const path = getRouterParam(event, "path") || "";
   const method = event.method;
