@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, generateKeyPairSync } from 'node:crypto';
+import { once } from 'node:events';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -11,6 +12,65 @@ import { verifyPatchedDependencies, reviewAudit } from '../scripts/audit-securit
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const forge = require('node-forge');
+
+test('Nitro archive helpers still expand and archive files with the security overrides', { timeout: 5000 }, async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'storefront-archive-'));
+  const archive = require('archiver')('zip');
+  try {
+    mkdirSync(join(directory, 'nested'));
+    for (const path of ['first.txt', 'nested/second.txt', 'nested/skip.txt', 'other.json']) {
+      writeFileSync(join(directory, path), 'fixture');
+    }
+    const expected = ['first.txt', 'nested/second.txt'];
+    const matches = require('archiver-utils').file.expand({ cwd: directory }, ['**/*.txt', '!**/skip.txt']);
+    assert.deepEqual(matches.map(path => path.replace(/\\/g, '/')).sort(), expected);
+    const entries = [];
+    archive.on('entry', entry => entries.push(entry.name));
+    const ended = once(archive, 'end');
+    archive.resume();
+    archive.glob('**/*.txt', { cwd: directory, ignore: ['**/skip.txt'] });
+    await Promise.all([archive.finalize(), ended]);
+    assert.deepEqual(entries.sort(), expected);
+  } finally {
+    archive.abort();
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+for (const entry of ['deepmerge', 'deepmerge/dist/umd.js']) {
+  const merge = require(entry);
+  test(`${entry} rejects prototype poisoning from either merge operand`, () => {
+    const malicious = () => JSON.parse('{"__proto__":{"polluted":true},"safe":1}');
+    for (const [target, source] of [
+      [malicious(), {}],
+      [{}, malicious()],
+      [Object.create(null), malicious()],
+      [malicious(), malicious()],
+    ]) {
+      const result = merge(target, source);
+      assert.equal(Object.getPrototypeOf(result), Object.prototype);
+      assert.equal(Object.hasOwn(result, '__proto__'), false);
+      assert.equal(result.polluted, undefined);
+      assert.equal(result.safe, 1);
+    }
+    const result = merge({ nested: malicious(), list: [malicious()] }, { nested: { next: 2 } });
+    assert.deepEqual(result, { nested: { safe: 1, next: 2 }, list: [{ safe: 1 }] });
+    assert.equal(Object.prototype.polluted, undefined);
+  });
+  test(`${entry} preserves normal merge options, arrays and symbols`, () => {
+    const symbol = Symbol('option');
+    const target = { nested: { a: 1 }, values: [1], [symbol]: { a: 1 } };
+    const source = { nested: { b: 2 }, values: [2], [symbol]: { b: 2 } };
+    assert.deepEqual(merge(target, source), { nested: { a: 1, b: 2 }, values: [1, 2], [symbol]: { a: 1, b: 2 } });
+    assert.deepEqual(merge(target, source, { arrayMerge: (_, incoming) => incoming }).values, [2]);
+    assert.equal(merge({}, target, { clone: false }).nested, target.nested);
+    assert.deepEqual(merge({ value: { a: 1 } }, { value: { b: 2 } }, {
+      customMerge: key => key === 'value' ? (a, b) => ({ ...a, ...b, custom: true }) : undefined,
+    }), { value: { a: 1, b: 2, custom: true } });
+    assert.deepEqual(merge.all([{ a: 1 }, { b: 2 }]), { a: 1, b: 2 });
+    assert.deepEqual(target, { nested: { a: 1 }, values: [1], [symbol]: { a: 1 } });
+  });
+}
 
 test('all lockfile copies contain the reviewed patches', () => verifyPatchedDependencies());
 test('patch verification accepts LF and CRLF but rejects changed or missing source in every copy', () => {

@@ -62,8 +62,10 @@ Node 建置完成後，可用 `npm run preview` 預覽，或以 `node .output/se
 
 TypeScript 6、H3 1 與 Node 24 型別是目前通過驗證的相容組合。更新 i18n 時，請一併更新 lockfile 中相容的 `vue-i18n` 與 `@intlify/*` 相依。
 
-`braces` 與 `node-forge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。
+Nuxt 已更新至 `4.6.3`、`vue-tsc` 至 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至安全版本；`node-forge` 使用官方 `1.4.2` 修正，已移除舊補丁。
 
-原始 `npm audit` 仍會列出 `node-forge` 的 `GHSA-86w9-cpqp-85rv` 與其相依鏈。`audit:security` 會驗證已知補丁並拒絕其他 advisory，通過不代表原始 audit 為零漏洞。
+`braces` 與 `deepmerge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。`deepmerge` 補丁阻擋兩個合併來源的 `__proto__` 鍵，並涵蓋原始碼、CommonJS 與 UMD 入口；回歸測試檢查原型污染與一般合併行為。
+
+原始 `npm audit` 目前仍列出 7 個低風險項目，皆來自 `deepmerge` 的 `GHSA-gcqx-w48m-w2h4` 與其相依鏈。上游尚無官方修正版；`audit:security` 會驗證補丁內容並拒絕其他 advisory，通過不代表原始 audit 為零漏洞。
 
 更新套件時先執行 `npm outdated`、`npm audit`。esbuild 安裝腳本採精確版本白名單；升級後先檢查腳本，再執行 `npm install-scripts approve esbuild`、`npm install-scripts prune`。

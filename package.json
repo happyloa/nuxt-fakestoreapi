@@ -24,7 +24,7 @@
     "@nuxtjs/i18n": "^10.6.0",
     "@pinia/nuxt": "^1.0.3",
     "h3": "^1.15.11",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.6.3",
     "pinia": "^4.1.0",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"
@@ -34,7 +34,7 @@
     "@types/node": "^24.19.2",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
-    "vue-tsc": "^3.3.13"
+    "vue-tsc": "^3.3.14"
   },
   "allowScripts": {
     "esbuild@0.25.12": true,
@@ -44,12 +44,12 @@
     "@intlify/unplugin-vue-i18n": {
       "@intlify/vue-i18n-extensions": "^9.0.0"
     },
-    "archiver-utils": {
-      "glob": "^13.0.6"
-    }
+    "glob": "^14.0.3",
+    "minimatch": "^11.0.4",
+    "node-forge": "^1.4.2"
   },
   "patchedDependencies": {
-    "node-forge@1.4.0": "patches/node-forge@1.4.0.patch",
-    "braces@3.0.3": "patches/braces@3.0.3.patch"
+    "braces@3.0.3": "patches/braces@3.0.3.patch",
+    "deepmerge@4.3.1": "patches/deepmerge@4.3.1.patch"
   }
 }

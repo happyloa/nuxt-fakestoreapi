@@ -10,11 +10,13 @@
       "lib/utils.js": "fbc288b6a64f44ce8d59a54544ebc51512a92f6a2ad304626e44a9c07d78fced"
     }
   },
-  "node-forge": {
-    "version": "1.4.0",
-    "advisory": "GHSA-86w9-cpqp-85rv",
+  "deepmerge": {
+    "version": "4.3.1",
+    "advisory": "GHSA-gcqx-w48m-w2h4",
     "files": {
-      "lib/rsa.js": "cf7c6b5d78f5a50956b618a0d441d12d226b3c679142dfadd2b294005001d7ad"
+      "index.js": "8d4edb7c70ff23dcc2766507b2b17b86b81b81f79032e3ff42c80c872318ccf6",
+      "dist/cjs.js": "f30c7f31ea7f1f2d13662769030826bf3bffc9116c403ee5ef3d2f9226b37bc2",
+      "dist/umd.js": "5de5f2fb31289ae2d0fd1cc2bdd766e513bc5f483818d039c88275e79c797033"
     }
   }
 }
