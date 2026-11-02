@@ -1,8 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 
-const siteUrl =
-  process.env.NUXT_PUBLIC_SITE_URL ||
-  "https://nuxt-fakestoreapi.worksbyaaron.com";
+const siteUrl = "https://nuxt-fakestoreapi.worksbyaaron.com";
 
 export default defineNuxtConfig({
   compatibilityDate: "2026-08-01",
@@ -34,15 +32,15 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
-    fakeStoreApiBase:
-      process.env.NUXT_FAKE_STORE_API_BASE || "https://fakestoreapi.com",
+    fakeStoreApiBase: "https://fakestoreapi.com",
     public: {
       siteUrl,
+      i18n: {
+        baseUrl: siteUrl,
+      },
     },
   },
 
-  // Bundle the small Vue helper instead of asking Nitro to resolve its package
-  // directory; Node deprecates the trailing-slash export lookup (DEP0155).
   nitro: {
     cloudflare: {
       nodeCompat: true,
@@ -50,19 +48,12 @@ export default defineNuxtConfig({
       deployConfig: false,
     },
     externals: {
-      // Nuxt 4.6 renderer paths need separator-independent matching on Windows.
-      inline: [
-        "@vue/shared",
-        // Vite emits both absolute and bare Pinia imports on Windows. Bundle
-        // both paths so the Nuxt plugin and stores use the same instance.
-        "pinia",
-        /[\\/]node_modules[\\/]nuxt[\\/]dist[\\/]/,
-      ],
+      // Bundle Pinia so the Nuxt plugin and stores share one instance in SSR.
+      inline: ["pinia"],
     },
   },
 
   i18n: {
-    baseUrl: siteUrl,
     locales: [
       { code: "zh", name: "繁體中文", language: "zh-TW", file: "zh.json" },
       { code: "en", name: "English", language: "en-US", file: "en.json" },
@@ -79,7 +70,6 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
-    optimizeDeps: { exclude: ["@nuxtjs/i18n"] },
   },
 
   css: ["~/assets/css/tailwind.css"],

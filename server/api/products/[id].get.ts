@@ -16,5 +16,5 @@ function parseProductId(value: string | undefined): number {
 
 export default defineEventHandler(async (event) => {
   const id = parseProductId(getRouterParam(event, "id"));
-  return getProduct(id);
+  return getProduct(event, id);
 });

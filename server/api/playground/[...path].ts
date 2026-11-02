@@ -31,7 +31,7 @@ export default defineEventHandler(async (event): Promise<unknown> => {
     body = input as Record<string, unknown>;
   }
   try {
-    const base = String(useRuntimeConfig().fakeStoreApiBase).replace(/\/+$/, "");
+    const base = String(useRuntimeConfig(event).fakeStoreApiBase).replace(/\/+$/, "");
     const result = await $fetch<unknown>(`${base}/${path.split("/").map(encodeURIComponent).join("/")}`, {
       method: method as "GET" | "POST" | "PUT" | "PATCH" | "DELETE", query, body, timeout: 8000, retry: 0,
     });

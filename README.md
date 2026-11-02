@@ -28,6 +28,10 @@ npm run dev
 | `NUXT_PUBLIC_I18N_BASE_URL` | 語系連結的公開網址，應與上一項一致 |
 | `NUXT_FAKE_STORE_API_BASE` | 伺服器端上游 API，預設 `https://fakestoreapi.com` |
 
+`nuxt.config.ts` 只設定 runtime config 預設值，由 Nuxt 在執行時套用上述環境變數。i18n 的 `baseUrl` 放在 `runtimeConfig.public.i18n`，讓同一份建置產物可切換部署網址；`NUXT_PUBLIC_SITE_URL` 與 `NUXT_PUBLIC_I18N_BASE_URL` 請設為相同值。伺服器 API 使用 `useRuntimeConfig(event)` 讀取該次請求的設定。
+
+直接執行 Node 正式產物時不會載入 `.env`，需由啟動環境提供變數；Pages 則在對應的 production／preview 環境設定。參考 [Nuxt runtime config](https://nuxt.com/docs/4.x/guide/going-further/runtime-config) 與 [Nuxt i18n runtime config](https://i18n.nuxtjs.org/docs/api/runtime-config)。
+
 ## 驗證
 
 ```bash
@@ -63,6 +67,8 @@ Node 建置完成後，可用 `npm run preview` 預覽，或以 `node .output/se
 TypeScript 6、H3 1 與 Node 24 型別是目前通過驗證的相容組合。更新 i18n 時，請一併更新 lockfile 中相容的 `vue-i18n` 與 `@intlify/*` 相依。
 
 Nuxt 已更新至 `4.6.3`、`vue-tsc` 至 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至安全版本；`node-forge` 使用官方 `1.4.2` 修正，已移除舊補丁。
+
+Nuxt `4.6.3` 已處理 Vue 打包與 Windows renderer 路徑，因此移除重複的 `@vue/shared`、Nuxt dist inline 設定；保留 Pinia inline，確保 SSR 的 Nuxt plugin 與 stores 使用同一個實例。Tailwind 維持官方 Vite plugin 配置，i18n 模組的相依最佳化交由模組與 Nuxt 管理。
 
 `braces` 與 `deepmerge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。`deepmerge` 補丁阻擋兩個合併來源的 `__proto__` 鍵，並涵蓋原始碼、CommonJS 與 UMD 入口；回歸測試檢查原型污染與一般合併行為。
 

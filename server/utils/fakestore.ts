@@ -1,5 +1,5 @@
 import type { Product } from "#shared/types/fakestore";
-import { createError } from "h3";
+import { createError, type H3Event } from "h3";
 import type {
   CatalogPayload,
   PublicUser,
@@ -197,11 +197,12 @@ function normalizePublicUser(value: unknown): PublicUser {
 }
 
 async function requestFakeStore(
+  event: H3Event,
   path: string,
   options: UpstreamRequestOptions = {},
 ): Promise<unknown> {
   try {
-    const configuredBaseUrl = useRuntimeConfig().fakeStoreApiBase;
+    const configuredBaseUrl = useRuntimeConfig(event).fakeStoreApiBase;
     const baseUrl =
       typeof configuredBaseUrl === "string" && configuredBaseUrl.length > 0
         ? configuredBaseUrl.replace(/\/+$/, "")
@@ -273,11 +274,11 @@ function getUserIdFromTrustedLoginToken(token: string): number | null {
   }
 }
 
-export async function getCatalog(): Promise<CatalogPayload> {
+export async function getCatalog(event: H3Event): Promise<CatalogPayload> {
   try {
     const [products, categories] = await Promise.all([
-      requestFakeStore("/products"),
-      requestFakeStore("/products/categories"),
+      requestFakeStore(event, "/products"),
+      requestFakeStore(event, "/products/categories"),
     ]);
     const catalog = {
       products: normalizeProducts(products),
@@ -296,9 +297,9 @@ export async function getCatalog(): Promise<CatalogPayload> {
   }
 }
 
-export async function getProduct(id: number): Promise<Product> {
+export async function getProduct(event: H3Event, id: number): Promise<Product> {
   try {
-    const response = await requestFakeStore(`/products/${id}`, {
+    const response = await requestFakeStore(event, `/products/${id}`, {
       notFoundMessage: "Product not found",
     });
     if (response === null) throw createError({ statusCode: 404, statusMessage: "Product not found" });
@@ -316,11 +317,12 @@ export async function getProduct(id: number): Promise<Product> {
 }
 
 export async function authenticateWithFakeStore(
+  event: H3Event,
   username: string,
   password: string,
 ): Promise<string> {
   const response = requireRecord(
-    await requestFakeStore("/auth/login", {
+    await requestFakeStore(event, "/auth/login", {
       method: "POST",
       body: { username, password },
       unauthorizedMessage: "Invalid credentials",
@@ -337,6 +339,7 @@ export async function authenticateWithFakeStore(
  * login endpoint. It must never be accepted from a browser cookie or request.
  */
 export async function getPublicUserAfterUpstreamLogin(
+  event: H3Event,
   token: string,
 ): Promise<PublicUser> {
   const userId = getUserIdFromTrustedLoginToken(token);
@@ -344,7 +347,7 @@ export async function getPublicUserAfterUpstreamLogin(
 
   try {
     return normalizePublicUser(
-      await requestFakeStore(`/users/${userId}`, {
+      await requestFakeStore(event, `/users/${userId}`, {
         notFoundMessage: "User not found",
         unauthorizedMessage: "Your session is invalid or expired",
       }),
