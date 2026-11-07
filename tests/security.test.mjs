@@ -7,22 +7,23 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { ZipArchive } from 'archiver';
 import { verifyPatchedDependencies, reviewAudit } from '../scripts/audit-security.mjs';
 
 const require = createRequire(import.meta.url);
 const braces = require('braces');
 const forge = require('node-forge');
 
-test('Nitro archive helpers still expand and archive files with the security overrides', { timeout: 5000 }, async () => {
+test('Nitro glob and archive helpers still match and archive files with the security overrides', { timeout: 5000 }, async () => {
   const directory = mkdtempSync(join(tmpdir(), 'storefront-archive-'));
-  const archive = require('archiver')('zip');
+  const archive = new ZipArchive();
   try {
     mkdirSync(join(directory, 'nested'));
     for (const path of ['first.txt', 'nested/second.txt', 'nested/skip.txt', 'other.json']) {
       writeFileSync(join(directory, path), 'fixture');
     }
     const expected = ['first.txt', 'nested/second.txt'];
-    const matches = require('archiver-utils').file.expand({ cwd: directory }, ['**/*.txt', '!**/skip.txt']);
+    const matches = require('glob').globSync('**/*.txt', { cwd: directory, nodir: true, ignore: ['**/skip.txt'] });
     assert.deepEqual(matches.map(path => path.replace(/\\/g, '/')).sort(), expected);
     const entries = [];
     archive.on('entry', entry => entries.push(entry.name));

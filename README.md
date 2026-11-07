@@ -11,14 +11,25 @@
 
 ## 本機開發
 
-本機與 Pages 使用 Node.js `24.21.0`、npm `12.2.1`，分別記錄在 `.node-version` 與 `package.json`。`.npmrc` 會拒絕不符合 `engines` 的版本。
+建議使用 Node.js `24.21.0`、npm `12.2.2`，分別記錄在 `.node-version` 與 `package.json`。`.npmrc` 會拒絕不符合 `engines` 的版本；目前最低需要 npm `12.2.1`，才能套用原生安全補丁與讀取 lockfile v4。`packageManager` 只記錄版本，不會自動升級本機 npm。
 
-若 npm 版本較舊，先執行 `npm install -g npm@12.2.1`，再安裝並啟動：
+若 npm 版本較舊，先執行 `npm install -g npm@12.2.2`，確認 `npm --version` 至少為 `12.2.1`，再安裝並啟動：
 
 ```bash
 npm ci
 npm run dev
 ```
+
+Windows PowerShell 若因執行原則攔截 `npm.ps1`，請使用 `npm.cmd`。若全域升級成功後版本仍未改變，通常是 PATH 優先指向 Node 隨附的舊 npm；可更新目前 Node 所在目錄的 npm，再確認版本：
+
+```powershell
+npm.cmd install --global npm@12.2.2 --prefix (Split-Path (Get-Command node.exe).Source)
+npm.cmd --version
+npm.cmd ci
+npm.cmd run dev
+```
+
+若顯示 `EBADENGINE`，請依錯誤中的 `Required` 與 `Actual` 更新 Node／npm；不要關閉 `engine-strict`，以免舊 npm 忽略安全補丁。
 
 需要覆寫設定時，複製 `.env.example` 為 `.env`：
 
@@ -66,9 +77,19 @@ Node 建置完成後，可用 `npm run preview` 預覽，或以 `node .output/se
 
 TypeScript 6、H3 1 與 Node 24 型別是目前通過驗證的相容組合。更新 i18n 時，請一併更新 lockfile 中相容的 `vue-i18n` 與 `@intlify/*` 相依。
 
-Nuxt 已更新至 `4.6.3`、`vue-tsc` 至 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至安全版本；`node-forge` 使用官方 `1.4.2` 修正，已移除舊補丁。
+Nuxt 已更新至 `4.6.4`、Vue 至 `3.5.45`、Tailwind CSS 與其 Vite plugin 至 `4.3.5`，`vue-tsc` 維持最新版 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至 `14.0.4`、`11.0.5` 與 `1.4.3`；`node-forge` 使用官方修正，無需本機補丁。
 
-Nuxt `4.6.3` 已處理 Vue 打包與 Windows renderer 路徑，因此移除重複的 `@vue/shared`、Nuxt dist inline 設定；保留 Pinia inline，確保 SSR 的 Nuxt plugin 與 stores 使用同一個實例。Tailwind 維持官方 Vite plugin 配置，i18n 模組的相依最佳化交由模組與 Nuxt 管理。
+直接宣告開發相依 `esbuild@^0.28.2`，滿足 Vite 8 的 optional peer 要求。i18n 的 `@intlify/bundle-utils` 仍使用其相容的 `esbuild@0.25.12`；兩者分別安裝，避免舊版被提升至根目錄後導致 `ERESOLVE`。
+
+以下套件保留相容主版本，因此 `npm outdated` 仍會列出它們；升級時需連同工具鏈遷移：
+
+| 套件 | 使用版本 | 最新主版本 | 保留原因 |
+| --- | --- | --- | --- |
+| `h3` | `1.15.11` | `2.0.8` | Nuxt `4.6.4` 的 Nitro 2 整合仍依賴 H3 1；H3 2 的事件與請求 API 不相容。 |
+| `typescript` | `6.0.3` | `7.0.2` | `vue-tsc` 與購物車測試仍使用 JavaScript compiler API；TypeScript 7 未提供相同入口。 |
+| `@types/node` | `24.19.2` | `26.6.6` | 型別需與專案的 Node 24 執行環境一致。 |
+
+Nuxt 已處理 Vue 打包與 Windows renderer 路徑，無需額外的 `@vue/shared`、Nuxt dist inline 設定；保留 Pinia inline，確保 SSR 的 Nuxt plugin 與 stores 使用同一個實例。Tailwind 維持官方 Vite plugin 配置，i18n 模組的相依最佳化交由模組與 Nuxt 管理。
 
 `braces` 與 `deepmerge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。`deepmerge` 補丁阻擋兩個合併來源的 `__proto__` 鍵，並涵蓋原始碼、CommonJS 與 UMD 入口；回歸測試檢查原型污染與一般合併行為。
 
