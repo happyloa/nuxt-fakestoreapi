@@ -7,6 +7,8 @@ import sessionPost from "../server/api/auth/session.post.ts";
 import sessionDelete from "../server/api/auth/session.delete.ts";
 import me from "../server/api/auth/me.get.ts";
 import orders from "../server/api/demo/orders.post.ts";
+import playground from "../server/api/playground/[...path].ts";
+import { getProduct, UPSTREAM_FETCH_OPTIONS } from "../server/utils/fakestore.ts";
 import { MAX_API_BODY_BYTES } from "../server/utils/request-body.ts";
 
 // Nitro auto-imports used by the handlers, stubbed with a fake upstream.
@@ -19,7 +21,13 @@ const upstreamUser = {
   phone: "1-570-236-7033",
 };
 globalThis.useRuntimeConfig = () => runtimeConfig;
+const upstreamCalls = [];
 globalThis.$fetch = async (url, options = {}) => {
+  upstreamCalls.push({ url, options });
+  if (url === "https://upstream.test/products/1") return { id: 1, title: "Bag", token: "secret" };
+  // Fake Store answers unknown ids with an empty body (parsed to null).
+  if (url === "https://upstream.test/products/999") return null;
+  if (url === "https://upstream.test/products/category/html") return "<script>alert(1)</script>";
   if (url === "https://upstream.test/auth/login") {
     if (options.body?.password === "correct") return { token: token({ sub: 2 }) };
     throw Object.assign(new Error("Unauthorized"), { statusCode: 401 });
@@ -39,7 +47,9 @@ app.use(createRouter()
   .post("/api/auth/session", sessionPost)
   .delete("/api/auth/session", sessionDelete)
   .get("/api/auth/me", me)
-  .post("/api/demo/orders", orders));
+  .post("/api/demo/orders", orders)
+  .use("/api/playground/**:path", playground)
+  .get("/account", () => "page"));
 const listener = toNodeListener(app);
 
 function request(path, { method = "GET", headers = {}, body, cookie } = {}) {
@@ -56,7 +66,8 @@ function request(path, { method = "GET", headers = {}, body, cookie } = {}) {
   });
 }
 
-const sessionCookie = (response) => response.headers.getSetCookie().find((value) => value.startsWith("storefront_session="));
+// Outside dev the cookie carries the __Host- prefix.
+const sessionCookie = (response) => response.headers.getSetCookie().find((value) => value.startsWith("__Host-storefront_session="));
 const cookiePair = (setCookie) => setCookie.split(";")[0];
 
 async function login() {
@@ -122,7 +133,7 @@ test("without NUXT_SESSION_PASSWORD sessions still work on the instance that cre
   } finally {
     runtimeConfig.sessionPassword = previous;
   }
-  assert.ok(warn.mock.callCount() <= 1);
+  assert.equal(warn.mock.callCount(), 1, "the missing key is reported once per instance");
 });
 
 test("demo orders require a session and validate every line", async () => {
@@ -154,4 +165,30 @@ test("logout clears the session cookie", async () => {
   const response = await request("/api/auth/session", { method: "DELETE", cookie });
   assert.equal(response.status, 200);
   assert.match(sessionCookie(response), /Max-Age=0/);
+});
+
+test("the playground relays only JSON objects or arrays and never follows redirects", async () => {
+  upstreamCalls.length = 0;
+  const ok = await request("/api/playground/products/1");
+  assert.equal(ok.status, 200);
+  assert.deepEqual(await ok.json(), { id: 1, title: "Bag" });
+  assert.equal(ok.headers.get("cache-control"), "no-store");
+  assert.equal(upstreamCalls[0].options.redirect, "manual");
+  assert.equal(upstreamCalls[0].options.parseResponse, UPSTREAM_FETCH_OPTIONS.parseResponse);
+  assert.equal((await request("/api/playground/products/999")).status, 404);
+  assert.equal((await request("/api/playground/products/category/html")).status, 502);
+});
+
+test("upstream bodies must be JSON; an empty body means not found", async () => {
+  const parse = UPSTREAM_FETCH_OPTIONS.parseResponse;
+  assert.equal(parse(""), null);
+  assert.deepEqual(parse('{"id":1}'), { id: 1 });
+  assert.throws(() => parse("<html></html>"));
+  await assert.rejects(getProduct({}, 999), (error) => error.statusCode === 404);
+});
+
+test("pages rendered for a signed-in visitor are kept out of shared caches", async () => {
+  assert.equal((await request("/account")).headers.get("cache-control"), null);
+  const { cookie } = await login();
+  assert.equal((await request("/account", { cookie })).headers.get("cache-control"), "private, no-store");
 });

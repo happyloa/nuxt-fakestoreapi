@@ -1,35 +1,30 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import { useNotificationsStore } from "~/stores/notifications";
-
 const authStore = useAuthStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
+const getRouteBaseName = useRouteBaseName();
 const route = useRoute();
+const router = useRouter();
 
-// 安全的重導目標：僅接受站內相對路徑，避免 open redirect
+// 上一次失敗的訊息不帶到這次造訪。
+authStore.loginError = "";
+
+// 導回目標是在當時的語系下產生的；依目前語系重新產生，
+// 避免使用者在登入頁切換語言後又被導回原本的語系。
 const resolveRedirect = () => {
-  const r = route.query.redirect;
-  if (
-    typeof r === "string" &&
-    r.startsWith("/") &&
-    !r.startsWith("//") &&
-    !/[\\\x00-\x1f]/.test(r)
-  ) {
-    return r;
-  }
-  return localePath("/account");
+  const target = safeRedirectPath(route.query.redirect);
+  if (!target) return localePath("/account");
+  const resolved = router.resolve(target);
+  const name = getRouteBaseName(resolved);
+  return typeof name === "string"
+    ? localePath({ name, params: resolved.params, query: resolved.query, hash: resolved.hash })
+    : target;
 };
 
-// 已登入的使用者直接導向目標頁
 if (authStore.isAuthenticated) {
   navigateTo(resolveRedirect());
 }
-
-/**
- * 由本站伺服器建立工作階段；登入後保留訪客已選購的商品。
- */
 
 const handleSubmit = async ({
   username,
@@ -63,11 +58,12 @@ usePageSeo(() => ({
       class="flex flex-col border-rule lg:border-r lg:pr-16 dark:border-rule-dark"
     >
       <p class="meta mb-6 text-slate-500 dark:text-slate-400">Storefront Lab</p>
-      <h2
-        class="whitespace-pre-line text-[clamp(2.25rem,4.5vw,3.75rem)] font-extrabold leading-[0.98] tracking-heading"
+      <!-- 視覺上的標語；頁面標題是右側表單的 h1。 -->
+      <p
+        class="whitespace-pre-line text-[clamp(2.25rem,4.5vw,3.75rem)] font-extrabold leading-display tracking-heading"
       >
         {{ $t("auth.login.welcome") }}
-      </h2>
+      </p>
       <p
         class="mt-5 max-w-sm text-sm leading-7 text-slate-600 dark:text-slate-300"
       >
@@ -75,7 +71,8 @@ usePageSeo(() => ({
       </p>
       <NuxtLink
         :to="localePath('/')"
-        class="mt-8 inline-flex items-center gap-2 self-start border-b-2 border-slate-900 pb-1 text-sm font-bold hover:border-brand hover:text-brand lg:mt-auto dark:border-paper dark:hover:border-brand-light dark:hover:text-brand-light"
+        :class="UNDERLINE_LINK_CLASS"
+        class="mt-8 self-start lg:mt-auto"
         >{{ $t("cart.continueShopping")
         }}<SiteIcon name="arrow" class="h-4 w-4"
       /></NuxtLink>

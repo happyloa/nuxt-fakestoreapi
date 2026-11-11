@@ -1,9 +1,9 @@
 import {
   createError,
   defineEventHandler,
-  setResponseHeader,
 } from "h3";
 import type { CartLine, DemoOrder } from "#shared/types/storefront";
+import { MAX_CART_LINES, MAX_LINE_QUANTITY, parseEntityId } from "#shared/utils/limits";
 import { isRecord } from "../../utils/fakestore";
 import { getSessionUser } from "../../utils/session";
 import { readBoundedJsonBody } from "../../utils/request-body";
@@ -16,16 +16,15 @@ function invalidOrderInput() {
   return createError({ statusCode: 400, statusMessage: "Invalid order input" });
 }
 
-function parsePositiveInteger(value: unknown, maximum: number): number {
+function parseQuantity(value: unknown): number {
   if (
     typeof value !== "number" ||
     !Number.isSafeInteger(value) ||
     value < 1 ||
-    value > maximum
+    value > MAX_LINE_QUANTITY
   ) {
     throw invalidOrderInput();
   }
-
   return value;
 }
 
@@ -34,7 +33,7 @@ function parseDemoOrderInput(value: unknown): DemoOrderInput {
     !isRecord(value) ||
     !Array.isArray(value.lines) ||
     value.lines.length === 0 ||
-    value.lines.length > 50
+    value.lines.length > MAX_CART_LINES
   ) {
     throw invalidOrderInput();
   }
@@ -45,9 +44,10 @@ function parseDemoOrderInput(value: unknown): DemoOrderInput {
       throw invalidOrderInput();
     }
 
-    const productId = parsePositiveInteger(line.productId, 1_000_000);
-    const quantity = parsePositiveInteger(line.quantity, 99);
-    if (productIds.has(productId)) throw invalidOrderInput();
+    // JSON ids must be numbers; numeric strings are rejected.
+    const productId = typeof line.productId === "number" ? parseEntityId(line.productId) : null;
+    const quantity = parseQuantity(line.quantity);
+    if (productId === null || productIds.has(productId)) throw invalidOrderInput();
 
     productIds.add(productId);
     return { productId, quantity };
@@ -57,7 +57,6 @@ function parseDemoOrderInput(value: unknown): DemoOrderInput {
 }
 
 export default defineEventHandler(async (event): Promise<DemoOrder> => {
-  setResponseHeader(event, "Cache-Control", "no-store");
   const user = await getSessionUser(event);
   if (!user) {
     throw createError({ statusCode: 401, statusMessage: "Authentication is required" });

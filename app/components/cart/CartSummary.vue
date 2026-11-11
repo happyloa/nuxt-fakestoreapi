@@ -8,12 +8,12 @@ withDefaults(
   defineProps<{
     total?: number;
     itemCount?: number;
-    checkoutLoading?: boolean;
+    loading?: boolean;
   }>(),
   {
     total: 0,
     itemCount: 0,
-    checkoutLoading: false,
+    loading: false,
   },
 );
 </script>
@@ -39,7 +39,7 @@ withDefaults(
     </p>
     <div class="mt-6 space-y-2">
       <BaseButton
-        :loading="checkoutLoading"
+        :loading="loading"
         :disabled="!itemCount"
         block
         size="lg"
@@ -49,13 +49,13 @@ withDefaults(
       /></BaseButton>
       <BaseButton
         variant="ghost"
-        :disabled="!itemCount || checkoutLoading"
+        :disabled="!itemCount || loading"
         block
         @click="$emit('clear')"
         >{{ $t("cart.summary.clear") }}</BaseButton
       >
     </div>
-    <p class="meta mt-4 text-slate-500 dark:text-slate-400">
+    <p class="mt-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
       {{ $t("cart.demoNotice") }}
     </p>
   </section>

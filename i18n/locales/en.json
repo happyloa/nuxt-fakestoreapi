@@ -1,7 +1,7 @@
 {
   "header": {
     "theme": {
-      "toggleLabel": "Toggle site theme",
+      "toggleLabel": "Dark mode",
       "light": "Switch to light mode",
       "dark": "Switch to dark mode"
     },
@@ -19,7 +19,6 @@
     "account": "My Account",
     "menu": "Menu",
     "ariaPrimary": "Primary navigation",
-    "ariaToggle": "Toggle navigation",
     "ariaClose": "Close navigation menu"
   },
   "products": {
@@ -55,9 +54,8 @@
     },
     "listingTitle": "All products",
     "empty": {
-      "title": "No products found",
-      "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
-      "cta": "Create your first product",
+      "title": "The catalogue is empty",
+      "description": "The Fake Store API returned no products. Please try again shortly.",
       "noResults": {
         "title": "No matching products",
         "description": "Try adjusting or clearing your current search and filters.",
@@ -99,7 +97,8 @@
       "electronics": "Electronics"
     },
     "listingDescription": "Filter by category, search by name or sort by price.",
-    "resultsCount": "{count} products"
+    "resultsCount": "{n} product | {n} products",
+    "ratingSummary": "Rated {rate} out of 5 from {count} reviews"
   },
   "cart": {
     "title": "Shopping cart",
@@ -188,7 +187,6 @@
     "userUpdated": "Updated user {username}.",
     "userDeleted": "Deleted user #{id}.",
     "checkoutSuccess": "Checkout complete! Order #{id} is ready.",
-    "checkoutEmpty": "Add some items before checking out.",
     "checkoutLogin": "Log in to checkout your cart.",
     "checkoutError": "We couldn't finish the checkout. Try again soon.",
     "cartLimit": "Cart limit reached: up to 99 of each product and 50 products in total.",
@@ -210,20 +208,22 @@
       "userId": "User ID",
       "payload": "JSON payload",
       "sortAsc": "ID ascending (asc)",
-      "sortDesc": "ID descending (desc)"
+      "sortDesc": "ID descending (desc)",
+      "limit": "Limit",
+      "sort": "Sort",
+      "method": "Method"
     },
     "errors": {
       "generic": "Something went wrong. Please try again.",
-      "idRequired": "Please enter an ID first.",
       "invalidJson": "The JSON payload could not be parsed.",
-      "userIdRequired": "Please enter a user ID first.",
       "invalidInput": "The request was rejected. Check the fields and try again.",
       "notFound": "Not found, or this operation is not supported.",
       "unavailable": "The demo service is temporarily unavailable. Please try again shortly."
     },
     "results": {
       "preview": "Response preview",
-      "response": "Response"
+      "response": "Response",
+      "received": "Response received."
     },
     "products": {
       "title": "Products endpoints",
@@ -231,18 +231,15 @@
       "queryDescription": "Combine category, limit and sorting to mirror the /products endpoint.",
       "querySuccess": "Fetched {count} products.",
       "singleTitle": "Get product by ID",
-      "singleDescription": "Retrieve a single product directly from /products/:id.",
+      "singleDescription": "Fetch one product through this site's /api/products/:id, which returns normalised data.",
       "updateTitle": "Update product",
-      "updateDescription": "Send a PUT request to update any product fields.",
+      "updateDescription": "Send PUT to replace a product or PATCH to change some fields.",
       "updateSuccess": "Product #{id} updated successfully.",
       "deleteTitle": "Delete product",
       "deleteDescription": "Issue a DELETE request to remove a product.",
       "deleteSuccess": "Product #{id} deleted successfully.",
       "fields": {
-        "category": "Category",
-        "limit": "Limit",
-        "sort": "Sort",
-        "method": "Method"
+        "category": "Category"
       },
       "categoriesTitle": "Fetch product categories",
       "categoriesDescription": "Call /products/categories to retrieve all available category names."
@@ -260,14 +257,12 @@
       "createDescription": "Send a POST request with a custom payload.",
       "createSuccess": "Cart #{id} created successfully.",
       "updateTitle": "Update cart",
-      "updateDescription": "Update cart contents with PUT /carts/:id.",
+      "updateDescription": "Send PUT to replace a cart or PATCH to change some fields.",
       "updateSuccess": "Cart #{id} updated successfully.",
       "deleteTitle": "Delete cart",
       "deleteDescription": "Delete a cart record with DELETE /carts/:id.",
       "deleteSuccess": "Cart #{id} deleted successfully.",
       "fields": {
-        "limit": "Limit",
-        "sort": "Sort",
         "startDate": "Start date",
         "endDate": "End date"
       }
@@ -280,18 +275,14 @@
       "createDescription": "POST a new user record with nested address data.",
       "createSuccess": "User {username} created successfully.",
       "updateTitle": "Update user",
-      "updateDescription": "PUT changes to any user fields.",
+      "updateDescription": "Send PUT to replace a user or PATCH to change some fields.",
       "updateSuccess": "User #{id} updated successfully.",
       "deleteTitle": "Delete user",
       "deleteDescription": "Remove a user with DELETE /users/:id.",
       "deleteSuccess": "User #{id} deleted successfully.",
       "queryTitle": "Query users",
       "queryDescription": "Combine limit and sorting to mirror the /users endpoint.",
-      "querySuccess": "Fetched {count} users.",
-      "fields": {
-        "limit": "Limit",
-        "sort": "Sort"
-      }
+      "querySuccess": "Fetched {count} users."
     },
     "demoNotice": "This playground uses public mock data. Changes are not persisted. Do not enter real personal data or passwords."
   },
@@ -330,12 +321,12 @@
   },
   "seo": {
     "home": {
-      "title": "Storefront Lab | Everyday finds",
+      "title": "Everyday finds",
       "description": "Explore clothing, jewelry and electronics. Browse products and try the demo shopping experience at Storefront Lab."
     },
     "cart": {
       "title": "Shopping Cart",
-      "description": "View and manage your Fake Store API shopping cart."
+      "description": "Review the items in your cart and try the demo checkout."
     },
     "login": {
       "title": "Login",
@@ -343,7 +334,7 @@
     },
     "api": {
       "title": "API Playground",
-      "description": "Experiment with every Fake Store API endpoint directly from the dashboard."
+      "description": "Call each Fake Store API endpoint from the browser and inspect the raw response."
     },
     "newProduct": {
       "title": "Create Product",
@@ -359,7 +350,7 @@
     },
     "account": {
       "title": "My Account",
-      "description": "View and manage your account information and order history."
+      "description": "Your demo account profile and your latest demo checkout."
     }
   }
 }

@@ -1,60 +1,48 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
-import { useNotificationsStore } from "~/stores/notifications";
-
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const notifications = useNotificationsStore();
 const { t } = useI18n();
 const localePath = useLocalePath();
-const checkoutLoading = ref(false);
 
-const handleClear = () => {
-  cartStore.clear();
-  notifications.info(t("notifications.cartCleared"), 2000);
-};
-
-const handleIncrement = (id: number) => {
-  cartStore.increment(id);
-};
-
-const handleDecrement = (id: number) => {
-  cartStore.decrement(id);
-};
+// 移除商品或清空後，被點的按鈕會從畫面消失；把焦點交給清單標題，
+// 鍵盤與螢幕閱讀器使用者才不會回到頁首。
+const itemsHeading = useTemplateRef<HTMLElement>("itemsHeading");
+const focusItems = () => nextTick(() => itemsHeading.value?.focus());
 
 const handleRemove = (id: number) => {
   cartStore.removeItem(id);
-  notifications.info(t("notifications.cartItemRemoved"), 2000);
+  notifications.info(t("notifications.cartItemRemoved"));
+  focusItems();
+};
+
+const handleClear = () => {
+  cartStore.clear();
+  notifications.info(t("notifications.cartCleared"));
+  focusItems();
+};
+
+const goToLogin = () => {
+  notifications.info(t("notifications.checkoutLogin"));
+  return navigateTo({ path: localePath("/login"), query: { redirect: localePath("/cart") } });
 };
 
 const handleCheckout = async () => {
-  if (checkoutLoading.value) return;
-  if (!authStore.isAuthenticated) {
-    notifications.info(t("notifications.checkoutLogin"), 2500);
-    navigateTo({ path: localePath("/login"), query: { redirect: localePath("/cart") } });
-    return;
-  }
-  if (!cartStore.items.length) {
-    notifications.info(t("notifications.checkoutEmpty"), 2500);
-    return;
-  }
-  checkoutLoading.value = true;
+  if (!authStore.isAuthenticated) return goToLogin();
   try {
     const order = await cartStore.checkout();
     if (order) {
-      notifications.success(
-        t("notifications.checkoutSuccess", { id: order.id }),
-        4000,
-      );
+      notifications.success(t("notifications.checkoutSuccess", { id: order.id }));
+      // The checkout button disables itself once the cart is empty.
+      focusItems();
     }
   } catch (error) {
-    notifications.error(
-      t("notifications.checkoutError"),
-      4000,
-    );
-  } finally {
-    checkoutLoading.value = false;
+    // The session expired or was cleared elsewhere: sign out here too.
+    if ((error as { statusCode?: number } | null)?.statusCode === 401) {
+      authStore.user = null;
+      return goToLogin();
+    }
+    notifications.error(t("notifications.checkoutError"));
   }
 };
 
@@ -70,19 +58,15 @@ usePageSeo(() => ({
       class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-rule pb-8 dark:border-rule-dark"
     >
       <BaseSectionHeading
-        id="cart-heading"
+        heading-id="cart-heading"
         class="mb-0!"
         :level="1"
         :title="$t('cart.title')"
         :description="$t('cart.subtitle')" />
-      <NuxtLink
-        :to="localePath('/')"
-        class="meta inline-flex min-h-11 items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
-        ><SiteIcon name="back" class="h-3.5 w-3.5" />{{ $t("cart.continueShopping") }}</NuxtLink
-      >
+      <BackLink :to="localePath('/')">{{ $t("cart.continueShopping") }}</BackLink>
     </div>
 
-    <BaseAlert v-if="cartStore.lastOrderItems.length && !cartStore.items.length" variant="success">
+    <BaseAlert v-if="cartStore.justCheckedOut" variant="success">
       {{ $t("cart.completed") }}
     </BaseAlert>
 
@@ -99,14 +83,18 @@ usePageSeo(() => ({
     <div
       class="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
       <section aria-labelledby="cart-items-heading">
-        <h2 id="cart-items-heading" class="sr-only">
+        <h2
+          id="cart-items-heading"
+          ref="itemsHeading"
+          tabindex="-1"
+          class="sr-only">
           {{ $t("cart.itemsHeading") }}
         </h2>
         <CartItemsList
           :items="cartStore.items"
           :loading="cartStore.loading || !cartStore.restored"
-          @increment="handleIncrement"
-          @decrement="handleDecrement"
+          @increment="cartStore.increment"
+          @decrement="cartStore.decrement"
           @remove="handleRemove" />
         <p
           v-if="cartStore.restored && !cartStore.items.length && !cartStore.loading"
@@ -117,7 +105,7 @@ usePageSeo(() => ({
       <CartSummary
         :total="cartStore.total"
         :item-count="cartStore.count"
-        :checkout-loading="checkoutLoading"
+        :loading="cartStore.loading"
         @clear="handleClear"
         @checkout="handleCheckout" />
     </div>

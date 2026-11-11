@@ -1,57 +1,27 @@
 <script setup lang="ts">
-/**
- * 使用者管理區塊元件
- * 提供使用者的單一取得、建立、更新與刪除功能
- */
-
+/** 會員端點：單筆、建立、查詢、更新與刪除。 */
 import {
   createUser,
   deleteUser,
   getUserById,
   getUsers,
-  patchUser,
   updateUser,
 } from "~/services/fakestore/users";
-import { useNotificationsStore } from "~/stores/notifications";
+import type { UpdateMethod } from "~/services/fakestore/client";
 import type {
-  User,
   CreateUserPayload,
   UpdateUserPayload,
+  User,
 } from "#shared/types/fakestore";
 
 const { t } = useI18n();
 const notifications = useNotificationsStore();
 
-// 查詢會員列表 (Query Users)
-const userQueryForm = reactive({
-  limit: 5,
-  sort: "desc" as "asc" | "desc",
-});
-const userQuery = useApiOperation<User[]>([]);
-const userQueryState = userQuery.state;
-const handleUserQuery = () =>
-  userQuery.run(
-    () =>
-      getUsers({
-        limit: userQueryForm.limit || undefined,
-        sort: userQueryForm.sort,
-      }),
-    {
-      success: (users) => t("api.users.querySuccess", { count: users.length }),
-    },
-  );
+const byIdForm = reactive({ id: "" });
+const byId = useApiOperation<User | null>(null);
+const runById = () => byId.run(() => getUserById(Number(byIdForm.id)));
 
-// 取得單一使用者 (Get User By ID)
-const userByIdForm = reactive({ id: "" as string | number });
-const userById = useApiOperation<User | null>(null);
-const userByIdState = userById.state;
-const handleUserById = () => {
-  if (!userByIdForm.id) return userById.fail(t("api.errors.idRequired"));
-  return userById.run(() => getUserById(Number(userByIdForm.id)));
-};
-
-// 建立使用者 (Create User)
-const userCreateForm = ref(
+const createPayload = ref(
   JSON.stringify(
     {
       email: "new.user@example.com",
@@ -66,80 +36,51 @@ const userCreateForm = ref(
         geolocation: { lat: "0", long: "0" },
       },
       phone: "02-12345678",
-    } as CreateUserPayload,
+    } satisfies CreateUserPayload,
     null,
     2,
   ),
 );
-const userCreate = useApiOperation<User | null>(null);
-const userCreateState = userCreate.state;
-const handleUserCreate = () => {
-  let payload: CreateUserPayload;
-  try {
-    payload = JSON.parse(userCreateForm.value);
-  } catch {
-    return userCreate.fail(t("api.errors.invalidJson"));
-  }
-  return userCreate.run(() => createUser(payload), {
-    success: (user) =>
-      t("api.users.createSuccess", { username: user!.username }),
+const create = useApiOperation<User | null>(null);
+const runCreate = () =>
+  create.runWithJson<CreateUserPayload>(createPayload.value, createUser, {
+    success: (user) => t("api.users.createSuccess", { username: user!.username }),
     onSuccess: (user) =>
-      notifications.success(
-        t("notifications.userCreated", { username: user!.username }),
-      ),
+      notifications.success(t("notifications.userCreated", { username: user!.username })),
   });
-};
 
-// 更新使用者 (Update User)
-const userUpdateForm = reactive({
-  id: "" as string | number,
-  method: "PUT" as "PUT" | "PATCH",
+const queryForm = reactive({ limit: 5, sort: "desc" as "asc" | "desc" });
+const query = useApiOperation<User[]>([]);
+const runQuery = () =>
+  query.run(() => getUsers({ limit: queryForm.limit || undefined, sort: queryForm.sort }), {
+    success: (users) => t("api.users.querySuccess", { count: users.length }),
+  });
+
+const updateForm = reactive({
+  id: "",
+  method: "PUT" as UpdateMethod,
   payload: '{\n  "phone": "02-8888888"\n}',
 });
-const userUpdate = useApiOperation<User | null>(null);
-const userUpdateState = userUpdate.state;
-const handleUserUpdate = () => {
-  if (!userUpdateForm.id) return userUpdate.fail(t("api.errors.idRequired"));
-  let payload: UpdateUserPayload;
-  try {
-    payload = JSON.parse(userUpdateForm.payload);
-  } catch {
-    return userUpdate.fail(t("api.errors.invalidJson"));
-  }
-  return userUpdate.run(
-    () =>
-      userUpdateForm.method === "PATCH"
-        ? patchUser(Number(userUpdateForm.id), payload)
-        : updateUser(Number(userUpdateForm.id), payload),
+const update = useApiOperation<User | null>(null);
+const runUpdate = () =>
+  update.runWithJson<UpdateUserPayload>(
+    updateForm.payload,
+    (payload) => updateUser(Number(updateForm.id), payload, updateForm.method),
     {
       success: (user) => t("api.users.updateSuccess", { id: user!.id }),
       onSuccess: (user) =>
-        notifications.info(
-          t("notifications.userUpdated", { username: user!.username }),
-        ),
+        notifications.info(t("notifications.userUpdated", { username: user!.username })),
     },
   );
-};
 
-// 刪除使用者 (Delete User)
-const userDeleteForm = reactive({ id: "" as string | number });
-const userDelete = useApiOperation<null>(null);
-const userDeleteState = userDelete.state;
-const handleUserDelete = () => {
-  if (!userDeleteForm.id) return userDelete.fail(t("api.errors.idRequired"));
-  return userDelete.run(
-    async () => {
-      await deleteUser(Number(userDeleteForm.id));
-      return null;
-    },
-    {
-      success: () => t("api.users.deleteSuccess", { id: userDeleteForm.id }),
-      onSuccess: () =>
-        notifications.info(
-          t("notifications.userDeleted", { id: userDeleteForm.id }),
-        ),
-    },
-  );
+const deleteForm = reactive({ id: "" });
+const remove = useApiOperation<User | null>(null);
+const runDelete = () => {
+  const id = deleteForm.id;
+  return remove.run(() => deleteUser(Number(id)), {
+    success: () => t("api.users.deleteSuccess", { id }),
+    onSuccess: () => notifications.info(t("notifications.userDeleted", { id })),
+  });
 };
 </script>
 
@@ -152,143 +93,94 @@ const handleUserDelete = () => {
       <ApiOperationCard
         :title="$t('api.users.singleTitle')"
         :description="$t('api.users.singleDescription')"
-        :loading="userByIdState.loading"
-        :error="userByIdState.error">
-        <form class="space-y-4" @submit.prevent="handleUserById">
-          <BaseInput
-            v-model="userByIdForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.userId')"
-            required />
-          <BaseButton type="submit" :loading="userByIdState.loading">
-            {{ $t("api.actions.fetch") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="userByIdState.result"
-            :label="$t('api.results.response')"
-            :value="userByIdState.result" />
-        </template>
+        :state="byId.state"
+        :action="$t('api.actions.fetch')"
+        @submit="runById">
+        <BaseInput
+          v-model="byIdForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.userId')"
+          required />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.users.createTitle')"
         :description="$t('api.users.createDescription')"
-        :loading="userCreateState.loading"
-        :error="userCreateState.error"
-        :success-message="userCreateState.success">
-        <form class="space-y-4" @submit.prevent="handleUserCreate">
-          <BaseTextarea
-            v-model="userCreateForm"
-            :label="$t('api.fields.payload')"
-            :rows="8" />
-          <BaseButton type="submit" :loading="userCreateState.loading">
-            {{ $t("api.actions.create") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="userCreateState.result"
-            :label="$t('api.results.response')"
-            :value="userCreateState.result" />
-        </template>
+        :state="create.state"
+        :action="$t('api.actions.create')"
+        @submit="runCreate">
+        <BaseTextarea
+          v-model="createPayload"
+          :label="$t('api.fields.payload')"
+          :rows="8" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.users.queryTitle')"
         :description="$t('api.users.queryDescription')"
-        :loading="userQueryState.loading"
-        :error="userQueryState.error"
-        :success-message="userQueryState.success">
-        <form class="space-y-4" @submit.prevent="handleUserQuery">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model.number="userQueryForm.limit"
-              type="number"
-              min="1"
-              max="20"
-              :label="$t('api.users.fields.limit')"
-              required />
-            <BaseSelect
-              v-model="userQueryForm.sort"
-              :label="$t('api.users.fields.sort')"
-              :options="[
-                { label: $t('api.fields.sortAsc'), value: 'asc' },
-                { label: $t('api.fields.sortDesc'), value: 'desc' },
-              ]" />
-          </div>
-          <BaseButton type="submit" :loading="userQueryState.loading">
-            {{ $t("api.actions.runQuery") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="userQueryState.result.length"
-            :label="$t('api.results.preview')"
-            :value="userQueryState.result" />
-        </template>
+        :state="query.state"
+        :action="$t('api.actions.runQuery')"
+        :result-label="$t('api.results.preview')"
+        @submit="runQuery">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <BaseInput
+            v-model.number="queryForm.limit"
+            type="number"
+            min="1"
+            max="20"
+            :label="$t('api.fields.limit')"
+            required />
+          <BaseSelect
+            v-model="queryForm.sort"
+            :label="$t('api.fields.sort')"
+            :options="[
+              { label: $t('api.fields.sortAsc'), value: 'asc' },
+              { label: $t('api.fields.sortDesc'), value: 'desc' },
+            ]" />
+        </div>
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.users.updateTitle')"
         :description="$t('api.users.updateDescription')"
-        :loading="userUpdateState.loading"
-        :error="userUpdateState.error"
-        :success-message="userUpdateState.success">
-        <form class="space-y-4" @submit.prevent="handleUserUpdate">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model="userUpdateForm.id"
-              type="number"
-              min="1"
-              :label="$t('api.fields.userId')"
-              required />
-            <BaseSelect
-              v-model="userUpdateForm.method"
-              :label="$t('api.products.fields.method')"
-              :options="[
-                { label: 'PUT', value: 'PUT' },
-                { label: 'PATCH', value: 'PATCH' },
-              ]" />
-          </div>
-          <BaseTextarea
-            v-model="userUpdateForm.payload"
-            :label="$t('api.fields.payload')"
-            :rows="6" />
-          <BaseButton type="submit" :loading="userUpdateState.loading">
-            {{ $t("api.actions.update") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="userUpdateState.result"
-            :label="$t('api.results.response')"
-            :value="userUpdateState.result" />
-        </template>
+        :state="update.state"
+        :action="$t('api.actions.update')"
+        @submit="runUpdate">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <BaseInput
+            v-model="updateForm.id"
+            type="number"
+            min="1"
+            :label="$t('api.fields.userId')"
+            required />
+          <BaseSelect
+            v-model="updateForm.method"
+            :label="$t('api.fields.method')"
+            :options="[
+              { label: 'PUT', value: 'PUT' },
+              { label: 'PATCH', value: 'PATCH' },
+            ]" />
+        </div>
+        <BaseTextarea
+          v-model="updateForm.payload"
+          :label="$t('api.fields.payload')"
+          :rows="6" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.users.deleteTitle')"
         :description="$t('api.users.deleteDescription')"
-        :loading="userDeleteState.loading"
-        :error="userDeleteState.error"
-        :success-message="userDeleteState.success">
-        <form class="space-y-4" @submit.prevent="handleUserDelete">
-          <BaseInput
-            v-model="userDeleteForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.userId')"
-            required />
-          <BaseButton
-            type="submit"
-            :loading="userDeleteState.loading"
-            variant="outline">
-            {{ $t("api.actions.delete") }}
-          </BaseButton>
-        </form>
+        :state="remove.state"
+        :action="$t('api.actions.delete')"
+        destructive
+        @submit="runDelete">
+        <BaseInput
+          v-model="deleteForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.userId')"
+          required />
       </ApiOperationCard>
     </div>
   </section>

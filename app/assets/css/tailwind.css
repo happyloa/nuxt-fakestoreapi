@@ -25,7 +25,6 @@
   --color-brand-light: #ff9a72;
   --color-paper: #f6f4ef;
   --color-plate: #ebe7de;
-  --color-slate-50: #f8f8f5;
   --color-slate-100: #f1f1ed;
   --color-slate-200: #e3e3dc;
   --color-slate-300: #cecec5;
@@ -38,9 +37,10 @@
   --color-slate-950: #141710;
   --color-rule: rgb(29 32 26 / 0.14);
   --color-rule-dark: rgb(246 244 239 / 0.14);
-  /* Tight display tracking for Latin type; relaxed for Chinese below. */
+  /* Tight display type for Latin; relaxed for Chinese below. */
   --tracking-display: -0.055em;
   --tracking-heading: -0.04em;
+  --leading-display: 0.92;
 }
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -56,11 +56,14 @@
 @layer base {
   :root {
     color-scheme: light;
+    /* Keep focused elements clear of the 64px sticky header. */
+    scroll-padding-top: 5rem;
   }
-  /* CJK glyphs fill the em box, so negative tracking makes them collide. */
+  /* CJK glyphs fill the em box, so tight tracking or leading makes them collide. */
   html:lang(zh-TW) {
     --tracking-display: -0.01em;
     --tracking-heading: -0.005em;
+    --leading-display: 1.12;
   }
   .dark {
     color-scheme: dark;

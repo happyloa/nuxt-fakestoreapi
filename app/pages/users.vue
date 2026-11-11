@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useUsersStore } from "~/stores/users";
-
 const usersStore = useUsersStore();
 const search = ref("");
 const { t } = useI18n();

@@ -34,18 +34,24 @@ const categoryLabel = useCategoryLabel();
         />
       </span>
       <h3
+        lang="en"
         class="mt-4 line-clamp-2 min-h-10 text-sm font-semibold leading-5 sm:text-[15px]"
       >
         {{ product.title }}
       </h3>
     </NuxtLink>
     <p class="mt-1.5 font-mono text-[11px] text-slate-500 dark:text-slate-400">
-      ★ {{ product.rating.rate }}
-      <span class="text-slate-400 dark:text-slate-500"
-        >/ {{ product.rating.count }}</span
-      >
+      <span aria-hidden="true"
+        >★ {{ product.rating.rate }} ({{ product.rating.count }})</span
+      ><span class="sr-only">{{
+        $t("products.ratingSummary", {
+          rate: product.rating.rate,
+          count: product.rating.count,
+        })
+      }}</span>
     </p>
-    <div class="mt-auto flex items-end justify-between gap-2 pt-5">
+    <!-- 窄螢幕（320px）時價格與按鈕可換行，避免按鈕跨出格線。 -->
+    <div class="mt-auto flex flex-wrap items-end justify-between gap-2 pt-5">
       <span class="text-base font-bold tabular-nums sm:text-lg">{{
         $n(product.price, "currency")
       }}</span

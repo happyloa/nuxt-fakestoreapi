@@ -2,7 +2,12 @@ import { createError, readRawBody, type H3Event } from "h3";
 
 export const MAX_API_BODY_BYTES = 32_768;
 
-/** Read JSON without letting a chunked request bypass the body-size limit. */
+/**
+ * Read JSON without letting a chunked request bypass the body-size limit.
+ * On Node the stream is cut off once it passes the limit. On Cloudflare Pages
+ * the platform adapter has already buffered the whole body before app code
+ * runs, so this only rejects it; capping memory there needs a platform rule.
+ */
 export async function readBoundedJsonBody(event: H3Event): Promise<unknown> {
   const request = event.node.req;
   // Nitro's Pages adapter has already read the Web Request into a Buffer.

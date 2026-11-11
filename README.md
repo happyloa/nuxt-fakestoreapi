@@ -6,7 +6,7 @@
 
 ## 開發
 
-需要 Node.js `24.21.0`（`.node-version`）與 npm `12.2.1` 以上（lockfile v4 與原生補丁需要，版本不符會被 `engine-strict` 擋下）。
+需要 Node.js `^22.22.3`、`^24.15.0` 或 `>=26`（`.node-version` 固定 `24.21.0`），以及 npm `12.2.1` 以上（lockfile v4 與原生補丁需要）。版本不符時 `engine-strict` 會擋下安裝。
 
 ```bash
 npm install -g npm@12.2.2
@@ -50,6 +50,6 @@ Cloudflare Pages 從 `main` 自動部署：build command `npm run build:cloudfla
 
 - 刻意保留的主版本：`h3` 1（Nitro 2 需要）、`typescript` 6（`vue-tsc` 需要 `typescript/lib/tsc`）、`@types/node` 24（對應執行環境）。
 - `overrides` 中的 `glob`、`minimatch`、`node-forge`：上層套件的版本範圍含已知漏洞，需保留。
-- `deepmerge` 以 `patches/` 的 npm 原生補丁修補 `GHSA-gcqx-w48m-w2h4`（上游未修），所以 `npm audit` 仍會列出 7 個 low；以 `npm run audit:security` 判讀。
+- `deepmerge` 以 `patches/` 的 npm 原生補丁修補 `GHSA-gcqx-w48m-w2h4`（上游未修），所以 `npm audit` 仍會列出 deepmerge 及其相依鏈的 low 等級項目；以 `npm run audit:security` 判讀。
 - esbuild 安裝腳本採版本白名單，升級後執行 `npm install-scripts approve esbuild` 與 `npm install-scripts prune`。
 - 設計變數（顏色、字距、`meta` 小字）集中在 `app/assets/css/tailwind.css`。

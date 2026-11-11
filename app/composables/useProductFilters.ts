@@ -1,9 +1,6 @@
 import type { Product } from "#shared/types/fakestore";
 
-/**
- * 統一管理商品列表的過濾邏輯與網址同步。
- * 在頁面與元件之間重複利用，維持資料流的一致性。
- */
+/** 首頁商品列表的篩選、搜尋、排序，並與網址參數同步。 */
 export const useProductFilters = (productsSource: () => Product[]) => {
   const route = useRoute();
   const router = useRouter();
@@ -45,9 +42,16 @@ export const useProductFilters = (productsSource: () => Product[]) => {
 
   // URL 同步加防抖：搜尋逐字輸入時不會每個字元都觸發 router.replace
   let queryTimer: ReturnType<typeof setTimeout> | null = null;
-  const updateQuery = () => {
+  const cancelSync = () => {
     if (queryTimer) clearTimeout(queryTimer);
+    queryTimer = null;
+  };
+  const updateQuery = () => {
+    cancelSync();
     queryTimer = setTimeout(() => {
+      // 下一頁載入期間舊頁面仍掛著；使用者已離開時不可再改網址，
+      // 否則會取消他點的導覽，或把篩選參數加到下一頁上。
+      if (router.currentRoute.value.path !== route.path) return;
       // 保留 hash：Nuxt 在同頁移除 hash 時會捲回頂端（例如從 #catalog 連結進來）。
       router.replace({
         hash: route.hash,
@@ -67,15 +71,14 @@ export const useProductFilters = (productsSource: () => Product[]) => {
   watch([selectedCategory, sortOrder, searchQuery], updateQuery);
 
   watch(() => route.query, (query) => {
-    if (queryTimer) clearTimeout(queryTimer);
+    cancelSync();
     selectedCategory.value = qs(query.category) || "all";
     sortOrder.value = qs(query.sort) === "desc" ? "desc" : "asc";
     searchQuery.value = qs(query.q);
   });
 
-  onScopeDispose(() => {
-    if (queryTimer) clearTimeout(queryTimer);
-  });
+  onBeforeRouteLeave(cancelSync);
+  onScopeDispose(cancelSync);
 
   const resetFilters = () => {
     selectedCategory.value = "all";

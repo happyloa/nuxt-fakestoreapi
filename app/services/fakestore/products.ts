@@ -3,12 +3,9 @@ import type {
   Product,
   UpdateProductPayload,
 } from '#shared/types/fakestore'
-import { createQueryString, fakestoreClient } from './client'
+import { createQueryString, fakestoreClient, type UpdateMethod } from './client'
 
-/**
- * 查詢產品 (支援分類與排序)
- * @param options 查詢選項
- */
+/** 查詢商品，可依分類篩選並限制筆數與排序 */
 export const queryProducts = (options: {
   limit?: number
   sort?: 'asc' | 'desc'
@@ -19,61 +16,25 @@ export const queryProducts = (options: {
     url += `/category/${encodeURIComponent(options.category)}`
   }
   const query = createQueryString({ limit: options.limit, sort: options.sort })
-  if (query) {
-    url += `?${query}`
-  }
-  return fakestoreClient<Product[]>(url)
+  return fakestoreClient<Product[]>(query ? `${url}?${query}` : url)
 }
 
-/**
- * 取得單一產品詳細資料
- * @param id 產品 ID
- */
+/** 透過本站有快取的 BFF 取得單一商品（已整理過的資料） */
 export const getProductById = (id: number) =>
   $fetch<Product>(`/api/products/${id}`)
 
-/**
- * 取得所有產品分類
- */
 export const getProductCategories = () =>
   fakestoreClient<string[]>('/products/categories')
 
-/**
- * 建立新產品
- * @param payload 產品資料
- */
 export const createProduct = (payload: CreateProductPayload) =>
-  fakestoreClient<Product>('/products', {
-    method: 'POST',
-    body: payload,
-  })
+  fakestoreClient<Product>('/products', { method: 'POST', body: payload })
 
-/**
- * 更新產品資訊
- * @param id 產品 ID
- * @param payload 更新內容
- */
-export const updateProduct = (id: number, payload: UpdateProductPayload) =>
-  fakestoreClient<Product>(`/products/${id}`, {
-    method: 'PUT',
-    body: payload,
-  })
+/** PUT 取代整筆資料，PATCH 只更新部分欄位 */
+export const updateProduct = (
+  id: number,
+  payload: UpdateProductPayload,
+  method: UpdateMethod = 'PUT',
+) => fakestoreClient<Product>(`/products/${id}`, { method, body: payload })
 
-/**
- * 刪除產品
- * @param id 產品 ID
- */
 export const deleteProduct = (id: number) =>
-  fakestoreClient<Product>(`/products/${id}`, {
-    method: 'DELETE',
-  })
-/**
- * 部分更新產品資訊 (PATCH)
- * @param id 產品 ID
- * @param payload 更新內容
- */
-export const patchProduct = (id: number, payload: UpdateProductPayload) =>
-  fakestoreClient<Product>(`/products/${id}`, {
-    method: 'PATCH',
-    body: payload,
-  })
+  fakestoreClient<Product>(`/products/${id}`, { method: 'DELETE' })

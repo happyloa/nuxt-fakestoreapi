@@ -9,7 +9,11 @@ import {
 } from "h3";
 import type { PublicUser } from "#shared/types/storefront";
 
-const SESSION_COOKIE_NAME = "storefront_session";
+// __Host- binds the cookie to this exact host over HTTPS, so a sibling
+// subdomain cannot plant or override it. Dev runs without HTTPS.
+export const SESSION_COOKIE_NAME = import.meta.dev
+  ? "storefront_session"
+  : "__Host-storefront_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 const MIN_PASSWORD_LENGTH = 32;
 

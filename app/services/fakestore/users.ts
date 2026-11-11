@@ -3,64 +3,29 @@ import type {
   UpdateUserPayload,
   User,
 } from '#shared/types/fakestore'
-import { createQueryString, fakestoreClient } from './client'
+import { createQueryString, fakestoreClient, type UpdateMethod } from './client'
 
-/**
- * 取得所有使用者列表
- * @param options 篩選與排序選項
- */
+/** 查詢會員，可限制筆數與排序 */
 export const getUsers = (options: {
   limit?: number
   sort?: 'asc' | 'desc'
 } = {}) => {
   const query = createQueryString(options)
-  const url = query ? `/users?${query}` : '/users'
-  return fakestoreClient<User[]>(url)
+  return fakestoreClient<User[]>(query ? `/users?${query}` : '/users')
 }
 
-/**
- * 取得單一使用者詳細資料
- * @param id 使用者 ID
- */
 export const getUserById = (id: number) =>
   fakestoreClient<User>(`/users/${id}`)
 
-/**
- * 建立新使用者
- * @param payload 使用者資料
- */
 export const createUser = (payload: CreateUserPayload) =>
-  fakestoreClient<User>('/users', {
-    method: 'POST',
-    body: payload,
-  })
+  fakestoreClient<User>('/users', { method: 'POST', body: payload })
 
-/**
- * 更新使用者資訊
- * @param id 使用者 ID
- * @param payload 更新內容
- */
-export const updateUser = (id: number, payload: UpdateUserPayload) =>
-  fakestoreClient<User>(`/users/${id}`, {
-    method: 'PUT',
-    body: payload,
-  })
+/** PUT 取代整筆資料，PATCH 只更新部分欄位 */
+export const updateUser = (
+  id: number,
+  payload: UpdateUserPayload,
+  method: UpdateMethod = 'PUT',
+) => fakestoreClient<User>(`/users/${id}`, { method, body: payload })
 
-/**
- * 刪除使用者
- * @param id 使用者 ID
- */
 export const deleteUser = (id: number) =>
-  fakestoreClient<User>(`/users/${id}`, {
-    method: 'DELETE',
-  })
-/**
- * 部分更新使用者資訊 (PATCH)
- * @param id 使用者 ID
- * @param payload 更新內容
- */
-export const patchUser = (id: number, payload: UpdateUserPayload) =>
-  fakestoreClient<User>(`/users/${id}`, {
-    method: 'PATCH',
-    body: payload,
-  })
+  fakestoreClient<User>(`/users/${id}`, { method: 'DELETE' })

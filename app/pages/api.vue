@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import { useProductsStore } from "~/stores/products";
-// ProductsSection / CartsSection / UsersSection 由 Nuxt 自動匯入，無需顯式 import
-
-/**
- * API Playground 頁面
- * 集中展示 Fake Store API 的全部操作 (CRUD)
- * 讓訪客可以實際操作並觀察 API 回應，作為作品集的互動展示亮點。
- */
+/** API 操作台：以分頁切換商品、購物車與會員端點。 */
 const productsStore = useProductsStore();
 
 const { t } = useI18n();
@@ -46,7 +39,6 @@ await useAsyncData("api-categories", async () => {
   return true;
 });
 
-// 設定 SEO Meta 標籤
 usePageSeo(() => ({
   title: t("seo.api.title"),
   description: t("seo.api.description"),
@@ -76,12 +68,8 @@ usePageSeo(() => ({
         :aria-selected="activeResource === resource.value"
         :aria-controls="'panel-' + resource.value"
         :tabindex="activeResource === resource.value ? 0 : -1"
-        class="min-h-13 shrink-0 text-[15px] font-semibold underline-offset-[10px] transition-colors"
-        :class="
-          activeResource === resource.value
-            ? 'text-slate-900 underline decoration-brand decoration-2 dark:text-paper dark:decoration-brand-light'
-            : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper'
-        "
+        class="min-h-13 shrink-0 text-[15px] font-semibold underline-offset-[10px] transition-colors focus-visible:-outline-offset-4"
+        :class="tabClass(activeResource === resource.value)"
         @click="activeResource = resource.value"
         @keydown="moveTab"
       >

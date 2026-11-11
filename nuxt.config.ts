@@ -2,9 +2,12 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: "2026-08-01",
-  devtools: { enabled: process.env.NODE_ENV !== "production" },
 
   modules: ["@nuxtjs/i18n", "@pinia/nuxt"],
+
+  // Inline the global Tailwind CSS as well as component styles, so the first
+  // paint does not wait for a render-blocking stylesheet request.
+  features: { inlineStyles: true },
 
   app: {
     head: {
@@ -16,6 +19,8 @@ export default defineNuxtConfig({
           href: "/favicon.ico?v=storefront-lab",
         },
         { rel: "icon", type: "image/svg+xml", sizes: "any", href: "/favicon.svg" },
+        // Product photos are served by the upstream; open the connection early.
+        { rel: "preconnect", href: "https://fakestoreapi.com" },
       ],
       script: [
         {
@@ -30,8 +35,7 @@ export default defineNuxtConfig({
     },
   },
 
-  // The restored interface uses unprefixed component names such as
-  // <SiteHeader>, <ProductGrid>, and the Base* UI kit.
+  // Components are used without folder prefixes, e.g. <ProductGrid>, <BaseButton>.
   components: [
     {
       path: "~/components",
@@ -77,12 +81,7 @@ export default defineNuxtConfig({
     ],
     defaultLocale: "zh",
     strategy: "prefix_except_default",
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: "i18n_redirected",
-      redirectOn: "root",
-      fallbackLocale: "en",
-    },
+    detectBrowserLanguage: { fallbackLocale: "en" },
     experimental: {
       // Message URLs contain a hash of the locale files, so browsers can reuse
       // them instead of revalidating every 10 seconds.

@@ -35,7 +35,7 @@ test("Pages rejects malformed and empty JSON", { timeout: 2000 }, async () => {
   for (const input of ["{", ""]) assert.equal((await pagesPost(input)).status, 400);
 });
 
-test("Pages enforces the byte limit without a Content-Length header", { timeout: 2000 }, async () => {
+test("Pages rejects an over-limit body without a Content-Length header", { timeout: 2000 }, async () => {
   const atLimit = JSON.stringify({ value: "x".repeat(MAX_API_BODY_BYTES - 12) });
   assert.equal(Buffer.byteLength(atLimit), MAX_API_BODY_BYTES);
   assert.equal((await pagesPost(atLimit)).status, 200);

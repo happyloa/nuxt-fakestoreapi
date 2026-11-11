@@ -1,5 +1,5 @@
-import { createError, defineEventHandler, getQuery, getRouterParam, setResponseHeader } from "h3";
-import { getFakeStoreBaseUrl, isRecord } from "../../utils/fakestore";
+import { createError, defineEventHandler, getQuery, getRouterParam } from "h3";
+import { getFakeStoreBaseUrl, isRecord, UPSTREAM_FETCH_OPTIONS } from "../../utils/fakestore";
 import {
   decodePlaygroundPath,
   isAllowedPlaygroundOperation,
@@ -8,9 +8,12 @@ import {
 } from "../../utils/playground";
 import { readBoundedJsonBody } from "../../utils/request-body";
 
-/** Restricted public mock API playground. Never forward cookies or upstream secrets. */
+/**
+ * Restricted public mock API playground. Never forwards cookies or upstream
+ * secrets, and only relays JSON objects or arrays (never text or HTML).
+ * Cache-Control: no-store is set by server/middleware/api-security.ts.
+ */
 export default defineEventHandler(async (event): Promise<unknown> => {
-  setResponseHeader(event, "Cache-Control", "no-store");
   const method = event.method;
   const segments = decodePlaygroundPath(getRouterParam(event, "path") || "");
   if (!segments || !isAllowedPlaygroundOperation(method, segments.join("/"))) {
@@ -32,12 +35,19 @@ export default defineEventHandler(async (event): Promise<unknown> => {
     }
     body = input;
   }
+  let result: unknown;
   try {
-    const result = await $fetch<unknown>(`${getFakeStoreBaseUrl(event)}/${toUpstreamPath(segments)}`, {
+    result = await $fetch<unknown>(`${getFakeStoreBaseUrl(event)}/${toUpstreamPath(segments)}`, {
+      ...UPSTREAM_FETCH_OPTIONS,
       method: method as "GET" | "POST" | "PUT" | "PATCH" | "DELETE", query, body, timeout: 8000, retry: 0,
     });
-    return redactSecrets(result);
   } catch {
     throw createError({ statusCode: 502, statusMessage: "The demo service is temporarily unavailable" });
   }
+  // Fake Store answers unknown ids with an empty body.
+  if (result === null) throw createError({ statusCode: 404, statusMessage: "Not found" });
+  if (!Array.isArray(result) && !isRecord(result)) {
+    throw createError({ statusCode: 502, statusMessage: "The demo service returned invalid data" });
+  }
+  return redactSecrets(result);
 });

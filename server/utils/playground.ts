@@ -1,10 +1,12 @@
 // Pure helpers for the API playground proxy. Kept free of Nitro auto-imports
 // so tests can load this module directly.
+import { ENTITY_ID_SOURCE } from "#shared/utils/limits";
 
 const COLLECTION = /^(products|users|carts)$/;
-const ITEM = /^(products|users|carts)\/[1-9]\d{0,5}$/;
-const QUERY_PATH =
-  /^(products\/categories|products\/category\/[^/]{1,120}|carts\/user\/[1-9]\d{0,5})$/;
+const ITEM = new RegExp(`^(products|users|carts)/${ENTITY_ID_SOURCE}$`);
+const QUERY_PATH = new RegExp(
+  `^(products/categories|products/category/[^/]{1,120}|carts/user/${ENTITY_ID_SOURCE})$`,
+);
 const UNSAFE_SEGMENT = /[\\/\u0000-\u001f\u007f]/;
 const SECRET_KEYS = new Set(["password", "token", "__v"]);
 

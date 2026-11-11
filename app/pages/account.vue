@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import { useCartStore } from "~/stores/cart";
-import { useNotificationsStore } from "~/stores/notifications";
-
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const notifications = useNotificationsStore();
@@ -19,7 +15,7 @@ const handleLogout = async () => {
     notifications.error(t("api.errors.generic"));
     return;
   }
-  notifications.info(t("notifications.loggedOut"), 2000);
+  notifications.info(t("notifications.loggedOut"));
   navigateTo(localePath("/"));
 };
 
@@ -50,7 +46,7 @@ usePageSeo(() => ({
             {{ catalogNumber(authStore.user.id) }} / {{ authStore.user.username }}
           </p>
           <h1
-            class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[0.95] tracking-heading"
+            class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-display tracking-heading"
           >
             {{ $t("account.title") }}
           </h1>
@@ -111,6 +107,7 @@ usePageSeo(() => ({
           </h2>
           <ul
             v-if="orderItems.length"
+            role="list"
             class="divide-y divide-rule dark:divide-rule-dark"
           >
             <li
@@ -121,21 +118,21 @@ usePageSeo(() => ({
               <span class="flex h-12 w-12 items-center justify-center bg-plate p-1.5 sm:h-16 sm:w-16"
                 ><img
                   :src="item.image"
-                  :alt="item.title"
+                  alt=""
                   width="64"
                   height="64"
                   loading="lazy"
                   class="max-h-full object-contain mix-blend-multiply"
               /></span>
               <div class="min-w-0 flex-1">
-                <p class="wrap-anywhere text-sm font-semibold">
+                <p lang="en" class="wrap-anywhere text-sm font-semibold">
                   {{ item.title }}
                 </p>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
                   {{ item.quantity }} × {{ $n(item.price, "currency") }}
                 </p>
               </div>
-              <span class="col-start-2 text-sm font-bold sm:col-start-auto">{{
+              <span class="col-start-2 text-sm font-bold tabular-nums sm:col-start-auto">{{
                 $n(item.price * item.quantity, "currency")
               }}</span>
             </li>

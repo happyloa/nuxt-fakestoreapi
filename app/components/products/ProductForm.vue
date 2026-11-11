@@ -6,7 +6,7 @@ interface Props {
   loading?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   categories: () => [],
   loading: false,
 });
@@ -26,8 +26,7 @@ const form = reactive({
 });
 
 const handleSubmit = () => {
-  // 欄位皆有原生 required，瀏覽器會在送出前攔截空欄位並聚焦，
-  // 因此不需額外的 JS 防呆（原本的靜默 return 會讓使用者「按了沒反應」）
+  // 欄位皆有原生 required，瀏覽器會在送出前攔截空欄位並聚焦。
   emit("submit", {
     title: form.title,
     price: Number(form.price),

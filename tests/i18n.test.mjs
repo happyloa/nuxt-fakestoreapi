@@ -24,3 +24,29 @@ test('every locale message is a non-empty string', () => {
     }
   }
 });
+
+// vue-i18n reads `|` as a plural separator and `@:`/`@.` as linked messages, so
+// a stray character silently truncates the text (it once cut the home title).
+const PLURAL_KEYS = new Set(['products.resultsCount']);
+const messages = locale => {
+  const data = load(locale);
+  return flatten(data).map(key => [key, key.split('.').reduce((node, part) => node[part], data)]);
+};
+
+test('only intended plural messages use the | separator, and none use linked-message syntax', () => {
+  for (const locale of ['zh', 'en']) {
+    for (const [key, value] of messages(locale)) {
+      if (value.includes('|')) assert.ok(PLURAL_KEYS.has(key), `${locale}: ${key} has an unescaped |`);
+      assert.doesNotMatch(value, /@[.:]/, `${locale}: ${key} looks like a linked message`);
+    }
+  }
+});
+
+test('zh and en use the same {placeholders} for every key', () => {
+  // Plural forms repeat placeholders, so compare the distinct names.
+  const placeholders = value => [...new Set([...value.matchAll(/\{(\w+)\}/g)].map(match => match[1]))].sort().join(',');
+  const en = new Map(messages('en'));
+  for (const [key, value] of messages('zh')) {
+    assert.equal(placeholders(value), placeholders(en.get(key)), key);
+  }
+});

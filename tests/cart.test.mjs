@@ -134,8 +134,32 @@ test("restored cart data is bounded, deduplicated and stripped of unknown fields
     { ...product(3), quantity: 100 },
   ]));
   assert.deepEqual(cart.items, [valid]);
+  cart.items = [];
   cart.restore(JSON.stringify(Array.from({ length: 51 }, (_, index) => ({ ...product(index + 1), quantity: 1 }))));
   assert.deepEqual(cart.items, []);
   cart.restore("not json");
   assert.deepEqual(cart.items, []);
+});
+
+test("items added before the stored cart is read are kept", (t) => {
+  const { cart } = createStores(t, async () => null);
+  cart.addItem(product(2));
+  cart.addItem(product(3));
+  cart.restore(JSON.stringify([{ ...product(1), quantity: 4 }, { ...product(2), quantity: 7 }]));
+  // Stored lines win for duplicates; new lines are appended.
+  assert.deepEqual(cart.items.map(({ id, quantity }) => [id, quantity]), [[1, 4], [2, 7], [3, 1]]);
+});
+
+test("clearing the cart keeps the last order, and the completed banner ends when shopping resumes", async (t) => {
+  const { cart } = createStores(t, async () => ({ id: "demo_banner" }));
+  cart.addItem(product(1));
+  await cart.checkout();
+  assert.equal(cart.justCheckedOut, true);
+  cart.addItem(product(2));
+  assert.equal(cart.justCheckedOut, false);
+  cart.clear();
+  assert.deepEqual(cart.items, []);
+  assert.deepEqual(cart.lastOrderItems, [{ ...product(1), quantity: 1 }]);
+  cart.reset();
+  assert.deepEqual(cart.lastOrderItems, []);
 });

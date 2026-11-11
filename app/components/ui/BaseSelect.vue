@@ -4,43 +4,32 @@ import { useAttrs } from "vue";
 defineOptions({ inheritAttrs: false });
 
 const attrs = useAttrs();
+const model = defineModel<string | number | null>({ required: true });
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue: string | number | null;
     label?: string;
     placeholder?: string;
     options: { label: string; value: string | number }[];
     required?: boolean;
   }>(),
-  {
-    placeholder: "",
-    required: false,
-  },
+  { placeholder: "", required: false },
 );
 
-const emit = defineEmits<{
-  (e: "update:modelValue", value: string | number | null): void;
-}>();
-
-const inputValue = computed({
-  get: () => props.modelValue,
-  set: (value: string | number | null) => emit("update:modelValue", value),
-});
-
 const inputId = useId();
+const selectId = computed(() => String(attrs.id ?? inputId));
 </script>
 
 <template>
   <div>
-    <label v-if="label" :for="String(attrs.id ?? inputId)" :class="FIELD_LABEL_CLASS">
+    <label v-if="label" :for="selectId" :class="FIELD_LABEL_CLASS">
       {{ label }}
       <span v-if="required" class="text-brand dark:text-brand-light" aria-hidden="true">*</span>
     </label>
     <select
       v-bind="attrs"
-      :id="String(attrs.id ?? inputId)"
-      v-model="inputValue"
+      :id="selectId"
+      v-model="model"
       :required="required"
       :class="FIELD_CONTROL_CLASS"
     >

@@ -9,6 +9,16 @@ const categoryLabel = useCategoryLabel();
 const featured = computed(() =>
   store.products.find((product) => product.id === 1),
 );
+
+// 捲到商品目錄並把焦點移到標題，鍵盤與螢幕閱讀器使用者會從目錄繼續。
+// 不在網址加 #catalog：同頁 hash 會讓之後每次篩選同步網址時都被捲回目錄。
+const scrollToCatalog = () => {
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.getElementById("catalog-heading")?.focus({ preventScroll: true });
+  document
+    .getElementById("catalog")
+    ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+};
 </script>
 <template>
   <section aria-labelledby="hero-title">
@@ -25,7 +35,7 @@ const featured = computed(() =>
     </div>
     <h1
       id="hero-title"
-      class="mt-8 whitespace-pre-line text-[clamp(3rem,9.2vw,8.5rem)] font-extrabold leading-[0.9] tracking-display sm:mt-10"
+      class="mt-8 whitespace-pre-line text-[clamp(3rem,9.2vw,8.5rem)] font-extrabold leading-display tracking-display sm:mt-10"
     >
       {{ $t("products.hero.title") }}
     </h1>
@@ -39,7 +49,8 @@ const featured = computed(() =>
           </p>
           <a
             href="#catalog"
-            class="group inline-flex items-center gap-3 border-b-2 border-slate-900 pb-1.5 text-[15px] font-bold hover:border-brand hover:text-brand dark:border-paper dark:hover:border-brand-light dark:hover:text-brand-light"
+            :class="UNDERLINE_LINK_CLASS"
+            @click.prevent="scrollToCatalog"
             >{{ $t("products.hero.ctaPrimary")
             }}<SiteIcon
               name="arrow"
@@ -55,15 +66,16 @@ const featured = computed(() =>
           <p class="meta mb-3 text-slate-500 dark:text-slate-400">
             {{ $t("products.hero.indexTitle") }}
           </p>
-          <ul class="border-t border-rule dark:border-rule-dark">
+          <ul role="list" class="border-t border-rule dark:border-rule-dark">
             <li
               v-for="category in store.categories"
               :key="category"
               class="border-b border-rule dark:border-rule-dark"
             >
               <NuxtLink
-                :to="{ query: { category }, hash: '#catalog' }"
+                :to="{ query: { category } }"
                 class="group flex min-h-11 items-center gap-3 text-sm font-semibold hover:text-brand dark:hover:text-brand-light"
+                @click="scrollToCatalog"
                 ><span class="flex-1">{{ categoryLabel(category) }}</span
                 ><span class="font-mono text-[11px] text-slate-500 tabular-nums dark:text-slate-400">{{
                   store.categoryCounts[category] ?? 0
@@ -74,7 +86,7 @@ const featured = computed(() =>
               /></NuxtLink>
             </li>
           </ul>
-          <p class="meta mt-4 text-slate-500 dark:text-slate-400">
+          <p class="mt-4 text-xs leading-5 text-slate-500 dark:text-slate-400">
             {{ $t("products.hero.demoNotice") }}
           </p>
         </nav>
@@ -88,6 +100,7 @@ const featured = computed(() =>
           <img
             :src="featuredImage"
             :alt="featured?.title ?? $t('products.hero.illustrationAlt')"
+            :lang="featured ? 'en' : undefined"
             width="418"
             height="597"
             fetchpriority="high"
@@ -102,7 +115,7 @@ const featured = computed(() =>
             >{{ $t("products.hero.featured") }} /
             {{ catalogNumber(featured.id) }}</span
           >
-          <span class="min-w-0 flex-1 truncate font-semibold">{{
+          <span lang="en" class="min-w-0 flex-1 truncate font-semibold">{{
             featured.title
           }}</span>
           <span class="shrink-0 font-bold tabular-nums">{{

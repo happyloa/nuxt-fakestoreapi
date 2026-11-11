@@ -31,17 +31,14 @@ export function usePageSeo(seo: () => PageSeoInput) {
     description: () => seo().description,
     ogTitle: () => seo().title,
     ogDescription: () => seo().description,
-    // The legacy product page uses the Open Graph "product" value, which is
-    // valid at runtime but not included in Nuxt's narrowed literal union.
+    // og:type "product" is valid but missing from the narrowed literal union.
     ogType: () => (seo().type ?? "website") as "website",
     ogImage: socialImage,
     // 只有站台預設圖的尺寸已知；商品圖來自上游，不宣告尺寸。
     ogImageWidth: () => (seo().image ? undefined : DEFAULT_OG_IMAGE_SIZE.width),
     ogImageHeight: () => (seo().image ? undefined : DEFAULT_OG_IMAGE_SIZE.height),
+    // X falls back to the og:* tags for title, description and image.
     twitterCard: "summary_large_image",
-    twitterTitle: () => seo().title,
-    twitterDescription: () => seo().description,
-    twitterImage: socialImage,
     robots: () => (NOINDEX_PATH.test(route.path) ? "noindex, follow" : "index, follow"),
   });
 }

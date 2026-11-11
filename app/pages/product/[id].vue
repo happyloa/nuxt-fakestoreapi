@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Product } from "#shared/types/fakestore";
-import { useProductsStore } from "~/stores/products";
+import { parseEntityId } from "#shared/utils/limits";
+import { getProductById } from "~/services/fakestore/products";
 
 const route = useRoute();
 const localePath = useLocalePath();
@@ -8,16 +8,17 @@ const productsStore = useProductsStore();
 const { t } = useI18n();
 
 definePageMeta({
-  validate: (route) => /^[1-9]\d{0,5}$/.test(String(route.params.id)),
+  validate: (route) => parseEntityId(String(route.params.id)) !== null,
 });
+const productId = computed(() => Number(route.params.id));
 const {
   data: product,
   pending,
   error,
   refresh,
 } = await useAsyncData(
-  () => `product-${route.params.id}`,
-  () => $fetch<Product>(`/api/products/${route.params.id}`),
+  () => `product-${productId.value}`,
+  () => getProductById(productId.value),
   {
     // 從首頁點進來時沿用目錄裡已有的完整商品資料，不必再等一次 API；
     // 手動重試（refresh）仍會重新請求。
@@ -25,9 +26,7 @@ const {
       nuxtApp.isHydrating
         ? nuxtApp.payload.data[key]
         : ctx.cause === "initial"
-          ? productsStore.products.find(
-              (item) => item.id === Number(route.params.id),
-            )
+          ? productsStore.products.find((item) => item.id === productId.value)
           : undefined,
   },
 );
@@ -76,15 +75,11 @@ useHead(() => {
             priceCurrency: "USD",
             availability: "https://schema.org/InStock",
           },
-          ...(p.rating
-            ? {
-                aggregateRating: {
-                  "@type": "AggregateRating",
-                  ratingValue: p.rating.rate,
-                  reviewCount: p.rating.count,
-                },
-              }
-            : {}),
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: p.rating.rate,
+            reviewCount: p.rating.count,
+          },
         }).replace(/</g, "\\u003c"),
       },
     ],
@@ -96,13 +91,7 @@ const addToCart = useAddToCart();
 
 <template>
   <div class="space-y-6">
-    <NuxtLink
-      :to="localePath('/')"
-      class="meta inline-flex min-h-11 items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
-    >
-      <SiteIcon name="back" class="h-3.5 w-3.5" />
-      {{ $t("products.details.back") }}
-    </NuxtLink>
+    <BackLink :to="localePath('/')">{{ $t("products.details.back") }}</BackLink>
 
     <div v-if="pending" class="grid gap-10 lg:grid-cols-12 lg:gap-14" aria-busy="true">
       <BaseSkeleton height="auto" class="aspect-square lg:col-span-7" />

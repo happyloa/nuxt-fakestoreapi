@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useProductFilters } from "~/composables/useProductFilters";
-import { useProductsStore } from "~/stores/products";
-
 const productsStore = useProductsStore();
 const { t } = useI18n();
 
@@ -44,16 +41,13 @@ usePageSeo(() => ({
 <template>
   <div class="space-y-20 sm:space-y-28">
     <ProductHero />
-    <section
-      id="catalog"
-      class="scroll-mt-20"
-      aria-labelledby="catalog-heading"
-    >
+    <section id="catalog" aria-labelledby="catalog-heading">
       <div class="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div>
           <h2
             id="catalog-heading"
-            class="text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-none tracking-heading"
+            tabindex="-1"
+            class="text-[clamp(2.25rem,5vw,3.75rem)] focus:outline-none font-extrabold leading-display tracking-heading"
           >
             {{ $t("products.listingTitle") }}
           </h2>
@@ -66,7 +60,7 @@ usePageSeo(() => ({
           aria-live="polite"
           class="meta tabular-nums text-slate-500 dark:text-slate-400"
         >
-          {{ $t("products.resultsCount", { count: filteredProducts.length }) }}
+          {{ $t("products.resultsCount", filteredProducts.length) }}
         </p>
       </div>
       <ProductFilterPanel
@@ -80,7 +74,7 @@ usePageSeo(() => ({
         @update:category="selectedCategory = $event"
         @update:sort="sortOrder = $event"
         @update:search="searchQuery = $event"
-        @refresh="resetFilters"
+        @reset="resetFilters"
       />
       <ProductGrid
         :products="filteredProducts"

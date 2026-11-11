@@ -1,7 +1,7 @@
 {
   "header": {
     "theme": {
-      "toggleLabel": "切換深淺色主題",
+      "toggleLabel": "深色模式",
       "light": "切換為淺色模式",
       "dark": "切換為深色模式"
     },
@@ -19,7 +19,6 @@
     "account": "我的帳號",
     "menu": "選單",
     "ariaPrimary": "主要導覽",
-    "ariaToggle": "切換導覽選單",
     "ariaClose": "關閉導覽選單"
   },
   "products": {
@@ -55,9 +54,8 @@
     },
     "listingTitle": "全部商品",
     "empty": {
-      "title": "目前沒有符合的商品",
-      "description": "試著調整篩選條件，或直接新增一個全新的商品。",
-      "cta": "新增第一個商品",
+      "title": "目前沒有商品",
+      "description": "Fake Store API 沒有回傳任何商品，請稍後再試。",
       "noResults": {
         "title": "找不到符合條件的商品",
         "description": "試試調整或清除目前的搜尋與篩選條件。",
@@ -99,7 +97,8 @@
       "electronics": "電子用品"
     },
     "listingDescription": "依分類篩選、以名稱搜尋，或依價格排序。",
-    "resultsCount": "{count} 件商品"
+    "resultsCount": "{n} 件商品",
+    "ratingSummary": "評分 {rate}（滿分 5），共 {count} 則評價"
   },
   "cart": {
     "title": "購物車",
@@ -209,7 +208,6 @@
     "userUpdated": "會員 {username} 資料已更新。",
     "userDeleted": "會員 #{id} 已刪除。",
     "checkoutSuccess": "結帳完成，訂單編號 #{id} 已建立。",
-    "checkoutEmpty": "購物車內沒有商品，請先加入商品再結帳。",
     "checkoutLogin": "請先登入帳號，再進行結帳。",
     "checkoutError": "結帳時發生錯誤，請稍後再試。",
     "cartLimit": "已達購物車上限：每項商品最多 99 件，最多 50 種商品。",
@@ -231,20 +229,22 @@
       "userId": "會員編號",
       "payload": "JSON 內容",
       "sortAsc": "編號遞增 (asc)",
-      "sortDesc": "編號遞減 (desc)"
+      "sortDesc": "編號遞減 (desc)",
+      "limit": "筆數",
+      "sort": "排序",
+      "method": "方法"
     },
     "errors": {
       "generic": "操作發生問題，請稍後再試。",
-      "idRequired": "請先輸入編號。",
       "invalidJson": "無法解析提供的 JSON 內容。",
-      "userIdRequired": "請先輸入會員編號。",
       "invalidInput": "請求內容不符合規則，請檢查欄位後再試。",
       "notFound": "找不到指定資料，或不支援此操作。",
       "unavailable": "示範服務暫時無法使用，請稍後再試。"
     },
     "results": {
       "preview": "回應預覽",
-      "response": "API 回應"
+      "response": "API 回應",
+      "received": "已取得回應。"
     },
     "products": {
       "title": "商品相關端點",
@@ -252,18 +252,15 @@
       "queryDescription": "依照分類、筆數與排序模擬 /products 端點。",
       "querySuccess": "共取得 {count} 項商品。",
       "singleTitle": "取得單一商品",
-      "singleDescription": "直接呼叫 /products/:id 取得指定商品。",
+      "singleDescription": "透過本站的 /api/products/:id 取得單一商品，回傳的是整理過的資料。",
       "updateTitle": "更新商品資料",
-      "updateDescription": "以 PUT 請求更新任意欄位。",
+      "updateDescription": "以 PUT 取代整筆商品，或以 PATCH 只更新部分欄位。",
       "updateSuccess": "商品 #{id} 更新成功。",
       "deleteTitle": "刪除商品",
       "deleteDescription": "對 /products/:id 發送 DELETE 刪除指定商品。",
       "deleteSuccess": "商品 #{id} 已成功刪除。",
       "fields": {
-        "category": "分類",
-        "limit": "筆數",
-        "sort": "排序",
-        "method": "方法"
+        "category": "分類"
       },
       "categoriesTitle": "取得產品分類",
       "categoriesDescription": "調用 /products/categories 取得所有可用的類別清單。"
@@ -281,14 +278,12 @@
       "createDescription": "POST 自訂 payload 建立新的購物車。",
       "createSuccess": "購物車 #{id} 建立成功。",
       "updateTitle": "更新購物車",
-      "updateDescription": "透過 PUT /carts/:id 更新購物車內容。",
+      "updateDescription": "以 PUT 取代整筆購物車，或以 PATCH 只更新部分欄位。",
       "updateSuccess": "購物車 #{id} 更新成功。",
       "deleteTitle": "刪除購物車",
       "deleteDescription": "對 /carts/:id 發送 DELETE 移除紀錄。",
       "deleteSuccess": "購物車 #{id} 已刪除。",
       "fields": {
-        "limit": "筆數",
-        "sort": "排序",
         "startDate": "起始日期",
         "endDate": "結束日期"
       }
@@ -301,18 +296,14 @@
       "createDescription": "POST 包含地址的會員資料。",
       "createSuccess": "會員 {username} 建立成功。",
       "updateTitle": "更新會員",
-      "updateDescription": "使用 PUT 請求更新會員欄位。",
+      "updateDescription": "以 PUT 取代整筆會員資料，或以 PATCH 只更新部分欄位。",
       "updateSuccess": "會員 #{id} 更新成功。",
       "deleteTitle": "刪除會員",
       "deleteDescription": "對 /users/:id 發送 DELETE 移除會員。",
       "deleteSuccess": "會員 #{id} 已刪除。",
       "queryTitle": "查詢會員列表",
       "queryDescription": "依照筆數與排序模擬 /users 端點。",
-      "querySuccess": "共取得 {count} 位會員。",
-      "fields": {
-        "limit": "筆數",
-        "sort": "排序"
-      }
+      "querySuccess": "共取得 {count} 位會員。"
     },
     "demoNotice": "這裡操作的是公開假資料；新增、修改與刪除不會永久保存。請勿輸入真實個資或密碼。"
   },
@@ -330,12 +321,12 @@
   },
   "seo": {
     "home": {
-      "title": "Storefront Lab | 日常好物",
+      "title": "日常好物",
       "description": "探索衣著、飾品與電子用品，瀏覽商品並體驗 Storefront Lab 的示範購物流程。"
     },
     "cart": {
       "title": "購物車",
-      "description": "查看並管理您的 Fake Store API 購物車。"
+      "description": "查看購物車內的商品，並試用示範結帳。"
     },
     "login": {
       "title": "會員登入",
@@ -343,7 +334,7 @@
     },
     "api": {
       "title": "API 操作台",
-      "description": "直接在儀表板中測試 Fake Store API 的所有端點。"
+      "description": "在瀏覽器中呼叫 Fake Store API 的各個端點，並查看原始回應。"
     },
     "newProduct": {
       "title": "建立新商品",
@@ -359,7 +350,7 @@
     },
     "account": {
       "title": "我的帳號",
-      "description": "查看並管理您的帳號資訊與訂單紀錄。"
+      "description": "示範帳號的個人資料與最近一次示範結帳。"
     }
   }
 }

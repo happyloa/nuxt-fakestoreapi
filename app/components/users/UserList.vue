@@ -8,7 +8,7 @@ interface Props {
   search?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   users: () => [],
   loading: false,
   error: "",
@@ -23,7 +23,7 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
     <div
       class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <BaseSectionHeading
-        id="user-list-heading"
+        heading-id="user-list-heading"
         :level="1"
         :title="$t('users.list.title')"
         :description="$t('users.list.description')" />
@@ -37,10 +37,7 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
         @update:model-value="emit('update:search', $event as string)" />
     </div>
     <div v-if="loading" class="grid gap-4 sm:grid-cols-2" aria-busy="true">
-      <BaseCard
-        v-for="index in 4"
-        :key="index"
-        class="h-40 animate-pulse bg-slate-200/60 dark:bg-slate-900"></BaseCard>
+      <BaseSkeleton v-for="index in 4" :key="index" height="10rem" />
     </div>
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}
@@ -50,7 +47,7 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
       class="border border-rule px-6 py-14 text-center text-sm text-slate-600 dark:border-rule-dark dark:text-slate-300">
       {{ $t("users.list.empty") }}
     </p>
-    <ul v-else class="grid gap-6 sm:grid-cols-2">
+    <ul v-else role="list" class="grid gap-6 sm:grid-cols-2">
       <li v-for="user in users" :key="user.id">
         <UserCard :user="user" />
       </li>

@@ -24,7 +24,7 @@ const emit = defineEmits<{
   (e: "update:category", value: string): void;
   (e: "update:sort", value: "asc" | "desc"): void;
   (e: "update:search", value: string): void;
-  (e: "refresh"): void;
+  (e: "reset"): void;
 }>();
 const { t } = useI18n();
 const categoryLabel = useCategoryLabel();
@@ -53,18 +53,16 @@ const sortOptions = computed(() => [
         :key="category.value"
         type="button"
         :aria-pressed="selectedCategory === category.value"
-        class="flex min-h-13 shrink-0 items-start gap-1 text-[15px] font-semibold underline-offset-[10px] transition-colors"
-        :class="
-          selectedCategory === category.value
-            ? 'text-slate-900 underline decoration-brand decoration-2 dark:text-paper dark:decoration-brand-light'
-            : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper'
-        "
+        class="relative flex min-h-13 shrink-0 items-start gap-1 text-[15px] font-semibold underline-offset-[10px] transition-colors focus-visible:-outline-offset-4"
+        :class="tabClass(selectedCategory === category.value)"
         @click="emit('update:category', category.value)"
       >
         <span class="self-center">{{ category.label }}</span
-        ><span class="mt-3 font-mono text-[10px] tabular-nums">{{
+        ><span class="sr-only"> (</span
+        ><span class="mt-3 font-mono text-[11px] tabular-nums">{{
           category.count
-        }}</span>
+        }}</span
+        ><span class="sr-only">)</span>
       </button>
     </div>
     <div
@@ -83,7 +81,7 @@ const sortOptions = computed(() => [
         v-if="hasActiveFilters"
         type="button"
         class="min-h-12 self-start text-sm font-semibold text-brand underline underline-offset-4 sm:self-end dark:text-brand-light"
-        @click="emit('refresh')"
+        @click="emit('reset')"
       >
         {{ t("products.filters.reset") }}
       </button>

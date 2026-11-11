@@ -1,6 +1,4 @@
 import type { Product } from "#shared/types/fakestore";
-import { useCartStore } from "~/stores/cart";
-import { useNotificationsStore } from "~/stores/notifications";
 
 /**
  * 將商品加入購物車，並依實際結果顯示提示：

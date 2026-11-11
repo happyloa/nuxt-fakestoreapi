@@ -1,16 +1,12 @@
 import { createError, getRouterParam } from "h3";
+import { parseEntityId } from "#shared/utils/limits";
 import { getProduct } from "../../utils/fakestore";
 
 function parseProductId(value: string | undefined): number {
-  if (!value || !/^[1-9]\d*$/.test(value)) {
+  const id = parseEntityId(value);
+  if (id === null) {
     throw createError({ statusCode: 400, statusMessage: "Invalid product id" });
   }
-
-  const id = Number(value);
-  if (!Number.isSafeInteger(id) || id > 1_000_000) {
-    throw createError({ statusCode: 400, statusMessage: "Invalid product id" });
-  }
-
   return id;
 }
 

@@ -29,7 +29,7 @@ watch(isMenuOpen, (open) => {
   document.body.style.overflow = open ? "hidden" : "";
 });
 onBeforeUnmount(() => {
-  if (import.meta.client) document.body.style.overflow = "";
+  document.body.style.overflow = "";
 });
 </script>
 <template>
@@ -54,11 +54,7 @@ onBeforeUnmount(() => {
           :to="item.to"
           :aria-current="route.path === item.to ? 'page' : undefined"
           class="py-2 underline-offset-[7px] transition-colors"
-          :class="
-            route.path === item.to
-              ? 'text-slate-900 underline decoration-brand decoration-2 dark:text-paper dark:decoration-brand-light'
-              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper'
-          "
+          :class="tabClass(route.path === item.to)"
           >{{ item.name }}</NuxtLink
         >
       </nav>
@@ -72,11 +68,10 @@ onBeforeUnmount(() => {
         >
         <NuxtLink
           :to="localePath('/cart')"
-          :aria-label="t('navigation.cart') + ' (' + cart.count + ')'"
           class="flex h-11 items-center gap-1.5 px-2"
         >
-          {{ t("navigation.cart")
-          }}<span
+          {{ t("navigation.cart") }}
+          <span
             class="min-w-6 bg-slate-900 px-1.5 py-0.5 text-center font-mono text-[11px] leading-4 text-paper tabular-nums dark:bg-paper dark:text-slate-950"
             :class="{ 'bg-brand! dark:bg-brand-light!': cart.count > 0 }"
             >{{ cart.count }}</span
@@ -86,7 +81,6 @@ onBeforeUnmount(() => {
           type="button"
           :aria-expanded="isMenuOpen"
           aria-controls="site-navigation-mobile"
-          :aria-label="t('navigation.ariaToggle')"
           class="flex h-11 items-center pl-3 lg:hidden"
           @click="openMenu"
         >
@@ -126,7 +120,10 @@ onBeforeUnmount(() => {
           :to="item.to"
           :aria-current="route.path === item.to ? 'page' : undefined"
           class="border-b border-rule py-4 text-3xl font-extrabold tracking-heading dark:border-rule-dark"
-          :class="route.path === item.to && 'text-brand dark:text-brand-light'"
+          :class="
+            route.path === item.to &&
+            'underline decoration-brand decoration-2 underline-offset-8 dark:decoration-brand-light'
+          "
           @click="closeMenu"
           >{{ item.name }}</NuxtLink
         >

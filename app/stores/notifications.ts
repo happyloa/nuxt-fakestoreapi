@@ -1,77 +1,72 @@
 import { defineStore } from 'pinia'
 
 export interface Toast {
-  id: string
+  id: number
   message: string
   variant: 'success' | 'error' | 'info'
-  duration?: number
 }
 
+// Long enough to read: at least 5 s, more for longer messages.
+const MIN_DURATION_MS = 5_000
+const PER_CHARACTER_MS = 60
+
 /**
- * 通知系統 Store
- * 管理全域的 Toast 通知訊息
+ * 全域 Toast 通知。錯誤通知會留到使用者關閉；其他通知依長度自動消失，
+ * 滑鼠停留或鍵盤焦點在通知上時暫停計時（WCAG 2.2.1）。
  */
 export const useNotificationsStore = defineStore('notifications', () => {
   const toasts = ref<Toast[]>([])
+  const timers = new Map<number, { remaining: number; startedAt: number; handle?: ReturnType<typeof setTimeout> }>()
+  let nextId = 0
+  let paused = false
 
-  /**
-   * 新增一則通知
-   * @param toast 通知內容物件
-   */
-  const add = (toast: Omit<Toast, 'id'>) => {
-    const id = crypto.randomUUID()
-    const newToast = { ...toast, id }
-    toasts.value.push(newToast)
+  const remove = (id: number) => {
+    clearTimeout(timers.get(id)?.handle)
+    timers.delete(id)
+    toasts.value = toasts.value.filter((toast) => toast.id !== id)
+  }
 
-    // 如果有設定持續時間，則自動移除
-    if (toast.duration !== 0) {
-      setTimeout(() => {
-        remove(id)
-      }, toast.duration || 3000)
+  const start = (id: number) => {
+    const timer = timers.get(id)
+    if (!timer) return
+    timer.startedAt = Date.now()
+    timer.handle = setTimeout(() => remove(id), timer.remaining)
+  }
+
+  const add = (message: string, variant: Toast['variant']) => {
+    // A counter instead of crypto.randomUUID(), which needs a secure context.
+    const id = ++nextId
+    toasts.value.push({ id, message, variant })
+    if (variant === 'error') return
+    timers.set(id, {
+      remaining: Math.max(MIN_DURATION_MS, message.length * PER_CHARACTER_MS),
+      startedAt: 0,
+    })
+    if (!paused) start(id)
+  }
+
+  const pause = () => {
+    if (paused) return
+    paused = true
+    for (const timer of timers.values()) {
+      clearTimeout(timer.handle)
+      timer.remaining = Math.max(1_000, timer.remaining - (Date.now() - timer.startedAt))
     }
   }
 
-  /**
-   * 移除指定 ID 的通知
-   * @param id 通知 ID
-   */
-  const remove = (id: string) => {
-    toasts.value = toasts.value.filter((t) => t.id !== id)
-  }
-
-  /**
-   * 顯示成功通知
-   * @param message 訊息內容
-   * @param duration 持續時間 (毫秒)
-   */
-  const success = (message: string, duration?: number) => {
-    add({ message, variant: 'success', duration })
-  }
-
-  /**
-   * 顯示錯誤通知
-   * @param message 訊息內容
-   * @param duration 持續時間 (毫秒)
-   */
-  const error = (message: string, duration?: number) => {
-    add({ message, variant: 'error', duration })
-  }
-
-  /**
-   * 顯示一般資訊通知
-   * @param message 訊息內容
-   * @param duration 持續時間 (毫秒)
-   */
-  const info = (message: string, duration?: number) => {
-    add({ message, variant: 'info', duration })
+  const resume = () => {
+    if (!paused) return
+    paused = false
+    for (const id of timers.keys()) start(id)
   }
 
   return {
     toasts,
-    add,
     remove,
-    success,
-    error,
-    info,
+    pause,
+    resume,
+    success: (message: string) => add(message, 'success'),
+    error: (message: string) => add(message, 'error'),
+    info: (message: string) => add(message, 'info'),
   }
 })

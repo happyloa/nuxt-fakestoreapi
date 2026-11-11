@@ -1,19 +1,14 @@
 <script setup lang="ts">
-/**
- * 購物車管理區塊元件
- * 提供購物車的查詢、單一取得、依使用者取得、建立、更新與刪除功能
- */
-
+/** 購物車端點：查詢、單筆、依會員、建立、更新與刪除。 */
 import {
   createCart,
   deleteCart,
   getCartById,
   getCarts,
   getCartsByUser,
-  patchCart,
   updateCart,
 } from "~/services/fakestore/carts";
-import { useNotificationsStore } from "~/stores/notifications";
+import type { UpdateMethod } from "~/services/fakestore/client";
 import type {
   Cart,
   CreateCartPayload,
@@ -23,124 +18,75 @@ import type {
 const { t } = useI18n();
 const notifications = useNotificationsStore();
 
-// 查詢購物車列表 (Query Carts)
-const cartQueryForm = reactive({
+const queryForm = reactive({
   limit: 5,
   sort: "desc" as "asc" | "desc",
   startDate: "",
   endDate: "",
 });
-const cartQuery = useApiOperation<Cart[]>([]);
-const cartQueryState = cartQuery.state;
-const handleCartsQuery = () =>
-  cartQuery.run(
+const query = useApiOperation<Cart[]>([]);
+const runQuery = () =>
+  query.run(
     () =>
       getCarts({
-        limit: cartQueryForm.limit || undefined,
-        sort: cartQueryForm.sort,
-        startDate: cartQueryForm.startDate || undefined,
-        endDate: cartQueryForm.endDate || undefined,
+        limit: queryForm.limit || undefined,
+        sort: queryForm.sort,
+        startDate: queryForm.startDate || undefined,
+        endDate: queryForm.endDate || undefined,
       }),
-    {
-      success: (carts) => t("api.carts.querySuccess", { count: carts.length }),
-    },
+    { success: (carts) => t("api.carts.querySuccess", { count: carts.length }) },
   );
 
-// 取得單一購物車 (Get Cart By ID)
-const cartByIdForm = reactive({ id: "" as string | number });
-const cartById = useApiOperation<Cart | null>(null);
-const cartByIdState = cartById.state;
-const handleCartById = () => {
-  if (!cartByIdForm.id) return cartById.fail(t("api.errors.idRequired"));
-  return cartById.run(() => getCartById(Number(cartByIdForm.id)));
-};
+const byIdForm = reactive({ id: "" });
+const byId = useApiOperation<Cart | null>(null);
+const runById = () => byId.run(() => getCartById(Number(byIdForm.id)));
 
-// 依使用者取得購物車 (Get Cart By User)
-const cartByUserForm = reactive({ userId: "" as string | number });
-const cartByUser = useApiOperation<Cart[]>([]);
-const cartByUserState = cartByUser.state;
-const handleCartByUser = () => {
-  if (!cartByUserForm.userId)
-    return cartByUser.fail(t("api.errors.userIdRequired"));
-  return cartByUser.run(() => getCartsByUser(Number(cartByUserForm.userId)));
-};
+const byUserForm = reactive({ userId: "" });
+const byUser = useApiOperation<Cart[]>([]);
+const runByUser = () => byUser.run(() => getCartsByUser(Number(byUserForm.userId)));
 
-// 建立購物車 (Create Cart)
-const cartCreateForm = ref(
+const createPayload = ref(
   JSON.stringify(
     {
       userId: 1,
-      date: new Date().toISOString(),
+      date: new Date().toISOString().slice(0, 10),
       products: [{ productId: 1, quantity: 1 }],
-    } as CreateCartPayload,
+    } satisfies CreateCartPayload,
     null,
     2,
   ),
 );
-const cartCreate = useApiOperation<Cart | null>(null);
-const cartCreateState = cartCreate.state;
-const handleCartCreate = () => {
-  let payload: CreateCartPayload;
-  try {
-    payload = JSON.parse(cartCreateForm.value);
-  } catch {
-    return cartCreate.fail(t("api.errors.invalidJson"));
-  }
-  return cartCreate.run(() => createCart(payload), {
+const create = useApiOperation<Cart | null>(null);
+const runCreate = () =>
+  create.runWithJson<CreateCartPayload>(createPayload.value, createCart, {
     success: (cart) => t("api.carts.createSuccess", { id: cart!.id }),
-    onSuccess: (cart) =>
-      notifications.success(t("notifications.cartCreated", { id: cart!.id })),
+    onSuccess: (cart) => notifications.success(t("notifications.cartCreated", { id: cart!.id })),
   });
-};
 
-// 更新購物車 (Update Cart)
-const cartUpdateForm = reactive({
-  id: "" as string | number,
-  method: "PUT" as "PUT" | "PATCH",
+const updateForm = reactive({
+  id: "",
+  method: "PUT" as UpdateMethod,
   payload: '{\n  "products": [{ "productId": 1, "quantity": 2 }]\n}',
 });
-const cartUpdate = useApiOperation<Cart | null>(null);
-const cartUpdateState = cartUpdate.state;
-const handleCartUpdate = () => {
-  if (!cartUpdateForm.id) return cartUpdate.fail(t("api.errors.idRequired"));
-  let payload: UpdateCartPayload;
-  try {
-    payload = JSON.parse(cartUpdateForm.payload);
-  } catch {
-    return cartUpdate.fail(t("api.errors.invalidJson"));
-  }
-  return cartUpdate.run(
-    () =>
-      cartUpdateForm.method === "PATCH"
-        ? patchCart(Number(cartUpdateForm.id), payload)
-        : updateCart(Number(cartUpdateForm.id), payload),
+const update = useApiOperation<Cart | null>(null);
+const runUpdate = () =>
+  update.runWithJson<UpdateCartPayload>(
+    updateForm.payload,
+    (payload) => updateCart(Number(updateForm.id), payload, updateForm.method),
     {
       success: (cart) => t("api.carts.updateSuccess", { id: cart!.id }),
-      onSuccess: (cart) =>
-        notifications.info(t("notifications.cartPatched", { id: cart!.id })),
+      onSuccess: (cart) => notifications.info(t("notifications.cartPatched", { id: cart!.id })),
     },
   );
-};
 
-// 刪除購物車 (Delete Cart)
-const cartDeleteForm = reactive({ id: "" as string | number });
-const cartDelete = useApiOperation<null>(null);
-const cartDeleteState = cartDelete.state;
-const handleCartDelete = () => {
-  if (!cartDeleteForm.id) return cartDelete.fail(t("api.errors.idRequired"));
-  return cartDelete.run(
-    async () => {
-      await deleteCart(Number(cartDeleteForm.id));
-      return null;
-    },
-    {
-      success: () => t("api.carts.deleteSuccess", { id: cartDeleteForm.id }),
-      onSuccess: () =>
-        notifications.info(
-          t("notifications.cartRemoved", { id: cartDeleteForm.id }),
-        ),
-    },
-  );
+const deleteForm = reactive({ id: "" });
+const remove = useApiOperation<Cart | null>(null);
+const runDelete = () => {
+  const id = deleteForm.id;
+  return remove.run(() => deleteCart(Number(id)), {
+    success: () => t("api.carts.deleteSuccess", { id }),
+    onSuccess: () => notifications.info(t("notifications.cartRemoved", { id })),
+  });
 };
 </script>
 
@@ -153,176 +99,115 @@ const handleCartDelete = () => {
       <ApiOperationCard
         :title="$t('api.carts.queryTitle')"
         :description="$t('api.carts.queryDescription')"
-        :loading="cartQueryState.loading"
-        :error="cartQueryState.error"
-        :success-message="cartQueryState.success">
-        <form class="space-y-4" @submit.prevent="handleCartsQuery">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model.number="cartQueryForm.limit"
-              type="number"
-              min="1"
-              max="20"
-              :label="$t('api.carts.fields.limit')" />
-            <BaseSelect
-              v-model="cartQueryForm.sort"
-              :label="$t('api.carts.fields.sort')"
-              :options="[
-                { label: $t('api.fields.sortAsc'), value: 'asc' },
-                { label: $t('api.fields.sortDesc'), value: 'desc' },
-              ]" />
-          </div>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model="cartQueryForm.startDate"
-              type="date"
-              :label="$t('api.carts.fields.startDate')" />
-            <BaseInput
-              v-model="cartQueryForm.endDate"
-              type="date"
-              :label="$t('api.carts.fields.endDate')" />
-          </div>
-          <BaseButton type="submit" :loading="cartQueryState.loading">
-            {{ $t("api.actions.runQuery") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="cartQueryState.result.length"
-            :label="$t('api.results.preview')"
-            :value="cartQueryState.result" />
-        </template>
+        :state="query.state"
+        :action="$t('api.actions.runQuery')"
+        :result-label="$t('api.results.preview')"
+        @submit="runQuery">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <BaseInput
+            v-model.number="queryForm.limit"
+            type="number"
+            min="1"
+            max="20"
+            :label="$t('api.fields.limit')" />
+          <BaseSelect
+            v-model="queryForm.sort"
+            :label="$t('api.fields.sort')"
+            :options="[
+              { label: $t('api.fields.sortAsc'), value: 'asc' },
+              { label: $t('api.fields.sortDesc'), value: 'desc' },
+            ]" />
+          <BaseInput
+            v-model="queryForm.startDate"
+            type="date"
+            :label="$t('api.carts.fields.startDate')" />
+          <BaseInput
+            v-model="queryForm.endDate"
+            type="date"
+            :label="$t('api.carts.fields.endDate')" />
+        </div>
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.carts.singleTitle')"
         :description="$t('api.carts.singleDescription')"
-        :loading="cartByIdState.loading"
-        :error="cartByIdState.error">
-        <form class="space-y-4" @submit.prevent="handleCartById">
-          <BaseInput
-            v-model="cartByIdForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.cartId')"
-            required />
-          <BaseButton type="submit" :loading="cartByIdState.loading">
-            {{ $t("api.actions.fetch") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="cartByIdState.result"
-            :label="$t('api.results.response')"
-            :value="cartByIdState.result" />
-        </template>
+        :state="byId.state"
+        :action="$t('api.actions.fetch')"
+        @submit="runById">
+        <BaseInput
+          v-model="byIdForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.cartId')"
+          required />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.carts.userTitle')"
         :description="$t('api.carts.userDescription')"
-        :loading="cartByUserState.loading"
-        :error="cartByUserState.error">
-        <form class="space-y-4" @submit.prevent="handleCartByUser">
-          <BaseInput
-            v-model="cartByUserForm.userId"
-            type="number"
-            min="1"
-            :label="$t('api.fields.userId')"
-            required />
-          <BaseButton type="submit" :loading="cartByUserState.loading">
-            {{ $t("api.actions.fetch") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="cartByUserState.result.length"
-            :label="$t('api.results.response')"
-            :value="cartByUserState.result" />
-        </template>
+        :state="byUser.state"
+        :action="$t('api.actions.fetch')"
+        @submit="runByUser">
+        <BaseInput
+          v-model="byUserForm.userId"
+          type="number"
+          min="1"
+          :label="$t('api.fields.userId')"
+          required />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.carts.createTitle')"
         :description="$t('api.carts.createDescription')"
-        :loading="cartCreateState.loading"
-        :error="cartCreateState.error"
-        :success-message="cartCreateState.success">
-        <form class="space-y-4" @submit.prevent="handleCartCreate">
-          <BaseTextarea
-            v-model="cartCreateForm"
-            :label="$t('api.fields.payload')"
-            :rows="6" />
-          <BaseButton type="submit" :loading="cartCreateState.loading">
-            {{ $t("api.actions.create") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="cartCreateState.result"
-            :label="$t('api.results.response')"
-            :value="cartCreateState.result" />
-        </template>
+        :state="create.state"
+        :action="$t('api.actions.create')"
+        @submit="runCreate">
+        <BaseTextarea
+          v-model="createPayload"
+          :label="$t('api.fields.payload')"
+          :rows="8" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.carts.updateTitle')"
         :description="$t('api.carts.updateDescription')"
-        :loading="cartUpdateState.loading"
-        :error="cartUpdateState.error"
-        :success-message="cartUpdateState.success">
-        <form class="space-y-4" @submit.prevent="handleCartUpdate">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model="cartUpdateForm.id"
-              type="number"
-              min="1"
-              :label="$t('api.fields.cartId')"
-              required />
-            <BaseSelect
-              v-model="cartUpdateForm.method"
-              :label="$t('api.products.fields.method')"
-              :options="[
-                { label: 'PUT', value: 'PUT' },
-                { label: 'PATCH', value: 'PATCH' },
-              ]" />
-          </div>
-          <BaseTextarea
-            v-model="cartUpdateForm.payload"
-            :label="$t('api.fields.payload')"
-            :rows="6" />
-          <BaseButton type="submit" :loading="cartUpdateState.loading">
-            {{ $t("api.actions.update") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="cartUpdateState.result"
-            :label="$t('api.results.response')"
-            :value="cartUpdateState.result" />
-        </template>
+        :state="update.state"
+        :action="$t('api.actions.update')"
+        @submit="runUpdate">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <BaseInput
+            v-model="updateForm.id"
+            type="number"
+            min="1"
+            :label="$t('api.fields.cartId')"
+            required />
+          <BaseSelect
+            v-model="updateForm.method"
+            :label="$t('api.fields.method')"
+            :options="[
+              { label: 'PUT', value: 'PUT' },
+              { label: 'PATCH', value: 'PATCH' },
+            ]" />
+        </div>
+        <BaseTextarea
+          v-model="updateForm.payload"
+          :label="$t('api.fields.payload')"
+          :rows="6" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.carts.deleteTitle')"
         :description="$t('api.carts.deleteDescription')"
-        :loading="cartDeleteState.loading"
-        :error="cartDeleteState.error"
-        :success-message="cartDeleteState.success">
-        <form class="space-y-4" @submit.prevent="handleCartDelete">
-          <BaseInput
-            v-model="cartDeleteForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.cartId')"
-            required />
-          <BaseButton
-            type="submit"
-            :loading="cartDeleteState.loading"
-            variant="outline">
-            {{ $t("api.actions.delete") }}
-          </BaseButton>
-        </form>
+        :state="remove.state"
+        :action="$t('api.actions.delete')"
+        destructive
+        @submit="runDelete">
+        <BaseInput
+          v-model="deleteForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.cartId')"
+          required />
       </ApiOperationCard>
     </div>
   </section>

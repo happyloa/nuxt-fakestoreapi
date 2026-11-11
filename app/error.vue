@@ -5,7 +5,8 @@ const props = defineProps<{
   error: NuxtError;
 }>();
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
+const localeHead = useLocaleHead();
 const localePath = useLocalePath();
 const errorTitle = computed(() =>
   props.error.statusCode === 404
@@ -18,19 +19,18 @@ const handleError = () => {
 };
 
 useSeoMeta({
-  title: () => `${errorTitle.value} | Storefront Lab`,
+  title: () => `${errorTitle.value}｜Storefront Lab`,
   robots: "noindex, nofollow",
 });
-useHead(() => ({
-  htmlAttrs: { lang: locale.value === "zh" ? "zh-TW" : "en-US" },
-}));
+// error.vue 不經過 layout，語系屬性要自行設定。
+useHead(() => ({ htmlAttrs: { lang: localeHead.value.htmlAttrs.lang } }));
 </script>
 
 <template>
   <div
     class="flex min-h-screen items-center bg-paper px-5 text-slate-900 sm:px-8 lg:px-10 dark:bg-slate-950 dark:text-paper"
   >
-    <div class="mx-auto w-full max-w-7xl space-y-6 py-16">
+    <main class="mx-auto w-full max-w-7xl space-y-6 py-16">
       <p
         class="meta border-b border-rule pb-3 text-slate-500 dark:border-rule-dark dark:text-slate-400"
       >
@@ -53,6 +53,6 @@ useHead(() => ({
       <BaseButton size="lg" @click="handleError"
         >{{ t("error.backToHome") }}<SiteIcon name="arrow" class="h-4 w-4"
       /></BaseButton>
-    </div>
+    </main>
   </div>
 </template>

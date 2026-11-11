@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MAX_LINE_QUANTITY } from "#shared/utils/limits";
 import type { CartItem } from "~/utils/cart";
 
 defineEmits<{
@@ -23,7 +24,7 @@ const stepClass =
 </script>
 
 <template>
-  <section aria-live="polite">
+  <section>
     <ul
       v-if="loading"
       class="divide-y divide-rule border-y border-rule dark:divide-rule-dark dark:border-rule-dark"
@@ -43,6 +44,7 @@ const stepClass =
     </ul>
     <ul
       v-else-if="items.length"
+      role="list"
       class="divide-y divide-rule border-y border-rule dark:divide-rule-dark dark:border-rule-dark"
     >
       <li
@@ -54,7 +56,7 @@ const stepClass =
           class="flex aspect-square items-center justify-center bg-plate p-2"
           ><img
             :src="item.image"
-            :alt="item.title"
+            alt=""
             width="88"
             height="88"
             loading="lazy"
@@ -64,7 +66,7 @@ const stepClass =
           <p class="meta text-slate-500 dark:text-slate-400">
             {{ catalogNumber(item.id) }}
           </p>
-          <h3 class="mt-1 text-sm font-semibold leading-5 sm:text-[15px]">
+          <h3 lang="en" class="mt-1 text-sm font-semibold leading-5 sm:text-[15px]">
             {{ item.title }}
           </h3>
           <p class="mt-1 text-sm tabular-nums text-slate-500 dark:text-slate-400">
@@ -99,7 +101,7 @@ const stepClass =
             <button
               type="button"
               :class="stepClass"
-              :disabled="item.quantity >= 99"
+              :disabled="item.quantity >= MAX_LINE_QUANTITY"
               :aria-label="$t('cart.a11y.increaseQty', { title: item.title })"
               @click="$emit('increment', item.id)"
             >
@@ -112,7 +114,7 @@ const stepClass =
             </p>
             <button
               type="button"
-              class="text-xs text-slate-500 underline underline-offset-4 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper"
+              class="min-h-6 py-1 text-xs text-slate-500 underline underline-offset-4 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper"
               @click="$emit('remove', item.id)"
             >
               {{ $t("cart.remove") }}

@@ -1,116 +1,59 @@
 <script setup lang="ts">
-/**
- * 產品管理區塊元件
- * 提供產品的查詢、單一取得、更新與刪除功能
- */
-
+/** 商品端點：查詢、單筆、分類、更新與刪除。 */
 import {
   deleteProduct,
   getProductById,
   getProductCategories,
-  patchProduct,
   queryProducts,
   updateProduct,
 } from "~/services/fakestore/products";
-import { useProductsStore } from "~/stores/products";
-import { useNotificationsStore } from "~/stores/notifications";
+import type { UpdateMethod } from "~/services/fakestore/client";
 import type { Product, UpdateProductPayload } from "#shared/types/fakestore";
 
 const { t } = useI18n();
 const productsStore = useProductsStore();
 const notifications = useNotificationsStore();
+const categoryLabel = useCategoryLabel();
 
-// 查詢產品列表 (Query Products)
-const productQueryForm = reactive({
-  category: "all",
-  limit: 6,
-  sort: "asc" as "asc" | "desc",
-});
-const productQuery = useApiOperation<Product[]>([]);
-const productQueryState = productQuery.state;
-const handleProductQuery = () =>
-  productQuery.run(
-    () =>
-      queryProducts({
-        category: productQueryForm.category,
-        limit: productQueryForm.limit,
-        sort: productQueryForm.sort,
-      }),
-    {
-      success: (products) =>
-        t("api.products.querySuccess", { count: products.length }),
-    },
-  );
+const queryForm = reactive({ category: "all", limit: 6, sort: "asc" as "asc" | "desc" });
+const query = useApiOperation<Product[]>([]);
+const runQuery = () =>
+  query.run(() => queryProducts(queryForm), {
+    success: (products) => t("api.products.querySuccess", { count: products.length }),
+  });
 
-// 取得單一產品 (Get Product By ID)
-const productByIdForm = reactive({ id: "" as string | number });
-const productById = useApiOperation<Product | null>(null);
-const productByIdState = productById.state;
-const handleProductById = () => {
-  if (!productByIdForm.id) return productById.fail(t("api.errors.idRequired"));
-  return productById.run(() => getProductById(Number(productByIdForm.id)));
-};
+const byIdForm = reactive({ id: "" });
+const byId = useApiOperation<Product | null>(null);
+const runById = () => byId.run(() => getProductById(Number(byIdForm.id)));
 
-// 取得全部分類 (Fetch All Categories)
-const productCategories = useApiOperation<string[]>([]);
-const productCategoriesState = productCategories.state;
-const handleFetchCategories = () =>
-  productCategories.run(() => getProductCategories());
+const categories = useApiOperation<string[]>([]);
+const runCategories = () => categories.run(getProductCategories);
 
-// 更新產品 (Update Product)
-const productUpdateForm = reactive({
-  id: "" as string | number,
-  method: "PUT" as "PUT" | "PATCH",
+const updateForm = reactive({
+  id: "",
+  method: "PUT" as UpdateMethod,
   payload: '{\n  "title": "Updated title"\n}',
 });
-const productUpdate = useApiOperation<Product | null>(null);
-const productUpdateState = productUpdate.state;
-const handleProductUpdate = () => {
-  if (!productUpdateForm.id)
-    return productUpdate.fail(t("api.errors.idRequired"));
-  let parsed: UpdateProductPayload;
-  try {
-    parsed = JSON.parse(productUpdateForm.payload);
-  } catch {
-    return productUpdate.fail(t("api.errors.invalidJson"));
-  }
-  return productUpdate.run(
-    () =>
-      productUpdateForm.method === "PATCH"
-        ? patchProduct(Number(productUpdateForm.id), parsed)
-        : updateProduct(Number(productUpdateForm.id), parsed),
+const update = useApiOperation<Product | null>(null);
+const runUpdate = () =>
+  update.runWithJson<UpdateProductPayload>(
+    updateForm.payload,
+    (payload) => updateProduct(Number(updateForm.id), payload, updateForm.method),
     {
-      success: (product) =>
-        t("api.products.updateSuccess", { id: product!.id }),
+      success: (product) => t("api.products.updateSuccess", { id: product!.id }),
       onSuccess: (product) =>
-        notifications.success(
-          t("notifications.productUpdated", { title: product!.title }),
-        ),
+        notifications.success(t("notifications.productUpdated", { title: product!.title })),
     },
   );
-};
 
-// 刪除產品 (Delete Product)
-const productDeleteForm = reactive({ id: "" as string | number });
-const productDelete = useApiOperation<null>(null);
-const productDeleteState = productDelete.state;
-const handleProductDelete = () => {
-  if (!productDeleteForm.id)
-    return productDelete.fail(t("api.errors.idRequired"));
-  return productDelete.run(
-    async () => {
-      await deleteProduct(Number(productDeleteForm.id));
-      return null;
-    },
-    {
-      success: () =>
-        t("api.products.deleteSuccess", { id: productDeleteForm.id }),
-      onSuccess: () =>
-        notifications.info(
-          t("notifications.productDeleted", { id: productDeleteForm.id }),
-        ),
-    },
-  );
+const deleteForm = reactive({ id: "" });
+const remove = useApiOperation<Product | null>(null);
+const runDelete = () => {
+  const id = deleteForm.id;
+  return remove.run(() => deleteProduct(Number(id)), {
+    success: () => t("api.products.deleteSuccess", { id }),
+    onSuccess: () => notifications.info(t("notifications.productDeleted", { id })),
+  });
 };
 </script>
 
@@ -123,149 +66,99 @@ const handleProductDelete = () => {
       <ApiOperationCard
         :title="$t('api.products.queryTitle')"
         :description="$t('api.products.queryDescription')"
-        :loading="productQueryState.loading"
-        :error="productQueryState.error"
-        :success-message="productQueryState.success">
-        <form class="space-y-4" @submit.prevent="handleProductQuery">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseSelect
-              v-model="productQueryForm.category"
-              :label="$t('api.products.fields.category')"
-              :options="[
-                { label: $t('products.filters.allCategories'), value: 'all' },
-                ...productsStore.categories.map((category) => ({
-                  label: category,
-                  value: category,
-                })),
-              ]" />
-            <BaseInput
-              v-model.number="productQueryForm.limit"
-              type="number"
-              min="1"
-              max="20"
-              :label="$t('api.products.fields.limit')"
-              required />
-          </div>
+        :state="query.state"
+        :action="$t('api.actions.runQuery')"
+        :result-label="$t('api.results.preview')"
+        @submit="runQuery">
+        <div class="grid gap-4 sm:grid-cols-2">
           <BaseSelect
-            v-model="productQueryForm.sort"
-            :label="$t('api.products.fields.sort')"
+            v-model="queryForm.category"
+            :label="$t('api.products.fields.category')"
             :options="[
-              { label: $t('api.fields.sortAsc'), value: 'asc' },
-              { label: $t('api.fields.sortDesc'), value: 'desc' },
+              { label: $t('products.filters.allCategories'), value: 'all' },
+              ...productsStore.categories.map((category) => ({
+                label: categoryLabel(category),
+                value: category,
+              })),
             ]" />
-          <BaseButton type="submit" :loading="productQueryState.loading">
-            {{ $t("api.actions.runQuery") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="productQueryState.result.length"
-            :label="$t('api.results.preview')"
-            :value="productQueryState.result" />
-        </template>
+          <BaseInput
+            v-model.number="queryForm.limit"
+            type="number"
+            min="1"
+            max="20"
+            :label="$t('api.fields.limit')"
+            required />
+        </div>
+        <BaseSelect
+          v-model="queryForm.sort"
+          :label="$t('api.fields.sort')"
+          :options="[
+            { label: $t('api.fields.sortAsc'), value: 'asc' },
+            { label: $t('api.fields.sortDesc'), value: 'desc' },
+          ]" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.products.singleTitle')"
         :description="$t('api.products.singleDescription')"
-        :loading="productByIdState.loading"
-        :error="productByIdState.error">
-        <form class="space-y-4" @submit.prevent="handleProductById">
-          <BaseInput
-            v-model="productByIdForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.productId')"
-            required />
-          <BaseButton type="submit" :loading="productByIdState.loading">
-            {{ $t("api.actions.fetch") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="productByIdState.result"
-            :label="$t('api.results.response')"
-            :value="productByIdState.result" />
-        </template>
+        :state="byId.state"
+        :action="$t('api.actions.fetch')"
+        @submit="runById">
+        <BaseInput
+          v-model="byIdForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.productId')"
+          required />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.products.categoriesTitle')"
         :description="$t('api.products.categoriesDescription')"
-        :loading="productCategoriesState.loading"
-        :error="productCategoriesState.error">
-        <BaseButton
-          type="button"
-          :loading="productCategoriesState.loading"
-          @click="handleFetchCategories">
-          {{ $t("api.actions.fetch") }}
-        </BaseButton>
-        <template #footer>
-          <ApiResultViewer
-            v-if="productCategoriesState.result.length"
-            :label="$t('api.results.response')"
-            :value="productCategoriesState.result" />
-        </template>
-      </ApiOperationCard>
+        :state="categories.state"
+        :action="$t('api.actions.fetch')"
+        @submit="runCategories" />
 
       <ApiOperationCard
         :title="$t('api.products.updateTitle')"
         :description="$t('api.products.updateDescription')"
-        :loading="productUpdateState.loading"
-        :error="productUpdateState.error"
-        :success-message="productUpdateState.success">
-        <form class="space-y-4" @submit.prevent="handleProductUpdate">
-          <div class="grid gap-4 sm:grid-cols-2">
-            <BaseInput
-              v-model="productUpdateForm.id"
-              type="number"
-              min="1"
-              :label="$t('api.fields.productId')"
-              required />
-            <BaseSelect
-              v-model="productUpdateForm.method"
-              :label="$t('api.products.fields.method')"
-              :options="[
-                { label: 'PUT', value: 'PUT' },
-                { label: 'PATCH', value: 'PATCH' },
-              ]" />
-          </div>
-          <BaseTextarea
-            v-model="productUpdateForm.payload"
-            :label="$t('api.fields.payload')"
-            :rows="6" />
-          <BaseButton type="submit" :loading="productUpdateState.loading">
-            {{ $t("api.actions.update") }}
-          </BaseButton>
-        </form>
-        <template #footer>
-          <ApiResultViewer
-            v-if="productUpdateState.result"
-            :label="$t('api.results.response')"
-            :value="productUpdateState.result" />
-        </template>
+        :state="update.state"
+        :action="$t('api.actions.update')"
+        @submit="runUpdate">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <BaseInput
+            v-model="updateForm.id"
+            type="number"
+            min="1"
+            :label="$t('api.fields.productId')"
+            required />
+          <BaseSelect
+            v-model="updateForm.method"
+            :label="$t('api.fields.method')"
+            :options="[
+              { label: 'PUT', value: 'PUT' },
+              { label: 'PATCH', value: 'PATCH' },
+            ]" />
+        </div>
+        <BaseTextarea
+          v-model="updateForm.payload"
+          :label="$t('api.fields.payload')"
+          :rows="6" />
       </ApiOperationCard>
 
       <ApiOperationCard
         :title="$t('api.products.deleteTitle')"
         :description="$t('api.products.deleteDescription')"
-        :loading="productDeleteState.loading"
-        :error="productDeleteState.error"
-        :success-message="productDeleteState.success">
-        <form class="space-y-4" @submit.prevent="handleProductDelete">
-          <BaseInput
-            v-model="productDeleteForm.id"
-            type="number"
-            min="1"
-            :label="$t('api.fields.productId')"
-            required />
-          <BaseButton
-            type="submit"
-            :loading="productDeleteState.loading"
-            variant="outline">
-            {{ $t("api.actions.delete") }}
-          </BaseButton>
-        </form>
+        :state="remove.state"
+        :action="$t('api.actions.delete')"
+        destructive
+        @submit="runDelete">
+        <BaseInput
+          v-model="deleteForm.id"
+          type="number"
+          min="1"
+          :label="$t('api.fields.productId')"
+          required />
       </ApiOperationCard>
     </div>
   </section>

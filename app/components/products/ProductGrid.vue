@@ -25,7 +25,7 @@ withDefaults(
 
 <template>
   <div>
-    <ProductGridSkeleton v-if="loading" :count="8" />
+    <ProductGridSkeleton v-if="loading" />
     <BaseAlert v-else-if="error" variant="error" class="mt-6">
       <div class="space-y-3">
         <p>{{ error }}</p>
@@ -42,6 +42,7 @@ withDefaults(
     <!-- 無間距格線：外框畫上與左邊線，每格補右與下邊線。 -->
     <ul
       v-else
+      role="list"
       class="grid grid-cols-2 border-l border-rule md:grid-cols-3 lg:grid-cols-4 dark:border-rule-dark"
     >
       <li

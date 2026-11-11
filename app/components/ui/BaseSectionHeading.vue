@@ -4,10 +4,13 @@ withDefaults(
     title: string;
     description?: string;
     level?: number;
+    /** 放在標題元素本身，供 aria-labelledby 只取標題文字 */
+    headingId?: string;
   }>(),
   {
     description: "",
     level: 2,
+    headingId: undefined,
   },
 );
 </script>
@@ -16,10 +19,11 @@ withDefaults(
   <hgroup class="mb-8 space-y-3 text-left">
     <component
       :is="'h' + level"
+      :id="headingId"
       :class="
         level === 1
-          ? 'text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] tracking-heading'
-          : 'text-xl tracking-[-0.02em] sm:text-2xl'
+          ? 'text-[clamp(2.5rem,6vw,4.75rem)] leading-display tracking-heading'
+          : 'text-xl tracking-heading sm:text-2xl'
       "
       class="font-extrabold text-slate-900 dark:text-paper"
     >
@@ -31,6 +35,5 @@ withDefaults(
     >
       {{ description }}
     </p>
-    <slot />
   </hgroup>
 </template>

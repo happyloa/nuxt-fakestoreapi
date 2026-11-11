@@ -1,9 +1,11 @@
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const cart = useCartStore();
   const key = "storefront-cart-v1";
-  // Async page hydration can outlive app:mounted. Restore browser-only state
-  // once the entire Nuxt app is ready so SSR markup and accessible labels agree.
-  onNuxtReady(() => {
+
+  // Read browser-only state right after hydration so SSR markup and the first
+  // client render agree, without the idle delay of onNuxtReady (items added in
+  // that gap would otherwise be overwritten by the stored cart).
+  const restore = () => {
     try {
       cart.restore(localStorage.getItem(key));
     } catch {
@@ -21,5 +23,8 @@ export default defineNuxtPlugin(() => {
       },
       { detached: true, flush: "sync" },
     );
-  });
+  };
+
+  if (nuxtApp.isHydrating) nuxtApp.hooks.hookOnce("app:suspense:resolve", restore);
+  else restore();
 });

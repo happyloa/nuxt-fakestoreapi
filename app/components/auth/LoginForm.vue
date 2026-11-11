@@ -4,7 +4,7 @@ interface Props {
   error?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   loading: false,
   error: "",
 });

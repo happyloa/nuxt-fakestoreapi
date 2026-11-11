@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import manropeUrl from '~/assets/fonts/manrope-latin.woff2?url'
+
 const SITE_NAME = 'Storefront Lab'
 
-// 站台名稱後綴；首頁標題已含站名時不重複附加。
-// 描述與分享圖由各頁的 usePageSeo 設定。
+// 站台名稱後綴；描述與分享圖由各頁的 usePageSeo 設定。
+// 字型在 HTML 解析時就開始下載，不必等到樣式套用後才被發現。
 useHead({
-  titleTemplate: (title) => {
-    if (!title) return SITE_NAME
-    return title.includes(SITE_NAME) ? title : `${title}｜${SITE_NAME}`
-  },
+  titleTemplate: (title) => (title ? `${title}｜${SITE_NAME}` : SITE_NAME),
+  link: [{ rel: 'preload', as: 'font', type: 'font/woff2', href: manropeUrl, crossorigin: '' }],
 })
 useSeoMeta({
   ogSiteName: SITE_NAME,

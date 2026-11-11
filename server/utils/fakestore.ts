@@ -4,11 +4,22 @@ import type {
   CatalogPayload,
   PublicUser,
 } from "#shared/types/storefront";
+import { MAX_ENTITY_ID, MAX_PRICE, parseEntityId } from "#shared/utils/limits";
 
 const DEFAULT_FAKE_STORE_API_URL = "https://fakestoreapi.com";
 const REQUEST_TIMEOUT_MS = 8_000;
-const MAX_PRODUCT_ID = 1_000_000;
 const STALE_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1_000;
+
+/**
+ * Shared options for every upstream request. Redirects are not followed (the
+ * allow-list only covers the first hop; "manual" also works on Workers), and
+ * bodies must be JSON so text or HTML is never relayed. Fake Store answers
+ * unknown ids with an empty body, which becomes null.
+ */
+export const UPSTREAM_FETCH_OPTIONS = {
+  redirect: "manual",
+  parseResponse: (text: string): unknown => (text === "" ? null : JSON.parse(text)),
+} as const;
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -149,9 +160,9 @@ function normalizeProduct(value: unknown): Product {
   const rating = requireRecord(product.rating);
 
   return {
-    id: requireInteger(product.id, 1, MAX_PRODUCT_ID),
+    id: requireInteger(product.id, 1, MAX_ENTITY_ID),
     title: requireText(product.title),
-    price: requireNumber(product.price, 0, 1_000_000),
+    price: requireNumber(product.price, 0, MAX_PRICE),
     description: requireText(product.description, 10_000),
     category: requireText(product.category, 120),
     image: normalizeImage(product.image),
@@ -187,7 +198,7 @@ function normalizePublicUser(value: unknown): PublicUser {
   if (!email.includes("@")) throw upstreamResponseError();
 
   return {
-    id: requireInteger(user.id, 1, MAX_PRODUCT_ID),
+    id: requireInteger(user.id, 1, MAX_ENTITY_ID),
     username: requireText(user.username, 120),
     email,
     name: {
@@ -211,6 +222,7 @@ async function requestFakeStore(
 ): Promise<unknown> {
   try {
     return await $fetch<unknown>(`${getFakeStoreBaseUrl(event)}${path}`, {
+      ...UPSTREAM_FETCH_OPTIONS,
       method: options.method,
       body: options.body,
       // Retrying a GET masks brief DNS/network failures without retrying
@@ -237,22 +249,6 @@ async function requestFakeStore(
   }
 }
 
-function parsePositiveInteger(value: unknown): number | null {
-  const normalized =
-    typeof value === "string" && /^\d+$/.test(value) ? Number(value) : value;
-
-  if (
-    typeof normalized !== "number" ||
-    !Number.isSafeInteger(normalized) ||
-    normalized < 1 ||
-    normalized > MAX_PRODUCT_ID
-  ) {
-    return null;
-  }
-
-  return normalized;
-}
-
 function getUserIdFromTrustedLoginToken(token: string): number | null {
   const payloadSegment = token.split(".")[1];
   if (!payloadSegment || payloadSegment.length > 4_096) return null;
@@ -270,7 +266,7 @@ function getUserIdFromTrustedLoginToken(token: string): number | null {
       return null;
     }
 
-    return parsePositiveInteger(payload.sub);
+    return parseEntityId(payload.sub);
   } catch {
     return null;
   }

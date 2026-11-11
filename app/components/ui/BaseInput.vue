@@ -1,33 +1,17 @@
 <script setup lang="ts">
-import { useAttrs } from "vue";
-
+// 其餘屬性（min、placeholder、autocomplete…）交給 <input>，外層 label 提供名稱。
 defineOptions({ inheritAttrs: false });
 
-const attrs = useAttrs();
+const model = defineModel<string | number | null>({ required: true });
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    modelValue: string | number | null;
     type?: string;
     label?: string;
-    placeholder?: string;
     required?: boolean;
   }>(),
-  {
-    type: "text",
-    placeholder: "",
-    required: false,
-  },
+  { type: "text", required: false },
 );
-
-const emit = defineEmits<{
-  (e: "update:modelValue", value: string | number | null): void;
-}>();
-
-const inputValue = computed({
-  get: () => props.modelValue,
-  set: (value: string | number | null) => emit("update:modelValue", value),
-});
 </script>
 
 <template>
@@ -37,11 +21,10 @@ const inputValue = computed({
       <span v-if="required" class="text-brand dark:text-brand-light" aria-hidden="true">*</span>
     </span>
     <input
-      v-bind="attrs"
-      v-model="inputValue"
+      v-bind="$attrs"
+      v-model="model"
       :type="type"
       :required="required"
-      :placeholder="placeholder"
       :class="FIELD_CONTROL_CLASS"
     />
   </label>

@@ -20,6 +20,7 @@ const categoryLabel = useCategoryLabel();
       <img
         :src="product.image"
         :alt="product.title"
+        lang="en"
         width="600"
         height="600"
         fetchpriority="high"
@@ -33,7 +34,9 @@ const categoryLabel = useCategoryLabel();
         <span>{{ catalogNumber(product.id) }}</span
         ><span>{{ categoryLabel(product.category) }}</span>
       </p>
+      <!-- 商品資料來自英文的上游 API，標示語言讓螢幕閱讀器以英文朗讀。 -->
       <h1
+        lang="en"
         class="mt-6 text-[clamp(2rem,3.6vw,3.25rem)] font-extrabold leading-[1.02] tracking-heading"
       >
         {{ product.title }}
@@ -42,6 +45,7 @@ const categoryLabel = useCategoryLabel();
         {{ $n(product.price, "currency") }}
       </p>
       <p
+        lang="en"
         class="mt-6 text-sm leading-7 text-slate-600 dark:text-slate-300"
       >
         {{ product.description }}
@@ -55,7 +59,7 @@ const categoryLabel = useCategoryLabel();
           $t("products.actions.addToCart")
         }}</BaseButton
       >
-      <p class="meta mt-3 text-slate-500 dark:text-slate-400">
+      <p class="mt-3 text-xs leading-5 text-slate-500 dark:text-slate-400">
         {{ $t("cart.demoNotice") }}
       </p>
       <dl class="mt-10 border-t border-rule text-sm dark:border-rule-dark">

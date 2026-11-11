@@ -5,13 +5,14 @@ defineProps<{ user: User }>();
 </script>
 
 <template>
-  <BaseCard as="article" class="space-y-4">
+  <BaseCard class="space-y-4">
     <header class="flex items-start justify-between gap-4">
       <div>
-        <h3 class="text-lg font-bold capitalize tracking-[-0.01em] text-slate-900 dark:text-paper">
+        <!-- 會員資料來自英文的上游 API；欄位標籤則跟隨介面語系。 -->
+        <h2 lang="en" class="text-lg font-bold capitalize tracking-[-0.01em] text-slate-900 dark:text-paper">
           {{ user.name.firstname }} {{ user.name.lastname }}
-        </h3>
-        <p class="text-sm text-slate-500 dark:text-slate-300">
+        </h2>
+        <p lang="en" class="text-sm text-slate-500 dark:text-slate-300">
           {{ user.username }} · {{ user.email }}
         </p>
       </div>
@@ -24,7 +25,7 @@ defineProps<{ user: User }>();
           {{ $t("users.card.address") }}
         </dt>
         <dd>
-          <address class="not-italic">
+          <address lang="en" class="not-italic">
             {{ user.address.number }} {{ user.address.street }}<br />
             {{ user.address.city }}, {{ user.address.zipcode }}
           </address>
