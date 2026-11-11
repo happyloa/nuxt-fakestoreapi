@@ -6,19 +6,6 @@ import type {
 import { createQueryString, fakestoreClient } from './client'
 
 /**
- * 取得所有產品列表
- * @param options 篩選與排序選項
- */
-export const getAllProducts = (options: {
-  limit?: number
-  sort?: 'asc' | 'desc'
-} = {}) => {
-  const query = createQueryString(options)
-  const url = query ? `/products?${query}` : '/products'
-  return fakestoreClient<Product[]>(url)
-}
-
-/**
  * 查詢產品 (支援分類與排序)
  * @param options 查詢選項
  */

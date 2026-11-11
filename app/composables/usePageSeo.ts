@@ -10,6 +10,7 @@ interface PageSeoInput {
 }
 
 const DEFAULT_OG_IMAGE = "/og-image.webp";
+const DEFAULT_OG_IMAGE_SIZE = { width: 1200, height: 686 };
 
 /**
  * 統一頁面 SEO 設定。
@@ -35,6 +36,9 @@ export function usePageSeo(seo: () => PageSeoInput) {
     ogType: () => (seo().type ?? "website") as "website",
     ogUrl: canonical,
     ogImage: socialImage,
+    // 只有站台預設圖的尺寸已知；商品圖來自上游，不宣告尺寸。
+    ogImageWidth: () => (seo().image ? undefined : DEFAULT_OG_IMAGE_SIZE.width),
+    ogImageHeight: () => (seo().image ? undefined : DEFAULT_OG_IMAGE_SIZE.height),
     twitterCard: "summary_large_image",
     twitterTitle: () => seo().title,
     twitterDescription: () => seo().description,

@@ -28,7 +28,6 @@
       "title": "Everyday finds.\nA little more you.",
       "subtitle": "Explore clothing, jewelry and tech. Find something you like, add it to your bag, and try the shopping experience.",
       "ctaPrimary": "Explore the collection",
-      "ctaSecondary": "Meet the users",
       "illustrationAlt": "Fjallraven everyday backpack",
       "featured": "In the collection",
       "demoNotice": "Demo store. No payment or shipping."
@@ -40,8 +39,6 @@
       "categories": "Available categories"
     },
     "filters": {
-      "title": "Smart filters",
-      "description": "Combine search, category and sorting to find the exact product you need.",
       "searchLabel": "Search",
       "searchPlaceholder": "Search products...",
       "categoryLabel": "Category",
@@ -70,9 +67,9 @@
       "back": "Back to all products",
       "rating": "Rating {rate}",
       "reviews": "{count} review | {count} reviews",
-      "missing": "We could not find this product. Please try again from the catalogue.",
       "loadError": "Unable to load product details.",
-      "upstreamUnavailable": "The product service is temporarily unavailable. Please try again shortly."
+      "upstreamUnavailable": "The product service is temporarily unavailable. Please try again shortly.",
+      "fallbackName": "Product"
     },
     "form": {
       "back": "Back to catalogue",
@@ -113,7 +110,6 @@
     "itemsHeading": "Items in your cart",
     "summary": {
       "title": "Order summary",
-      "description": "Review the totals and proceed when you're ready.",
       "items": "Items: {count}",
       "total": "Total: {total}",
       "checkout": "Demo checkout",
@@ -169,7 +165,6 @@
       "zipcode": "Zip Code"
     },
     "noOrders": "No order history yet.",
-    "orderItems": "{count} items",
     "logout": "Sign Out"
   },
   "notifications": {
@@ -190,7 +185,9 @@
     "checkoutSuccess": "Checkout complete! Order #{id} is ready.",
     "checkoutEmpty": "Add some items before checking out.",
     "checkoutLogin": "Log in to checkout your cart.",
-    "checkoutError": "We couldn't finish the checkout. Try again soon."
+    "checkoutError": "We couldn't finish the checkout. Try again soon.",
+    "cartLimit": "Cart limit reached: up to 99 of each product and 50 products in total.",
+    "checkoutPending": "Checkout in progress. Add more items once it finishes."
   },
   "api": {
     "title": "API playground",
@@ -206,13 +203,18 @@
       "productId": "Product ID",
       "cartId": "Cart ID",
       "userId": "User ID",
-      "payload": "JSON payload"
+      "payload": "JSON payload",
+      "sortAsc": "ID ascending (asc)",
+      "sortDesc": "ID descending (desc)"
     },
     "errors": {
       "generic": "Something went wrong. Please try again.",
       "idRequired": "Please enter an ID first.",
       "invalidJson": "The JSON payload could not be parsed.",
-      "userIdRequired": "Please enter a user ID first."
+      "userIdRequired": "Please enter a user ID first.",
+      "invalidInput": "The request was rejected. Check the fields and try again.",
+      "notFound": "Not found, or this operation is not supported.",
+      "unavailable": "The demo service is temporarily unavailable. Please try again shortly."
     },
     "results": {
       "preview": "Response preview",
@@ -311,11 +313,9 @@
     "backToHome": "Back to Home"
   },
   "footer": {
-    "title": "About this project",
     "description": "A small storefront for exploring products and trying the shopping experience. Built with Nuxt and Fake Store API.",
     "copyright": "© {year} Storefront Lab",
     "sections": {
-      "api": "API",
       "project": "Project",
       "shop": "Explore"
     },

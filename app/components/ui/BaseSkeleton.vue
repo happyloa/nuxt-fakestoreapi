@@ -8,13 +8,12 @@ defineProps<{
   width?: string;
   height?: string;
   rounded?: string;
-  circle?: boolean;
 }>();
 </script>
 
 <template>
   <div
     class="animate-pulse bg-slate-200 dark:bg-slate-800"
-    :class="[circle ? 'rounded-full' : rounded || 'rounded-lg']"
+    :class="rounded || 'rounded-lg'"
     :style="{ width: width || '100%', height: height || '1rem' }" />
 </template>

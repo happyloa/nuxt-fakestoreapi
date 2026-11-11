@@ -1,7 +1,4 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ variant?: "inline" | "floating" }>(), {
-  variant: "inline",
-});
 const theme = useThemeStore();
 const { t } = useI18n();
 const isDark = computed(() => theme.resolved === "dark");

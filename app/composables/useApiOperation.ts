@@ -28,6 +28,24 @@ interface RunOptions<T> {
 export function useApiOperation<T>(initialResult: T) {
   const { t } = useI18n();
 
+  // ofetch 的錯誤訊息是未在地化的英文（含方法與網址），改依狀態碼顯示語系文案。
+  const describeError = (error: unknown) => {
+    const status =
+      error && typeof error === "object" && "statusCode" in error
+        ? Number(error.statusCode) || undefined
+        : undefined;
+    const key =
+      status === 400 || status === 413 || status === 415
+        ? "invalidInput"
+        : status === 404
+          ? "notFound"
+          : status && status >= 500
+            ? "unavailable"
+            : "generic";
+    const message = t(`api.errors.${key}`);
+    return status ? `${message} (HTTP ${status})` : message;
+  };
+
   const state = reactive<ApiOperationState<T>>({
     loading: false,
     error: "",
@@ -49,7 +67,7 @@ export function useApiOperation<T>(initialResult: T) {
       options.onSuccess?.(result);
       return result;
     } catch (error) {
-      state.error = toErrorMessage(error, t("api.errors.generic"));
+      state.error = describeError(error);
       return undefined;
     } finally {
       state.loading = false;

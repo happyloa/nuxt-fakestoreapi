@@ -4,7 +4,15 @@
  * 提供購物車的查詢、單一取得、依使用者取得、建立、更新與刪除功能
  */
 
-import { useAdminCartsStore } from "~/stores/adminCarts";
+import {
+  createCart,
+  deleteCart,
+  getCartById,
+  getCarts,
+  getCartsByUser,
+  patchCart,
+  updateCart,
+} from "~/services/fakestore/carts";
 import { useNotificationsStore } from "~/stores/notifications";
 import type {
   Cart,
@@ -13,7 +21,6 @@ import type {
 } from "#shared/types/fakestore";
 
 const { t } = useI18n();
-const adminCartsStore = useAdminCartsStore();
 const notifications = useNotificationsStore();
 
 // 查詢購物車列表 (Query Carts)
@@ -28,7 +35,7 @@ const cartQueryState = cartQuery.state;
 const handleCartsQuery = () =>
   cartQuery.run(
     () =>
-      adminCartsStore.fetchAllCarts({
+      getCarts({
         limit: cartQueryForm.limit || undefined,
         sort: cartQueryForm.sort,
         startDate: cartQueryForm.startDate || undefined,
@@ -45,7 +52,7 @@ const cartById = useApiOperation<Cart | null>(null);
 const cartByIdState = cartById.state;
 const handleCartById = () => {
   if (!cartByIdForm.id) return cartById.fail(t("api.errors.idRequired"));
-  return cartById.run(() => adminCartsStore.fetchCartById(Number(cartByIdForm.id)));
+  return cartById.run(() => getCartById(Number(cartByIdForm.id)));
 };
 
 // 依使用者取得購物車 (Get Cart By User)
@@ -55,9 +62,7 @@ const cartByUserState = cartByUser.state;
 const handleCartByUser = () => {
   if (!cartByUserForm.userId)
     return cartByUser.fail(t("api.errors.userIdRequired"));
-  return cartByUser.run(() =>
-    adminCartsStore.fetchCartsByUser(Number(cartByUserForm.userId)),
-  );
+  return cartByUser.run(() => getCartsByUser(Number(cartByUserForm.userId)));
 };
 
 // 建立購物車 (Create Cart)
@@ -81,7 +86,7 @@ const handleCartCreate = () => {
   } catch {
     return cartCreate.fail(t("api.errors.invalidJson"));
   }
-  return cartCreate.run(() => adminCartsStore.createRemoteCart(payload), {
+  return cartCreate.run(() => createCart(payload), {
     success: (cart) => t("api.carts.createSuccess", { id: cart!.id }),
     onSuccess: (cart) =>
       notifications.success(t("notifications.cartCreated", { id: cart!.id })),
@@ -107,8 +112,8 @@ const handleCartUpdate = () => {
   return cartUpdate.run(
     () =>
       cartUpdateForm.method === "PATCH"
-        ? adminCartsStore.patchRemoteCart(Number(cartUpdateForm.id), payload)
-        : adminCartsStore.updateRemoteCart(Number(cartUpdateForm.id), payload),
+        ? patchCart(Number(cartUpdateForm.id), payload)
+        : updateCart(Number(cartUpdateForm.id), payload),
     {
       success: (cart) => t("api.carts.updateSuccess", { id: cart!.id }),
       onSuccess: (cart) =>
@@ -125,7 +130,7 @@ const handleCartDelete = () => {
   if (!cartDeleteForm.id) return cartDelete.fail(t("api.errors.idRequired"));
   return cartDelete.run(
     async () => {
-      await adminCartsStore.deleteRemoteCart(Number(cartDeleteForm.id));
+      await deleteCart(Number(cartDeleteForm.id));
       return null;
     },
     {
@@ -163,8 +168,8 @@ const handleCartDelete = () => {
               v-model="cartQueryForm.sort"
               :label="$t('api.carts.fields.sort')"
               :options="[
-                { label: $t('products.filters.sortAsc'), value: 'asc' },
-                { label: $t('products.filters.sortDesc'), value: 'desc' },
+                { label: $t('api.fields.sortAsc'), value: 'asc' },
+                { label: $t('api.fields.sortDesc'), value: 'desc' },
               ]" />
           </div>
           <div class="grid gap-4 sm:grid-cols-2">

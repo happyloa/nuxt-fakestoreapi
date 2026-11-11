@@ -124,3 +124,35 @@ for (const outcome of ["success", "failure"]) {
     });
   }
 }
+
+test("addItem enforces the 99-quantity and 50-line limits and refuses changes during checkout", async (t) => {
+  const request = deferred();
+  const { cart } = createStores(t, () => request.promise);
+  for (let i = 0; i < 99; i++) assert.equal(cart.addItem(product(1)), "added");
+  assert.equal(cart.addItem(product(1)), "limit");
+  assert.equal(cart.items[0].quantity, 99);
+  for (let id = 2; id <= 50; id++) assert.equal(cart.addItem(product(id)), "added");
+  assert.equal(cart.addItem(product(51)), "limit");
+  assert.equal(cart.items.length, 50);
+  const pending = cart.checkout();
+  assert.equal(cart.addItem(product(2)), "busy");
+  assert.equal(cart.items[1].quantity, 1);
+  request.resolve({ id: "demo_limits" });
+  await pending;
+});
+
+test("restored cart data is bounded, deduplicated and stripped of unknown fields", (t) => {
+  const { cart } = createStores(t, async () => null);
+  const valid = { ...product(1), quantity: 2 };
+  cart.restore(JSON.stringify([
+    { ...valid, extra: "dropped" },
+    { ...valid, quantity: 5 },
+    { ...product(2), image: "javascript:alert(1)", quantity: 1 },
+    { ...product(3), quantity: 100 },
+  ]));
+  assert.deepEqual(cart.items, [valid]);
+  cart.restore(JSON.stringify(Array.from({ length: 51 }, (_, index) => ({ ...product(index + 1), quantity: 1 }))));
+  assert.deepEqual(cart.items, []);
+  cart.restore("not json");
+  assert.deepEqual(cart.items, []);
+});

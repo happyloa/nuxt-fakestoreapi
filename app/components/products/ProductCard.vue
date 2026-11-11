@@ -14,9 +14,10 @@ const categoryLabel = useCategoryLabel();
       <figure
         class="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-slate-200/70 bg-white p-6 sm:p-8 dark:border-slate-700"
       >
+        <!-- 同一連結內已有商品標題，圖片設為裝飾性以免連結名稱重複朗讀。 -->
         <img
           :src="product.image"
-          :alt="product.title"
+          alt=""
           width="360"
           height="360"
           loading="lazy"

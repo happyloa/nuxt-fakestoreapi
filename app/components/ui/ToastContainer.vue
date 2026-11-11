@@ -23,10 +23,10 @@ const variantClasses: Record<string, string> = {
       aria-live="polite"
       aria-atomic="false"
       class="fixed top-4 right-4 left-4 sm:left-auto sm:w-96 z-[60] flex max-w-sm flex-col gap-3">
+      <!-- 外層容器已是 polite 即時區域，個別 toast 不再重複宣告角色。 -->
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        :role="toast.variant === 'error' ? 'alert' : 'status'"
         class="flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg shadow-slate-900/5 backdrop-blur"
         :class="variantClasses[toast.variant]">
         <div class="flex-1 text-sm font-medium">{{ toast.message }}</div>

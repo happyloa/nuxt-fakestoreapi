@@ -41,8 +41,16 @@ function getStaleValue<T>(entry: CacheEntry<T> | null | undefined): T | null {
   return entry.value;
 }
 
-function isRecord(value: unknown): value is UnknownRecord {
+export function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** Upstream base URL without a trailing slash; falls back when the env value is empty. */
+export function getFakeStoreBaseUrl(event: H3Event): string {
+  const configuredBaseUrl = useRuntimeConfig(event).fakeStoreApiBase;
+  return typeof configuredBaseUrl === "string" && configuredBaseUrl.length > 0
+    ? configuredBaseUrl.replace(/\/+$/, "")
+    : DEFAULT_FAKE_STORE_API_URL;
 }
 
 function getErrorStatus(error: unknown): number | undefined {
@@ -202,13 +210,7 @@ async function requestFakeStore(
   options: UpstreamRequestOptions = {},
 ): Promise<unknown> {
   try {
-    const configuredBaseUrl = useRuntimeConfig(event).fakeStoreApiBase;
-    const baseUrl =
-      typeof configuredBaseUrl === "string" && configuredBaseUrl.length > 0
-        ? configuredBaseUrl.replace(/\/+$/, "")
-        : DEFAULT_FAKE_STORE_API_URL;
-
-    return await $fetch<unknown>(`${baseUrl}${path}`, {
+    return await $fetch<unknown>(`${getFakeStoreBaseUrl(event)}${path}`, {
       method: options.method,
       body: options.body,
       // Retrying a GET masks brief DNS/network failures without retrying
@@ -302,7 +304,11 @@ export async function getProduct(event: H3Event, id: number): Promise<Product> {
     const response = await requestFakeStore(event, `/products/${id}`, {
       notFoundMessage: "Product not found",
     });
-    if (response === null) throw createError({ statusCode: 404, statusMessage: "Product not found" });
+    // Fake Store answers unknown ids with 200 and an empty body, which ofetch
+    // resolves to "" on Node and to undefined/null on other runtimes.
+    if (response === null || response === undefined || response === "") {
+      throw createError({ statusCode: 404, statusMessage: "Product not found" });
+    }
     const product = normalizeProduct(response);
 
     if (product.id !== id) throw upstreamResponseError();

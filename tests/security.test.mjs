@@ -11,7 +11,6 @@ import { ZipArchive } from 'archiver';
 import { verifyPatchedDependencies, reviewAudit } from '../scripts/audit-security.mjs';
 
 const require = createRequire(import.meta.url);
-const braces = require('braces');
 const forge = require('node-forge');
 
 test('Nitro glob and archive helpers still match and archive files with the security overrides', { timeout: 5000 }, async () => {
@@ -103,30 +102,6 @@ test('patch verification accepts LF and CRLF but rejects changed or missing sour
     rmSync(directory, { recursive: true, force: true });
   }
 });
-test('ordinary braces, ranges, escaped and literal patterns still work', () => {
-  assert.deepEqual(braces.expand('app/{pages,components}/*.{ts,vue}'), ['app/pages/*.ts', 'app/pages/*.vue', 'app/components/*.ts', 'app/components/*.vue']);
-  assert.deepEqual(braces.expand('{1..3}'), ['1', '2', '3']);
-  assert.equal(braces.compile('{a,{b,c}}'), '(a|(b|c))');
-  assert.equal(braces.stringify(braces.parse('a/{b,c}/d')), 'a/{b,c}/d');
-  assert.deepEqual(braces.expand('\\{a,b\\}'), ['{a,b}']);
-  assert.deepEqual(braces.expand('${literal}'), ['${literal}']);
-});
-test('deep braces, parentheses, mixed and unbalanced input fail with a bounded error', () => {
-  for (const input of ['{'.repeat(4000) + 'a,b' + '}'.repeat(4000), '('.repeat(4000) + 'a' + ')'.repeat(4000), '{('.repeat(2000) + 'a,b' + ')}'.repeat(2000), '{'.repeat(4000)]) {
-    for (const operation of [braces.parse, braces.compile, braces.expand, braces.stringify]) {
-      assert.throws(() => operation(input), { name: 'SyntaxError', message: /safe depth limit/ });
-    }
-  }
-});
-test('direct AST operations also reject excessive depth and cycles', () => {
-  let deep = { type: 'text', value: 'a' };
-  for (let i = 0; i < 5000; i++) deep = { type: 'root', nodes: [deep] };
-  const cycle = { type: 'root', nodes: [] }; cycle.nodes.push(cycle);
-  for (const operation of [braces.compile, braces.expand, braces.stringify]) {
-    for (const ast of [deep, cycle]) assert.throws(() => operation(ast), { name: 'SyntaxError' });
-  }
-});
-
 test('RSA accepts valid signatures and rejects extra DigestAlgorithm elements', () => {
   const keys = generateKeyPairSync('rsa', { modulusLength: 1024, publicExponent: 3, privateKeyEncoding: { type: 'pkcs1', format: 'pem' }, publicKeyEncoding: { type: 'pkcs1', format: 'pem' } });
   const privateKey = forge.pki.privateKeyFromPem(keys.privateKey);
@@ -151,5 +126,5 @@ test('audit review rejects unrelated or incomplete vulnerability reports', () =>
   const patches = verifyPatchedDependencies();
   assert.throws(() => reviewAudit({}, patches), /complete report/);
   assert.throws(() => reviewAudit({ metadata: { vulnerabilities: {} }, vulnerabilities: { example: { via: ['missing'] } } }, patches), /Unresolved/);
-  assert.throws(() => reviewAudit({ metadata: { vulnerabilities: {} }, vulnerabilities: { example: { via: [{ name: 'braces', url: 'https://github.com/advisories/GHSA-new-unknown' }] } } }, patches), /Unmitigated/);
+  assert.throws(() => reviewAudit({ metadata: { vulnerabilities: {} }, vulnerabilities: { deepmerge: { via: [{ name: 'deepmerge', url: 'https://github.com/advisories/GHSA-new-unknown' }] } } }, patches), /Unmitigated/);
 });

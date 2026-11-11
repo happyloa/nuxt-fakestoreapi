@@ -46,14 +46,11 @@ npm.cmd run dev
 ## 驗證
 
 ```bash
-npm run typecheck
-npm run test:security
-npm run test:server
-npm run test:cart
-npm run audit:security
+npm test          # 執行 tests/*.test.mjs，離線即可
+npm run verify    # typecheck + 測試 + audit:security（audit 需要網路）
 ```
 
-測試使用 Node.js 內建 runner，涵蓋安全補丁、請求大小限制，以及結帳成功、失敗與登出後過期回應的競態。
+測試使用 Node.js 內建 runner，涵蓋安全補丁、請求大小限制、API 操作台路徑解析與敏感欄位移除、zh／en 語系 key 一致性，以及購物車上限與結帳成功、失敗、登出後過期回應的競態。
 
 ## 建置與部署
 
@@ -62,7 +59,9 @@ npm run audit:security
 | Node | `npm run build` | `.output/server/index.mjs` |
 | Cloudflare Pages | `npm run build:cloudflare` | `dist` |
 
-Node 建置完成後，可用 `npm run preview` 預覽，或以 `node .output/server/index.mjs` 啟動。
+Node 建置完成後，可用 `npm run preview` 預覽，正式啟動請用 `npm start`。它會在未設定時把 `NODE_ENV` 設為 `production` 再載入 `.output/server/index.mjs`；直接執行 `node .output/server/index.mjs` 時，外部化的 `vue-router`、`@intlify/*` 會保留開發診斷，例如每個不存在的網址都會輸出路由警告。
+
+安全標頭只在 `nuxt.config.ts` 的 `routeRules` 設定一次：Node 直接套用，Cloudflare Pages 建置時 Nitro 會同時寫入 `dist/_headers` 供靜態檔使用，`public/` 不需要另外放 `_headers`。`/api/catalog` 與 `/api/products/:id` 在 handler 內以資源為快取 key（忽略查詢字串）快取 5 分鐘；Nitro 快取使用最多 500 筆的 LRU，避免記憶體無限成長。
 
 既有 Pages 專案由 GitHub `main` 分支自動部署，build command 為 `npm run build:cloudflare`、output directory 為 `dist`，production／preview 均需 `nodejs_compat`。已核對成功部署紀錄中的 Node.js 與 npm 版本；升級工具鏈後請再核對，Pages 不會從 `engines` 安裝指定版本。參考 [Pages build image 文件](https://developers.cloudflare.com/pages/configuration/build-image/)。
 
@@ -91,7 +90,7 @@ Nuxt 已更新至 `4.6.4`、Vue 至 `3.5.45`、Vue Router 至 `5.5.0`、Tailwind
 
 Nuxt 已處理 Vue 打包與 Windows renderer 路徑，無需額外的 `@vue/shared`、Nuxt dist inline 設定；保留 Pinia inline，確保 SSR 的 Nuxt plugin 與 stores 使用同一個實例。Tailwind 維持官方 Vite plugin 配置，i18n 模組的相依最佳化交由模組與 Nuxt 管理。
 
-`braces` 與 `deepmerge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。`deepmerge` 補丁阻擋兩個合併來源的 `__proto__` 鍵，並涵蓋原始碼、CommonJS 與 UMD 入口；回歸測試檢查原型污染與一般合併行為。
+`deepmerge` 使用 npm 原生 `patchedDependencies`；lockfile v4 記錄補丁雜湊，`patches/*.patch` 固定使用 LF。即使執行 `npm ci --ignore-scripts`，補丁仍會套用；補丁遺失、變更或無法套用會中止安裝。維護方式見 [npm patch 文件](https://docs.npmjs.com/cli/v12/commands/npm-patch/)。`deepmerge` 補丁阻擋兩個合併來源的 `__proto__` 鍵，並涵蓋原始碼、CommonJS 與 UMD 入口；回歸測試檢查原型污染與一般合併行為。`braces` 的 `GHSA-vfj7-8cjw-p6xm` 已於 2026-10-23 由 GitHub 撤銷，因此不再保留其補丁。
 
 原始 `npm audit` 目前仍列出 7 個低風險項目，皆來自 `deepmerge` 的 `GHSA-gcqx-w48m-w2h4` 與其相依鏈。上游尚無官方修正版；`audit:security` 會驗證補丁內容並拒絕其他 advisory，通過不代表原始 audit 為零漏洞。
 

@@ -78,7 +78,3 @@ export interface CreateUserPayload {
 }
 
 export type UpdateUserPayload = Partial<CreateUserPayload>
-
-export interface LoginResponse {
-  token: string
-}

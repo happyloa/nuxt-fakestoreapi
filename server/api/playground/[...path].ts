@@ -1,17 +1,19 @@
 import { createError, defineEventHandler, getQuery, getRouterParam, setResponseHeader } from "h3";
+import { getFakeStoreBaseUrl, isRecord } from "../../utils/fakestore";
+import {
+  decodePlaygroundPath,
+  isAllowedPlaygroundOperation,
+  redactSecrets,
+  toUpstreamPath,
+} from "../../utils/playground";
 import { readBoundedJsonBody } from "../../utils/request-body";
 
 /** Restricted public mock API playground. Never forward cookies or upstream secrets. */
 export default defineEventHandler(async (event): Promise<unknown> => {
   setResponseHeader(event, "Cache-Control", "no-store");
-  const path = getRouterParam(event, "path") || "";
   const method = event.method;
-  const collection = /^(products|users|carts)$/.test(path);
-  const item = /^(products|users|carts)\/[1-9]\d{0,5}$/.test(path);
-  const queryPath = /^(products\/categories|products\/category\/[^/]{1,120}|carts\/user\/[1-9]\d{0,5})$/.test(path);
-  if (!((method === "GET" && (collection || item || queryPath))
-    || (method === "POST" && collection)
-    || (["PUT", "PATCH", "DELETE"].includes(method) && item))) {
+  const segments = decodePlaygroundPath(getRouterParam(event, "path") || "");
+  if (!segments || !isAllowedPlaygroundOperation(method, segments.join("/"))) {
     throw createError({ statusCode: 404, statusMessage: "Unsupported demo operation" });
   }
   const query = getQuery(event);
@@ -25,14 +27,13 @@ export default defineEventHandler(async (event): Promise<unknown> => {
   let body: Record<string, unknown> | undefined;
   if (["POST", "PUT", "PATCH"].includes(method)) {
     const input = await readBoundedJsonBody(event);
-    if (!input || typeof input !== "object" || Array.isArray(input)) {
+    if (!isRecord(input)) {
       throw createError({ statusCode: 400, statusMessage: "Invalid demo input" });
     }
-    body = input as Record<string, unknown>;
+    body = input;
   }
   try {
-    const base = String(useRuntimeConfig(event).fakeStoreApiBase).replace(/\/+$/, "");
-    const result = await $fetch<unknown>(`${base}/${path.split("/").map(encodeURIComponent).join("/")}`, {
+    const result = await $fetch<unknown>(`${getFakeStoreBaseUrl(event)}/${toUpstreamPath(segments)}`, {
       method: method as "GET" | "POST" | "PUT" | "PATCH" | "DELETE", query, body, timeout: 8000, retry: 0,
     });
     return redactSecrets(result);
@@ -40,11 +41,3 @@ export default defineEventHandler(async (event): Promise<unknown> => {
     throw createError({ statusCode: 502, statusMessage: "The demo service is temporarily unavailable" });
   }
 });
-
-function redactSecrets(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(redactSecrets);
-  if (!value || typeof value !== "object") return value;
-  return Object.fromEntries(Object.entries(value).filter(([key]) =>
-    !["password", "token", "__v"].includes(key.toLowerCase()),
-  ).map(([key, entry]) => [key, redactSecrets(entry)]));
-}

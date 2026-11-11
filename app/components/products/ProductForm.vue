@@ -15,6 +15,8 @@ const emit = defineEmits<{
   (e: "submit", payload: CreateProductPayload): void;
 }>();
 
+const categoryLabel = useCategoryLabel();
+
 const form = reactive({
   title: "",
   price: "",
@@ -73,7 +75,10 @@ const handleSubmit = () => {
         :label="$t('products.form.categoryLabel')"
         :placeholder="$t('products.form.categoryPlaceholder')"
         :options="
-          categories.map((category) => ({ label: category, value: category }))
+          categories.map((category) => ({
+            label: categoryLabel(category),
+            value: category,
+          }))
         "
         required />
     </div>

@@ -8,6 +8,8 @@ export default defineNuxtPlugin(() => {
       cart.restore(localStorage.getItem(key));
     } catch {
       /* Storage may be disabled. */
+    } finally {
+      cart.restored = true;
     }
     cart.$subscribe(
       (_mutation, state) => {

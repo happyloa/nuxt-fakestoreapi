@@ -4,16 +4,13 @@ import {
   setResponseHeader,
 } from "h3";
 import type { CartLine, DemoOrder } from "#shared/types/storefront";
+import { isRecord } from "../../utils/fakestore";
 import { getSessionUser } from "../../utils/session";
 import { readBoundedJsonBody } from "../../utils/request-body";
 
 type DemoOrderInput = {
   lines: CartLine[];
 };
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
 
 function invalidOrderInput() {
   return createError({ statusCode: 400, statusMessage: "Invalid order input" });

@@ -17,7 +17,6 @@ interface State {
   users: User[]
   loading: boolean
   error: string
-  selectedUser: User | null
 }
 
 /**
@@ -29,28 +28,19 @@ export const useUsersStore = defineStore('users', {
     users: [],
     loading: false,
     error: '',
-    selectedUser: null as User | null,
   }),
   actions: {
     /**
-     * 取得所有使用者列表
-     * @param force 是否強制重新抓取
+     * 取得所有使用者列表；已有資料時沿用 store 內容
      */
-    async fetchUsers(options: { limit?: number; sort?: 'asc' | 'desc'; force?: boolean } = {}) {
-      if (this.users.length && !options.force && !options.limit && !options.sort) {
+    async fetchUsers() {
+      if (this.users.length) {
         return
       }
       this.loading = true
       this.error = ''
       try {
-        const users = await getUsersApi({
-          limit: options.limit,
-          sort: options.sort
-        })
-        if (!options.limit && !options.sort) {
-          this.users = users
-        }
-        return users
+        this.users = await getUsersApi()
       } catch (error) {
         this.error = localizedError("load")
       } finally {
@@ -72,7 +62,6 @@ export const useUsersStore = defineStore('users', {
       this.error = ''
       try {
         const user = await getUserByIdApi(id)
-        this.selectedUser = user
         const exists = this.users.find((entry) => entry.id === user.id)
         if (!exists) {
           this.users.push(user)
@@ -116,7 +105,6 @@ export const useUsersStore = defineStore('users', {
         this.users = this.users.map((user) =>
           user.id === id ? { ...user, ...updated } : user,
         )
-        this.selectedUser = updated
         return updated
       } catch (error) {
         this.error = localizedError("save")
@@ -135,9 +123,6 @@ export const useUsersStore = defineStore('users', {
       try {
         await deleteUserApi(id)
         this.users = this.users.filter((user) => user.id !== id)
-        if (this.selectedUser?.id === id) {
-          this.selectedUser = null
-        }
       } catch (error) {
         this.error = localizedError("delete")
         throw error
@@ -158,7 +143,6 @@ export const useUsersStore = defineStore('users', {
         this.users = this.users.map((user) =>
           user.id === id ? { ...user, ...updated } : user,
         )
-        this.selectedUser = updated
         return updated
       } catch (error) {
         this.error = localizedError("save")

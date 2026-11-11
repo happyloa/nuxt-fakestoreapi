@@ -1,14 +1,8 @@
 <script setup lang="ts">
 import type { Product } from "#shared/types/fakestore";
-import { useCartStore } from "~/stores/cart";
-import { useProductsStore } from "~/stores/products";
-import { useNotificationsStore } from "~/stores/notifications";
 
 const route = useRoute();
 const localePath = useLocalePath();
-const productsStore = useProductsStore();
-const cartStore = useCartStore();
-const notifications = useNotificationsStore();
 const { t } = useI18n();
 
 definePageMeta({
@@ -23,8 +17,14 @@ const {
   () => `product-${route.params.id}`,
   () => $fetch<Product>(`/api/products/${route.params.id}`),
 );
+// SSR 一律渲染錯誤頁；用戶端導覽需 fatal 才會切到 error.vue。
+// 伺服器端不標 fatal，避免 Nitro 為每個不存在的商品記錄錯誤堆疊。
 if (error.value?.statusCode === 404)
-  throw createError({ statusCode: 404, statusMessage: "Product not found" });
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Product not found",
+    fatal: import.meta.client,
+  });
 const errorMessage = computed(() => {
   if (!error.value) return "";
   return error.value.statusCode === 502
@@ -34,7 +34,7 @@ const errorMessage = computed(() => {
 
 usePageSeo(() => ({
   title: t("seo.productDetail.title", {
-    name: product.value?.title ?? "Product",
+    name: product.value?.title ?? t("products.details.fallbackName"),
   }),
   description: product.value?.description ?? t("seo.productDetail.description"),
   image: product.value?.image,
@@ -77,20 +77,7 @@ useHead(() => {
   };
 });
 
-const addToCart = () => {
-  if (!product.value) {
-    return;
-  }
-  cartStore.addItem({
-    id: product.value.id,
-    title: product.value.title,
-    price: product.value.price,
-    image: product.value.image,
-  });
-  notifications.success(
-    t("notifications.cartAdded", { title: product.value.title }),
-  );
-};
+const addToCart = useAddToCart();
 </script>
 
 <template>

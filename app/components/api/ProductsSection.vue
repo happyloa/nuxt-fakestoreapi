@@ -147,8 +147,8 @@ const handleProductDelete = () => {
             v-model="productQueryForm.sort"
             :label="$t('api.products.fields.sort')"
             :options="[
-              { label: $t('products.filters.sortAsc'), value: 'asc' },
-              { label: $t('products.filters.sortDesc'), value: 'desc' },
+              { label: $t('api.fields.sortAsc'), value: 'asc' },
+              { label: $t('api.fields.sortDesc'), value: 'desc' },
             ]" />
           <BaseButton type="submit" :loading="productQueryState.loading">
             {{ $t("api.actions.runQuery") }}

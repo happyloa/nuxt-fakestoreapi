@@ -45,16 +45,11 @@ export const useThemeStore = defineStore("theme", {
     },
     applyTheme() {
       if (typeof document === "undefined") return;
+      // color-scheme 由 tailwind.css 的 :root / .dark 規則決定。
       document.documentElement.classList.toggle(
         "dark",
         this.resolved === "dark",
       );
-      document.documentElement.setAttribute("data-theme", this.resolved);
-      document.documentElement.style.setProperty("color-scheme", this.resolved);
-      // 延遲啟用 transition，避免初次載入的 FOUC
-      requestAnimationFrame(() => {
-        document.documentElement.classList.add("transition-ready");
-      });
     },
     hydrate() {
       if (this.hydrated) return;

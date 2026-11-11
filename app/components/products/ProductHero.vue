@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// 由 Vite 輸出帶雜湊的 /_nuxt/ 檔名，可套用長期快取。
+import featuredImage from "~/assets/images/featured-backpack.webp";
+
 const store = useProductsStore();
 const localePath = useLocalePath();
 const featured = computed(() =>
@@ -45,7 +48,7 @@ const featured = computed(() =>
       class="relative flex min-h-80 items-center justify-center overflow-hidden px-8 pb-10 pt-4 sm:min-h-96 lg:py-12"
     >
       <div
-        class="absolute h-64 w-64 rounded-full border-[36px] border-[#e0e5d5] sm:h-80 sm:w-80 dark:border-[#3a4431]"
+        class="absolute h-64 w-64 rounded-full border-36 border-[#e0e5d5] sm:h-80 sm:w-80 dark:border-[#3a4431]"
         aria-hidden="true"
       />
       <NuxtLink
@@ -55,20 +58,20 @@ const featured = computed(() =>
         class="group relative z-10 flex h-full w-full items-center justify-center pb-20 lg:pb-14"
       >
         <img
-          src="/images/featured-backpack.png"
+          :src="featuredImage"
           :alt="featured.title"
-          width="640"
-          height="640"
+          width="418"
+          height="597"
           fetchpriority="high"
           class="h-64 w-64 object-contain drop-shadow-2xl transition-transform duration-300 group-hover:-rotate-3 sm:h-80 sm:w-80 lg:h-96 lg:w-96"
         />
       </NuxtLink>
       <img
         v-else
-        src="/images/featured-backpack.png"
+        :src="featuredImage"
         :alt="$t('products.hero.illustrationAlt')"
-        width="640"
-        height="640"
+        width="418"
+        height="597"
         fetchpriority="high"
         class="relative h-64 w-64 object-contain drop-shadow-xl sm:h-80 sm:w-80"
       />

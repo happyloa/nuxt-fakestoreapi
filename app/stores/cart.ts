@@ -9,6 +9,8 @@ export const useCartStore = defineStore("cart", {
     loading: false,
     error: "",
     checkoutGeneration: 0,
+    // False on the server and during hydration; set once localStorage has been read.
+    restored: false,
   }),
   getters: {
     total: (state) => state.items.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100,
@@ -16,11 +18,18 @@ export const useCartStore = defineStore("cart", {
   },
   actions: {
     restore(value: string | null) { this.items = parseStoredCart(value); },
-    addItem(product: Omit<CartItem, "quantity">) {
-      if (this.loading) return;
+    /** Returns whether the item was added, hit the 50-line / 99-quantity limit, or a checkout is pending. */
+    addItem(product: Omit<CartItem, "quantity">): "added" | "limit" | "busy" {
+      if (this.loading) return "busy";
       const existing = this.items.find((item) => item.id === product.id);
-      if (existing) existing.quantity = Math.min(99, existing.quantity + 1);
-      else if (this.items.length < 50) this.items.push({ ...product, quantity: 1 });
+      if (existing) {
+        if (existing.quantity >= 99) return "limit";
+        existing.quantity++;
+        return "added";
+      }
+      if (this.items.length >= 50) return "limit";
+      this.items.push({ ...product, quantity: 1 });
+      return "added";
     },
     removeItem(id: number) {
       if (!this.loading) this.items = this.items.filter((item) => item.id !== id);

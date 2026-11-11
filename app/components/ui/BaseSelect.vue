@@ -12,12 +12,10 @@ const props = withDefaults(
     placeholder?: string;
     options: { label: string; value: string | number }[];
     required?: boolean;
-    error?: string;
   }>(),
   {
     placeholder: "",
     required: false,
-    error: "",
   },
 );
 
@@ -30,7 +28,6 @@ const inputValue = computed({
   set: (value: string | number | null) => emit("update:modelValue", value),
 });
 
-const errorId = useId();
 const inputId = useId();
 </script>
 
@@ -45,14 +42,7 @@ const inputId = useId();
       :id="String(attrs.id ?? inputId)"
       v-model="inputValue"
       :required="required"
-      :aria-invalid="error ? 'true' : undefined"
-      :aria-describedby="error ? errorId : undefined"
-      :class="[
-        'w-full rounded-lg border bg-white min-h-12 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100',
-        error
-          ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-400/40 dark:border-rose-500'
-          : 'border-slate-200 focus:border-brand focus:ring-brand/40 dark:border-slate-700',
-      ]"
+      class="w-full rounded-lg border border-slate-200 bg-white min-h-12 px-4 py-3 text-sm text-slate-900 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
     >
       <option v-if="placeholder" disabled value="">{{ placeholder }}</option>
       <option
@@ -64,11 +54,5 @@ const inputId = useId();
         {{ option.label }}
       </option>
     </select>
-    <span
-      v-if="error"
-      :id="errorId"
-      class="mt-1 block text-xs text-rose-600 dark:text-rose-400"
-      >{{ error }}</span
-    >
   </div>
 </template>

@@ -3,22 +3,14 @@ import {
   defineEventHandler,
   setResponseHeader,
 } from "h3";
-import type { SessionResponse } from "#shared/types/storefront";
+import type { LoginInput, SessionResponse } from "#shared/types/storefront";
 import {
   authenticateWithFakeStore,
   getPublicUserAfterUpstreamLogin,
+  isRecord,
 } from "../../utils/fakestore";
 import { createSession } from "../../utils/session";
 import { readBoundedJsonBody } from "../../utils/request-body";
-
-type LoginInput = {
-  username: string;
-  password: string;
-};
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
 
 function parseLoginInput(value: unknown): LoginInput {
   if (

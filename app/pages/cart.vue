@@ -96,7 +96,7 @@ usePageSeo(() => ({
         </h2>
         <CartItemsList
           :items="cartStore.items"
-          :loading="cartStore.loading"
+          :loading="cartStore.loading || !cartStore.restored"
           @increment="handleIncrement"
           @decrement="handleDecrement"
           @remove="handleRemove" />
@@ -104,7 +104,7 @@ usePageSeo(() => ({
           {{ cartStore.error }}
         </BaseAlert>
         <BaseAlert
-          v-if="!cartStore.items.length && !cartStore.loading"
+          v-if="cartStore.restored && !cartStore.items.length && !cartStore.loading"
           variant="warning">
           {{ $t("cart.empty") }}
         </BaseAlert>

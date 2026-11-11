@@ -1,22 +1,23 @@
 <script setup lang="ts">
-// 品牌主色：須與 app/assets/css/tailwind.css 的 --color-brand 保持同步
-const BRAND_COLOR = '#2563eb'
+const SITE_NAME = 'Storefront Lab'
 
-// 站台級 SEO 預設：標題後綴模板 + 預設描述/OG（供未呼叫 usePageSeo 的頁面後備，如 error.vue）
+// 站台名稱後綴；首頁標題已含站名時不重複附加。
+// 描述與分享圖由各頁的 usePageSeo 設定。
 useHead({
-  titleTemplate: (title) => (title ? `${title}｜Fake Store` : 'Fake Store'),
+  titleTemplate: (title) => {
+    if (!title) return SITE_NAME
+    return title.includes(SITE_NAME) ? title : `${title}｜${SITE_NAME}`
+  },
 })
 useSeoMeta({
-  description: 'Nuxt 4 與 Tailwind CSS v4 打造的 Fake Store API 電商示範專案。',
-  ogSiteName: 'Fake Store',
-  ogImage: '/og-image.webp',
+  ogSiteName: SITE_NAME,
 })
 </script>
 
 <template>
   <div>
-    <!-- Nuxt 載入進度條 -->
-    <NuxtLoadingIndicator :color="BRAND_COLOR" :height="3" />
+    <!-- Nuxt 載入進度條，顏色沿用 tailwind.css 的品牌色 -->
+    <NuxtLoadingIndicator color="var(--color-brand)" :height="3" />
     <!-- 路由變更通知 (無障礙功能) -->
     <NuxtRouteAnnouncer />
     <!-- 應用程式主要佈局 -->

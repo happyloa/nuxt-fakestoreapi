@@ -32,8 +32,6 @@
   --color-slate-900: #1d201a;
   --color-slate-950: #141710;
   --shadow-card: 0 2px 6px rgb(29 32 26 / 0.03);
-  --shadow-card-hover: 0 6px 18px rgb(29 32 26 / 0.07);
-  --shadow-premium: 0 8px 24px rgb(29 32 26 / 0.08);
 }
 @custom-variant dark (&:where(.dark, .dark *));
 

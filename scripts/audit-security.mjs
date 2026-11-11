@@ -56,9 +56,10 @@ export function reviewAudit(report, patches) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   try {
     const patches = verifyPatchedDependencies();
+    // NODE_ENV=production makes npm omit dev dependencies unless they are requested explicitly.
     const result = process.platform === 'win32'
-      ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'npm.cmd audit --json'], { encoding: 'utf8' })
-      : spawnSync('npm', ['audit', '--json'], { encoding: 'utf8' });
+      ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', 'npm.cmd audit --json --include=dev'], { encoding: 'utf8' })
+      : spawnSync('npm', ['audit', '--json', '--include=dev'], { encoding: 'utf8' });
     if (result.error || ![0, 1].includes(result.status)) throw result.error || new Error(result.stderr);
     const report = JSON.parse(result.stdout);
     const findings = reviewAudit(report, patches);

@@ -24,10 +24,7 @@ const formatted = computed(() =>
     >
       {{ label }}
     </figcaption>
-    <pre
-      class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100"
-    >
-      <code>{{ formatted }}</code>
-    </pre>
+    <!-- pre 會保留空白，code 必須緊接在標籤內，否則第一行會多出縮排。 -->
+    <pre class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100"><code>{{ formatted }}</code></pre>
   </figure>
 </template>

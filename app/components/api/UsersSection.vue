@@ -202,14 +202,15 @@ const handleUserDelete = () => {
               v-model.number="userQueryForm.limit"
               type="number"
               min="1"
+              max="20"
               :label="$t('api.users.fields.limit')"
               required />
             <BaseSelect
               v-model="userQueryForm.sort"
               :label="$t('api.users.fields.sort')"
               :options="[
-                { label: 'ASC', value: 'asc' },
-                { label: 'DESC', value: 'desc' },
+                { label: $t('api.fields.sortAsc'), value: 'asc' },
+                { label: $t('api.fields.sortDesc'), value: 'desc' },
               ]" />
           </div>
           <BaseButton type="submit" :loading="userQueryState.loading">

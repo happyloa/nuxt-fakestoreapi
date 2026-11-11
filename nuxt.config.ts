@@ -19,6 +19,16 @@ export default defineNuxtConfig({
         },
         { rel: "icon", type: "image/svg+xml", sizes: "any", href: "/favicon.svg" },
       ],
+      script: [
+        {
+          // Apply dark mode before the first paint. Keep the storage key and
+          // values in sync with app/stores/theme.ts.
+          innerHTML:
+            "try{var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}",
+          tagPosition: "head",
+          tagPriority: "critical",
+        },
+      ],
     },
   },
 
@@ -51,6 +61,12 @@ export default defineNuxtConfig({
       // Bundle Pinia so the Nuxt plugin and stores share one instance in SSR.
       inline: ["pinia"],
     },
+    storage: {
+      // Bound every Nitro cache (API handlers and i18n messages). The default
+      // in-memory driver never evicts, so unique request keys would grow it
+      // without limit.
+      cache: { driver: "lru-cache", max: 500 },
+    },
   },
 
   i18n: {
@@ -66,6 +82,11 @@ export default defineNuxtConfig({
       redirectOn: "root",
       fallbackLocale: "en",
     },
+    experimental: {
+      // Message URLs contain a hash of the locale files, so browsers can reuse
+      // them instead of revalidating every 10 seconds.
+      httpCacheDuration: 60 * 60 * 24 * 7,
+    },
   },
 
   vite: {
@@ -74,9 +95,10 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/tailwind.css"],
 
+  // /api/catalog and /api/products/:id are cached in their handlers.
+  // These headers are the single source: Nitro also writes them to
+  // dist/_headers for static assets on Cloudflare Pages.
   routeRules: {
-    "/api/catalog": { swr: 300 },
-    "/api/products/**": { swr: 300 },
     "/**": {
       headers: {
         "Content-Security-Policy": [
@@ -91,7 +113,8 @@ export default defineNuxtConfig({
           "frame-ancestors 'none'",
           "object-src 'none'",
         ].join("; "),
-        "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
+        "Permissions-Policy":
+          "camera=(), geolocation=(), microphone=(), fullscreen=(), payment=()",
         "Referrer-Policy": "strict-origin-when-cross-origin",
         "Strict-Transport-Security":
           "max-age=63072000; includeSubDomains; preload",

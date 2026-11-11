@@ -5,21 +5,15 @@ defineEmits<{
   (e: "add-to-cart", product: Product): void;
 }>();
 
-interface Props {
-  product?: Product | null;
-}
+defineProps<{
+  product: Product;
+}>();
 
 const categoryLabel = useCategoryLabel();
-const props = withDefaults(defineProps<Props>(), {
-  product: null,
-});
 </script>
 
 <template>
-  <article
-    v-if="product"
-    class="grid items-start gap-8 lg:grid-cols-2 lg:gap-16"
-  >
+  <article class="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
     <figure
       class="flex aspect-square items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 dark:border-slate-800"
     >
@@ -72,7 +66,4 @@ const props = withDefaults(defineProps<Props>(), {
       </p>
     </div>
   </article>
-  <BaseAlert v-else variant="warning">{{
-    $t("products.details.missing")
-  }}</BaseAlert>
 </template>

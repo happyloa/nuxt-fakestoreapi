@@ -1,4 +1,4 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
+import { createError, getRouterParam } from "h3";
 import { getProduct } from "../../utils/fakestore";
 
 function parseProductId(value: string | undefined): number {
@@ -14,7 +14,14 @@ function parseProductId(value: string | undefined): number {
   return id;
 }
 
-export default defineEventHandler(async (event) => {
-  const id = parseProductId(getRouterParam(event, "id"));
-  return getProduct(event, id);
-});
+// One cache entry per product id; the query string is ignored. Error
+// responses (400/404/502) are never cached.
+export default defineCachedEventHandler(
+  (event) => getProduct(event, parseProductId(getRouterParam(event, "id"))),
+  {
+    name: "product",
+    maxAge: 300,
+    swr: true,
+    getKey: (event) => getRouterParam(event, "id") ?? "",
+  },
+);

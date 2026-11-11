@@ -1,26 +1,19 @@
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title: string;
     description?: string;
-    align?: "left" | "center";
     level?: number;
   }>(),
   {
     description: "",
-    align: "left",
     level: 2,
   },
 );
 </script>
 
 <template>
-  <hgroup
-    :class="[
-      'mb-8 space-y-2',
-      align === 'center' ? 'text-center' : 'text-left',
-    ]"
-  >
+  <hgroup class="mb-8 space-y-2 text-left">
     <component
       :is="'h' + level"
       :class="level === 1 ? 'text-4xl sm:text-5xl' : 'text-xl sm:text-2xl'"

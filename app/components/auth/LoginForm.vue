@@ -29,7 +29,6 @@ const submit = () => {
       :level="1"
       :title="$t('auth.login.title')"
       :description="$t('auth.login.subtitle')"
-      align="left"
     />
     <p
       class="rounded-lg bg-slate-100 p-4 text-xs leading-6 dark:bg-slate-900 text-slate-500 dark:text-slate-400"

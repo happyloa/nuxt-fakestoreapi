@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import {
   createProduct as createProductApi,
   deleteProduct as deleteProductApi,
-  getAllProducts,
   getProductById,
   getProductCategories,
   queryProducts as queryProductsApi,
@@ -14,6 +13,7 @@ import type {
   Product,
   UpdateProductPayload,
 } from "#shared/types/fakestore";
+import type { CatalogPayload } from "#shared/types/storefront";
 
 interface State {
   products: Product[];
@@ -51,27 +51,9 @@ export const useProductsStore = defineStore("products", {
   },
   actions: {
     /**
-     * 取得所有商品列表
-     * @param force 是否強制重新抓取 (忽略快取)
-     */
-    async fetchProducts(force = false) {
-      if (this.products.length && !force) {
-        return;
-      }
-      this.loading = true;
-      this.error = "";
-      try {
-        const products = await getAllProducts();
-        this.products = products;
-      } catch (error) {
-        this.error =
-          localizedError("load");
-      } finally {
-        this.loading = false;
-      }
-    },
-    /**
      * 取得商品分類列表
+     * 一般情況讀取有快取的 /api/catalog（只保留分類，避免頁面 payload 夾帶整份商品）；
+     * force 時改走 API 操作台 proxy，直接向上游重新查詢。
      * @param force 是否強制重新抓取
      */
     async fetchCategories(force = false) {
@@ -79,8 +61,9 @@ export const useProductsStore = defineStore("products", {
         return;
       }
       try {
-        const categories = await getProductCategories();
-        this.categories = categories;
+        this.categories = force
+          ? await getProductCategories()
+          : (await $fetch<CatalogPayload>("/api/catalog")).categories;
       } catch (error) {
         this.error =
           localizedError("load");

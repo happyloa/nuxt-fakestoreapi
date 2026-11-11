@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { useProductFilters } from "~/composables/useProductFilters";
-import { useCartStore } from "~/stores/cart";
 import { useProductsStore } from "~/stores/products";
-import { useNotificationsStore } from "~/stores/notifications";
-import type { Product } from "#shared/types/fakestore";
 
 const productsStore = useProductsStore();
-const cartStore = useCartStore();
 const { t } = useI18n();
-const notifications = useNotificationsStore();
 
 /**
  * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
@@ -46,18 +41,7 @@ const {
   resetFilters,
 } = useProductFilters(() => productsStore.products);
 
-/**
- * 將商品加入購物車並顯示提示訊息。
- */
-const handleAddToCart = (product: Product) => {
-  cartStore.addItem({
-    id: product.id,
-    title: product.title,
-    price: product.price,
-    image: product.image,
-  });
-  notifications.success(t("notifications.cartAdded", { title: product.title }));
-};
+const handleAddToCart = useAddToCart();
 
 usePageSeo(() => ({
   title: t("seo.home.title"),

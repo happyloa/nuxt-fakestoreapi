@@ -10,17 +10,13 @@ const props = withDefaults(
     modelValue: string;
     label?: string;
     placeholder?: string;
-    hint?: string;
     rows?: number;
     required?: boolean;
-    error?: string;
   }>(),
   {
     placeholder: "",
-    hint: "",
     rows: 4,
     required: false,
-    error: "",
   },
 );
 
@@ -30,8 +26,6 @@ const inputValue = computed({
   get: () => props.modelValue,
   set: (value: string) => emit("update:modelValue", value),
 });
-
-const errorId = useId();
 </script>
 
 <template>
@@ -46,25 +40,7 @@ const errorId = useId();
       :rows="rows"
       :required="required"
       :placeholder="placeholder"
-      :aria-invalid="error ? 'true' : undefined"
-      :aria-describedby="error ? errorId : undefined"
-      :class="[
-        'w-full rounded-lg border bg-white min-h-12 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 dark:bg-slate-800 dark:text-slate-100',
-        error
-          ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-400/40 dark:border-rose-500'
-          : 'border-slate-200 focus:border-brand focus:ring-brand/40 dark:border-slate-700',
-      ]"
+      class="w-full rounded-lg border border-slate-200 bg-white min-h-12 px-4 py-3 text-sm text-slate-900 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
     />
-    <span
-      v-if="error"
-      :id="errorId"
-      class="mt-1 block text-xs text-rose-600 dark:text-rose-400"
-      >{{ error }}</span
-    >
-    <span
-      v-else-if="hint"
-      class="mt-1 block text-xs text-slate-500 dark:text-slate-400"
-      >{{ hint }}</span
-    >
   </label>
 </template>

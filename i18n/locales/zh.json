@@ -28,7 +28,6 @@
       "title": "把喜歡的，\n帶進日常裡。",
       "subtitle": "從衣著、飾品到電子用品，慢慢挑選，把喜歡的商品加入購物車，體驗完整的選購流程。",
       "ctaPrimary": "探索商品",
-      "ctaSecondary": "查看會員資料",
       "illustrationAlt": "Fjallraven 日常背包",
       "featured": "目錄精選",
       "demoNotice": "示範商店，不會付款或出貨。"
@@ -40,8 +39,6 @@
       "categories": "分類數量"
     },
     "filters": {
-      "title": "智慧篩選",
-      "description": "透過關鍵字、分類與排序組合，快速找到需要的商品。",
       "searchLabel": "搜尋",
       "searchPlaceholder": "搜尋商品名稱或描述…",
       "categoryLabel": "分類",
@@ -70,9 +67,9 @@
       "back": "返回商品列表",
       "rating": "評分 {rate}",
       "reviews": "{count} 則評價",
-      "missing": "找不到這項商品，請回到列表重新選擇。",
       "loadError": "無法載入商品詳細資訊。",
-      "upstreamUnavailable": "商品服務暫時無法使用，請稍後重試。"
+      "upstreamUnavailable": "商品服務暫時無法使用，請稍後重試。",
+      "fallbackName": "商品"
     },
     "form": {
       "back": "回到商品列表",
@@ -113,7 +110,6 @@
     "itemsHeading": "購物車內的商品",
     "summary": {
       "title": "訂單摘要",
-      "description": "確認商品與金額後再進行下一步。",
       "items": "項目數：{count}",
       "total": "總計：{total}",
       "checkout": "示範結帳",
@@ -169,7 +165,6 @@
       "zipcode": "郵遞區號"
     },
     "noOrders": "目前沒有訂單紀錄。",
-    "orderItems": "{count} 件商品",
     "logout": "登出帳號"
   },
   "ui": {
@@ -212,7 +207,9 @@
     "checkoutSuccess": "結帳完成，訂單編號 #{id} 已建立。",
     "checkoutEmpty": "購物車內沒有商品，請先加入商品再結帳。",
     "checkoutLogin": "請先登入帳號，再進行結帳。",
-    "checkoutError": "結帳時發生錯誤，請稍後再試。"
+    "checkoutError": "結帳時發生錯誤，請稍後再試。",
+    "cartLimit": "已達購物車上限：每項商品最多 99 件，最多 50 種商品。",
+    "checkoutPending": "結帳處理中，完成後再加入商品。"
   },
   "api": {
     "title": "API 操作台",
@@ -228,13 +225,18 @@
       "productId": "商品編號",
       "cartId": "購物車編號",
       "userId": "會員編號",
-      "payload": "JSON 內容"
+      "payload": "JSON 內容",
+      "sortAsc": "編號遞增 (asc)",
+      "sortDesc": "編號遞減 (desc)"
     },
     "errors": {
       "generic": "操作發生問題，請稍後再試。",
       "idRequired": "請先輸入編號。",
       "invalidJson": "無法解析提供的 JSON 內容。",
-      "userIdRequired": "請先輸入會員編號。"
+      "userIdRequired": "請先輸入會員編號。",
+      "invalidInput": "請求內容不符合規則，請檢查欄位後再試。",
+      "notFound": "找不到指定資料，或不支援此操作。",
+      "unavailable": "示範服務暫時無法使用，請稍後再試。"
     },
     "results": {
       "preview": "回應預覽",
@@ -311,11 +313,9 @@
     "demoNotice": "這裡操作的是公開假資料；新增、修改與刪除不會永久保存。請勿輸入真實個資或密碼。"
   },
   "footer": {
-    "title": "專案說明",
     "description": "一間可以慢慢逛的示範商店，體驗商品瀏覽與購物流程。使用 Nuxt 與 Fake Store API 建立。",
     "copyright": "© {year} Storefront Lab",
     "sections": {
-      "api": "API",
       "project": "專案",
       "shop": "逛逛商店"
     },
