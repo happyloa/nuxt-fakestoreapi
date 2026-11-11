@@ -42,35 +42,37 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <div class="space-y-12 sm:space-y-16">
+  <div class="space-y-20 sm:space-y-28">
     <ProductHero />
     <section
       id="catalog"
-      class="scroll-mt-28 space-y-6"
+      class="scroll-mt-20"
       aria-labelledby="catalog-heading"
     >
-      <div class="flex flex-wrap items-end justify-between gap-3">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div>
           <h2
             id="catalog-heading"
-            class="text-3xl font-extrabold tracking-tight sm:text-4xl"
+            class="text-[clamp(2.25rem,5vw,3.75rem)] font-extrabold leading-none tracking-heading"
           >
             {{ $t("products.listingTitle") }}
           </h2>
-          <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
             {{ $t("products.listingDescription") }}
           </p>
         </div>
         <p
           v-if="!isPageLoading && !pageError"
           aria-live="polite"
-          class="text-sm text-slate-500 dark:text-slate-400"
+          class="meta tabular-nums text-slate-500 dark:text-slate-400"
         >
           {{ $t("products.resultsCount", { count: filteredProducts.length }) }}
         </p>
       </div>
       <ProductFilterPanel
         :categories="productsStore.categories"
+        :counts="productsStore.categoryCounts"
+        :total="productsStore.total"
         :selected-category="selectedCategory"
         :sort-order="sortOrder"
         :search-query="searchQuery"
@@ -90,10 +92,5 @@ usePageSeo(() => ({
         @retry="refresh()"
       />
     </section>
-    <ProductStats
-      :total-products="productsStore.total"
-      :average-price="productsStore.averagePrice"
-      :categories-count="productsStore.categories.length"
-    />
   </div>
 </template>

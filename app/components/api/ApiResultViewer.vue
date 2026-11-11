@@ -20,11 +20,11 @@ const formatted = computed(() =>
   <figure class="space-y-2">
     <figcaption
       v-if="label"
-      class="text-xs font-semibold text-slate-500 dark:text-slate-400"
+      class="meta text-slate-500 dark:text-slate-400"
     >
       {{ label }}
     </figcaption>
     <!-- pre 會保留空白，code 必須緊接在標籤內，否則第一行會多出縮排。 -->
-    <pre class="max-h-64 overflow-auto rounded-xl bg-slate-900/95 p-4 text-xs text-slate-100"><code>{{ formatted }}</code></pre>
+    <pre class="max-h-64 overflow-auto bg-slate-900 p-4 font-mono text-xs leading-5 text-slate-100 dark:bg-black/40"><code>{{ formatted }}</code></pre>
   </figure>
 </template>

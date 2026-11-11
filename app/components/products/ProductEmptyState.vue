@@ -16,10 +16,10 @@ const localePath = useLocalePath();
 
 <template>
   <section
-    class="rounded-2xl border border-dashed border-slate-300 bg-white px-8 py-16 text-center transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900"
+    class="border-b border-rule px-2 py-20 text-center dark:border-rule-dark"
     aria-live="polite">
     <template v-if="hasActiveFilters">
-      <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+      <h3 class="text-2xl font-extrabold tracking-heading">
         {{ $t("products.empty.noResults.title") }}
       </h3>
       <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
@@ -30,7 +30,7 @@ const localePath = useLocalePath();
       </BaseButton>
     </template>
     <template v-else>
-      <h3 class="text-lg font-semibold text-slate-800 dark:text-white">
+      <h3 class="text-2xl font-extrabold tracking-heading">
         {{ $t("products.empty.title") }}
       </h3>
       <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">

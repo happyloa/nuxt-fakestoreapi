@@ -28,7 +28,7 @@ onMounted(() => {
     <button
       v-if="isVisible"
       type="button"
-      class="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-slate-200/60 bg-white/80 text-slate-600 shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-brand/30 hover:text-brand hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 dark:border-slate-600/60 dark:bg-slate-800/90 dark:text-slate-300 dark:hover:border-brand-light/30 dark:hover:text-brand-light dark:focus-visible:ring-offset-slate-900"
+      class="inline-flex h-12 w-12 cursor-pointer items-center justify-center border border-slate-900 bg-paper text-slate-900 transition-colors hover:bg-slate-900 hover:text-paper dark:border-paper/70 dark:bg-slate-950 dark:text-paper dark:hover:bg-paper dark:hover:text-slate-950"
       :aria-label="$t('ui.backToTop')"
       @click="scrollToTop">
       <svg
@@ -51,12 +51,14 @@ onMounted(() => {
 <style scoped>
 .back-to-top-enter-active,
 .back-to-top-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .back-to-top-enter-from,
 .back-to-top-leave-to {
   opacity: 0;
-  transform: translateY(16px) scale(0.8);
+  transform: translateY(8px);
 }
 </style>

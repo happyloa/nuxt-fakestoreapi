@@ -7,7 +7,7 @@ const isDark = computed(() => theme.resolved === "dark");
   <ClientOnly>
     <button
       type="button"
-      class="flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+      class="flex h-11 w-11 items-center justify-center text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
       :aria-pressed="isDark"
       :aria-label="t('header.theme.toggleLabel')"
       :title="t(isDark ? 'header.theme.light' : 'header.theme.dark')"

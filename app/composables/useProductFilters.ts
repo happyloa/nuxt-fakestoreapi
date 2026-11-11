@@ -48,7 +48,9 @@ export const useProductFilters = (productsSource: () => Product[]) => {
   const updateQuery = () => {
     if (queryTimer) clearTimeout(queryTimer);
     queryTimer = setTimeout(() => {
+      // 保留 hash：Nuxt 在同頁移除 hash 時會捲回頂端（例如從 #catalog 連結進來）。
       router.replace({
+        hash: route.hash,
         query: {
           ...route.query,
           category:

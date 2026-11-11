@@ -65,7 +65,7 @@ usePageSeo(() => ({
     <div
       role="tablist"
       :aria-label="$t('api.title')"
-      class="flex flex-wrap gap-2 border-b border-slate-200 pb-4 dark:border-slate-800"
+      class="-mt-4 flex gap-x-7 overflow-x-auto border-y border-rule dark:border-rule-dark"
     >
       <button
         v-for="resource in resources"
@@ -76,11 +76,11 @@ usePageSeo(() => ({
         :aria-selected="activeResource === resource.value"
         :aria-controls="'panel-' + resource.value"
         :tabindex="activeResource === resource.value ? 0 : -1"
-        class="min-h-11 rounded-full px-5 py-3 text-sm font-bold"
+        class="min-h-13 shrink-0 text-[15px] font-semibold underline-offset-[10px] transition-colors"
         :class="
           activeResource === resource.value
-            ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-            : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+            ? 'text-slate-900 underline decoration-brand decoration-2 dark:text-paper dark:decoration-brand-light'
+            : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper'
         "
         @click="activeResource = resource.value"
         @keydown="moveTab"

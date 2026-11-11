@@ -15,6 +15,12 @@ export const useProductsStore = defineStore("products", {
   }),
   getters: {
     total: (state) => state.products.length,
+    /** 各分類的商品數，key 為分類 id */
+    categoryCounts: (state) =>
+      state.products.reduce<Record<string, number>>((counts, product) => {
+        counts[product.category] = (counts[product.category] ?? 0) + 1;
+        return counts;
+      }, {}),
     averagePrice: (state) =>
       state.products.length
         ? state.products.reduce((sum, product) => sum + product.price, 0) /

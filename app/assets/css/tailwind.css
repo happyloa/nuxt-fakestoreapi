@@ -8,18 +8,23 @@
   font-display: swap;
 }
 
+/*
+ * Catalogue look: warm paper, ink type, one rust accent, hairline rules and
+ * square corners. Product photos sit on "plate" wells and are multiplied onto
+ * them so their white studio backgrounds read as printed paper.
+ */
 @theme {
   --font-sans:
     Manrope, "PingFang TC", "Microsoft JhengHei", ui-sans-serif, system-ui,
     sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas,
+    monospace;
   --color-brand: #c74116;
   --color-brand-dark: #a53512;
-  --color-brand-light: #ffb193;
-  --color-brand-foreground: #ffffff;
-  --color-accent: #566843;
-  --color-accent-dark: #3e4e2f;
-  --color-accent-light: #bdd2a7;
-  --color-paper: #fafaf7;
+  --color-brand-light: #ff9a72;
+  --color-paper: #f6f4ef;
+  --color-plate: #ebe7de;
   --color-slate-50: #f8f8f5;
   --color-slate-100: #f1f1ed;
   --color-slate-200: #e3e3dc;
@@ -31,13 +36,31 @@
   --color-slate-800: #292c25;
   --color-slate-900: #1d201a;
   --color-slate-950: #141710;
-  --shadow-card: 0 2px 6px rgb(29 32 26 / 0.03);
+  --color-rule: rgb(29 32 26 / 0.14);
+  --color-rule-dark: rgb(246 244 239 / 0.14);
+  /* Tight display tracking for Latin type; relaxed for Chinese below. */
+  --tracking-display: -0.055em;
+  --tracking-heading: -0.04em;
 }
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Small uppercase catalogue labels (numbers, categories, metadata). */
+@utility meta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 @layer base {
   :root {
     color-scheme: light;
+  }
+  /* CJK glyphs fill the em box, so negative tracking makes them collide. */
+  html:lang(zh-TW) {
+    --tracking-display: -0.01em;
+    --tracking-heading: -0.005em;
   }
   .dark {
     color-scheme: dark;
@@ -46,7 +69,7 @@
     @apply bg-paper font-sans text-slate-900 antialiased;
   }
   .dark body {
-    @apply bg-slate-950 text-slate-100;
+    @apply bg-slate-950 text-paper;
   }
   button:not(:disabled),
   select {
@@ -54,10 +77,10 @@
   }
   :focus-visible {
     outline: 2px solid var(--color-brand);
-    outline-offset: 4px;
+    outline-offset: 3px;
   }
   ::selection {
-    @apply bg-brand/20;
+    @apply bg-brand text-white;
   }
   * {
     scrollbar-width: thin;

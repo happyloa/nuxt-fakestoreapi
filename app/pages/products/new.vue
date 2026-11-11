@@ -46,9 +46,9 @@ usePageSeo(() => ({
   <div class="space-y-8">
     <NuxtLink
       :to="localePath('/')"
-      class="inline-flex items-center gap-2 text-sm font-medium text-brand"
+      class="meta inline-flex min-h-11 items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
     >
-      <SiteIcon name="back" class="h-4 w-4" />
+      <SiteIcon name="back" class="h-3.5 w-3.5" />
       {{ $t("products.form.back") }}
     </NuxtLink>
 

@@ -24,19 +24,19 @@
   },
   "products": {
     "hero": {
-      "badge": "A storefront to explore",
+      "badge": "An index of everyday things",
       "title": "Everyday finds.\nA little more you.",
-      "subtitle": "Explore clothing, jewelry and tech. Find something you like, add it to your bag, and try the shopping experience.",
-      "ctaPrimary": "Explore the collection",
+      "subtitle": "Clothes, jewelry and electronics from the Fake Store API. Put a few in your cart and walk through the whole checkout.",
+      "ctaPrimary": "Browse all products",
       "illustrationAlt": "Fjallraven everyday backpack",
-      "featured": "In the collection",
-      "demoNotice": "Demo store. No payment or shipping."
+      "featured": "Featured",
+      "demoNotice": "Demo store. No payment or shipping.",
+      "indexTitle": "Browse by category"
     },
     "stats": {
-      "sectionTitle": "Catalogue highlights",
-      "totalProducts": "Products in catalogue",
-      "averagePrice": "Average price",
-      "categories": "Available categories"
+      "totalProducts": "products",
+      "averagePrice": "average price",
+      "categories": "categories"
     },
     "filters": {
       "searchLabel": "Search",
@@ -50,9 +50,10 @@
     },
     "actions": {
       "addToCart": "Add to cart",
-      "addNamedToCart": "Add {title} to cart"
+      "addNamedToCart": "Add {title} to cart",
+      "add": "Add"
     },
-    "listingTitle": "Find your everyday.",
+    "listingTitle": "All products",
     "empty": {
       "title": "No products found",
       "description": "Try a different combination of filters or add a brand-new product to the catalogue.",
@@ -65,11 +66,15 @@
     },
     "details": {
       "back": "Back to all products",
-      "rating": "Rating {rate}",
-      "reviews": "{count} review | {count} reviews",
       "loadError": "Unable to load product details.",
       "upstreamUnavailable": "The product service is temporarily unavailable. Please try again shortly.",
-      "fallbackName": "Product"
+      "fallbackName": "Product",
+      "specs": {
+        "number": "Catalogue no.",
+        "category": "Category",
+        "rating": "Rating",
+        "reviews": "Reviews"
+      }
     },
     "form": {
       "back": "Back to catalogue",
@@ -93,7 +98,7 @@
       "jewelry": "Jewelry",
       "electronics": "Electronics"
     },
-    "listingDescription": "Browse the full collection, or start with a category.",
+    "listingDescription": "Filter by category, search by name or sort by price.",
     "resultsCount": "{count} products"
   },
   "cart": {
@@ -106,7 +111,7 @@
       "decreaseQty": "Decrease quantity of {title}",
       "removeItem": "Remove {title}"
     },
-    "empty": "Your cart is empty. Add something from the products page!",
+    "empty": "Your cart is empty.",
     "itemsHeading": "Items in your cart",
     "summary": {
       "title": "Order summary",
@@ -142,8 +147,8 @@
       "password": "Password",
       "submit": "Sign in",
       "demoHint": "The public demo account is filled in. Select Sign in to continue.",
-      "welcome": "Your next find\nis waiting.",
-      "welcomeDescription": "Your bag stays with you when you sign in. Use the demo account to try checkout and view your receipt."
+      "welcome": "Your cart\ncomes with you.",
+      "welcomeDescription": "Anything you added before signing in stays in the cart. Sign in with the demo account to check out and see the receipt."
     }
   },
   "account": {
@@ -191,7 +196,7 @@
   },
   "api": {
     "title": "API playground",
-    "subtitle": "Try every Fake Store API endpoint without leaving the dashboard.",
+    "subtitle": "Call each Fake Store API endpoint from the browser and read the raw response.",
     "actions": {
       "runQuery": "Run request",
       "fetch": "Fetch",
@@ -301,19 +306,18 @@
     "load": "Failed to load data. Please try again.",
     "catalogUnavailable": "The product service is temporarily unavailable. Please try again shortly.",
     "save": "Failed to save. Please try again.",
-    "delete": "Failed to delete. Please try again.",
     "login": "Login failed. Please check your username and password.",
     "loginUnavailable": "The login service is temporarily unavailable. Please try again shortly."
   },
   "error": {
-    "title404": "404",
+    "title404": "This page is not in the catalogue",
     "titleGeneric": "Unable to load this page",
-    "desc404": "The page you are looking for does not exist, might have been removed, or the URL is incorrect.",
+    "desc404": "Nothing lives at this address. It may have been removed, or the URL has a typo.",
     "descGeneric": "An unexpected error occurred on the server. Please try again later.",
     "backToHome": "Back to Home"
   },
   "footer": {
-    "description": "A small storefront for exploring products and trying the shopping experience. Built with Nuxt and Fake Store API.",
+    "description": "A demo store built with Nuxt and the Fake Store API. Products, users and orders are public sample data.",
     "copyright": "© {year} Storefront Lab",
     "sections": {
       "project": "Project",

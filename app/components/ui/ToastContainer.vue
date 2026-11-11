@@ -6,11 +6,10 @@ const notifications = useNotificationsStore();
 const { toasts } = storeToRefs(notifications);
 
 const variantClasses: Record<string, string> = {
-  success:
-    "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/40 dark:bg-emerald-500/20 dark:text-emerald-100",
-  info: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-500/40 dark:bg-sky-500/20 dark:text-sky-100",
-  error:
-    "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-500/40 dark:bg-rose-500/20 dark:text-rose-100",
+  // 深色底的收據式通知，左側色條區分類型。
+  success: "border-emerald-400",
+  info: "border-slate-400",
+  error: "border-brand-light",
 };
 </script>
 
@@ -22,16 +21,16 @@ const variantClasses: Record<string, string> = {
       role="status"
       aria-live="polite"
       aria-atomic="false"
-      class="fixed top-4 right-4 left-4 sm:left-auto sm:w-96 z-[60] flex max-w-sm flex-col gap-3">
+      class="fixed left-4 right-4 top-20 z-[60] flex flex-col gap-2 sm:left-auto sm:w-96">
       <!-- 外層容器已是 polite 即時區域，個別 toast 不再重複宣告角色。 -->
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="flex items-start gap-3 rounded-xl border px-4 py-3 shadow-lg shadow-slate-900/5 backdrop-blur"
+        class="flex items-start gap-3 border-l-2 bg-slate-900 px-4 py-3 text-paper dark:bg-paper dark:text-slate-950"
         :class="variantClasses[toast.variant]">
         <div class="flex-1 text-sm font-medium">{{ toast.message }}</div>
         <button
-          class="rounded-full p-1 text-xs text-current transition hover:bg-black/10 dark:hover:bg-white/10"
+          class="-my-1 -mr-1 flex h-8 w-8 shrink-0 items-center justify-center text-xs text-current opacity-70 transition-opacity hover:opacity-100"
           :aria-label="$t('ui.dismiss')"
           @click="notifications.remove(toast.id)">
           <span aria-hidden="true">✕</span>
@@ -42,21 +41,18 @@ const variantClasses: Record<string, string> = {
 </template>
 
 <style scoped>
-.toast-enter-active {
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+.toast-enter-active,
 .toast-leave-active {
-  transition: all 0.3s cubic-bezier(0.4, 0, 1, 1);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
-.toast-enter-from {
-  opacity: 0;
-  transform: translateX(80px) scale(0.9);
-}
+.toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateX(40px) scale(0.95);
+  transform: translateY(-6px);
 }
 .toast-move {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease;
 }
 </style>

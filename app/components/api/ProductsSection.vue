@@ -116,7 +116,7 @@ const handleProductDelete = () => {
 
 <template>
   <section class="space-y-6">
-    <h2 class="text-lg font-semibold text-slate-900 dark:text-white">
+    <h2 class="meta text-slate-500 dark:text-slate-400">
       {{ $t("api.products.title") }}
     </h2>
     <div class="grid gap-6 lg:grid-cols-2">

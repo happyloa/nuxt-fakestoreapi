@@ -17,13 +17,13 @@ withDefaults(
 <template>
   <div
     class="flex items-start justify-between gap-4"
-    :class="divider && 'border-b border-slate-100 pb-2 dark:border-slate-800'"
+    :class="divider && 'border-b border-rule pb-3 dark:border-rule-dark'"
   >
-    <dt class="shrink-0 font-medium text-slate-500 dark:text-slate-400">
+    <dt class="meta shrink-0 pt-0.5 text-slate-500 dark:text-slate-400">
       {{ label }}
     </dt>
     <dd
-      class="min-w-0 wrap-anywhere text-right font-semibold text-slate-900 dark:text-white"
+      class="min-w-0 wrap-anywhere text-right font-semibold text-slate-900 dark:text-paper"
       :class="capitalize && 'capitalize'"
     >
       <slot />

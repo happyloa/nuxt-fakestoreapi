@@ -24,19 +24,19 @@
   },
   "products": {
     "hero": {
-      "badge": "逛逛日常的好物",
+      "badge": "日常物件索引",
       "title": "把喜歡的，\n帶進日常裡。",
-      "subtitle": "從衣著、飾品到電子用品，慢慢挑選，把喜歡的商品加入購物車，體驗完整的選購流程。",
-      "ctaPrimary": "探索商品",
+      "subtitle": "衣著、飾品與電子用品，資料來自 Fake Store API。挑幾樣放進購物車，走一遍完整的結帳流程。",
+      "ctaPrimary": "瀏覽全部商品",
       "illustrationAlt": "Fjallraven 日常背包",
-      "featured": "目錄精選",
-      "demoNotice": "示範商店，不會付款或出貨。"
+      "featured": "精選",
+      "demoNotice": "示範商店，不會付款或出貨。",
+      "indexTitle": "依分類瀏覽"
     },
     "stats": {
-      "sectionTitle": "商店概況",
-      "totalProducts": "商品總數",
+      "totalProducts": "件商品",
       "averagePrice": "平均價格",
-      "categories": "分類數量"
+      "categories": "個分類"
     },
     "filters": {
       "searchLabel": "搜尋",
@@ -50,9 +50,10 @@
     },
     "actions": {
       "addToCart": "加入購物車",
-      "addNamedToCart": "將「{title}」加入購物車"
+      "addNamedToCart": "將「{title}」加入購物車",
+      "add": "加入"
     },
-    "listingTitle": "找到你的日常好物",
+    "listingTitle": "全部商品",
     "empty": {
       "title": "目前沒有符合的商品",
       "description": "試著調整篩選條件，或直接新增一個全新的商品。",
@@ -65,11 +66,15 @@
     },
     "details": {
       "back": "返回商品列表",
-      "rating": "評分 {rate}",
-      "reviews": "{count} 則評價",
       "loadError": "無法載入商品詳細資訊。",
       "upstreamUnavailable": "商品服務暫時無法使用，請稍後重試。",
-      "fallbackName": "商品"
+      "fallbackName": "商品",
+      "specs": {
+        "number": "目錄編號",
+        "category": "分類",
+        "rating": "評分",
+        "reviews": "評價數"
+      }
     },
     "form": {
       "back": "回到商品列表",
@@ -93,7 +98,7 @@
       "jewelry": "飾品",
       "electronics": "電子用品"
     },
-    "listingDescription": "看看全部商品，或從喜歡的分類開始。",
+    "listingDescription": "依分類篩選、以名稱搜尋，或依價格排序。",
     "resultsCount": "{count} 件商品"
   },
   "cart": {
@@ -106,7 +111,7 @@
       "decreaseQty": "減少「{title}」的數量",
       "removeItem": "移除「{title}」"
     },
-    "empty": "購物車目前是空的，快去逛逛商品吧！",
+    "empty": "購物車是空的。",
     "itemsHeading": "購物車內的商品",
     "summary": {
       "title": "訂單摘要",
@@ -142,8 +147,8 @@
       "password": "密碼",
       "submit": "登入",
       "demoHint": "已填入公開示範帳號，按下登入即可繼續。",
-      "welcome": "喜歡的商品，\n都在這裡等你。",
-      "welcomeDescription": "登入後會保留已選購的商品。使用示範帳號，就能體驗結帳並查看本次收據。"
+      "welcome": "購物車\n會跟著你。",
+      "welcomeDescription": "登入前放進購物車的商品會保留。用示範帳號登入後，就能結帳並看到這次的收據。"
     }
   },
   "account": {
@@ -178,14 +183,13 @@
     "load": "載入資料失敗，請稍後再試。",
     "catalogUnavailable": "商品服務暫時無法使用，請稍後重試。",
     "save": "儲存失敗，請稍後再試。",
-    "delete": "刪除失敗，請稍後再試。",
     "login": "登入失敗，請確認帳號與密碼。",
     "loginUnavailable": "登入服務暫時無法使用，請稍後再試。"
   },
   "error": {
-    "title404": "404",
+    "title404": "找不到這個頁面",
     "titleGeneric": "無法載入這個頁面",
-    "desc404": "找不到您想訪問的頁面，它可能已被移除或網址輸入錯誤。",
+    "desc404": "這個網址沒有對應的頁面，可能已被移除或輸入錯誤。",
     "descGeneric": "伺服器發生未預期的狀況，請稍後再試。",
     "backToHome": "返回首頁"
   },
@@ -213,7 +217,7 @@
   },
   "api": {
     "title": "API 操作台",
-    "subtitle": "直接在儀表板中測試 Fake Store API 的每一支端點。",
+    "subtitle": "在瀏覽器裡呼叫 Fake Store API 的每一支端點，直接查看原始回應。",
     "actions": {
       "runQuery": "送出請求",
       "fetch": "取得資料",
@@ -313,7 +317,7 @@
     "demoNotice": "這裡操作的是公開假資料；新增、修改與刪除不會永久保存。請勿輸入真實個資或密碼。"
   },
   "footer": {
-    "description": "一間可以慢慢逛的示範商店，體驗商品瀏覽與購物流程。使用 Nuxt 與 Fake Store API 建立。",
+    "description": "用 Nuxt 與 Fake Store API 做的示範商店。商品、會員與訂單都是公開的假資料。",
     "copyright": "© {year} Storefront Lab",
     "sections": {
       "project": "專案",

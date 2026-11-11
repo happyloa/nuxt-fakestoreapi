@@ -40,14 +40,14 @@ const emit = defineEmits<{ (e: "update:search", value: string): void }>();
       <BaseCard
         v-for="index in 4"
         :key="index"
-        class="h-40 animate-pulse bg-slate-100 dark:bg-slate-800"></BaseCard>
+        class="h-40 animate-pulse bg-slate-200/60 dark:bg-slate-900"></BaseCard>
     </div>
     <BaseAlert v-else-if="error" variant="error">
       {{ error }}
     </BaseAlert>
     <p
       v-else-if="!users.length"
-      class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center text-sm text-slate-600 transition-colors duration-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+      class="border border-rule px-6 py-14 text-center text-sm text-slate-600 dark:border-rule-dark dark:text-slate-300">
       {{ $t("users.list.empty") }}
     </p>
     <ul v-else class="grid gap-6 sm:grid-cols-2">

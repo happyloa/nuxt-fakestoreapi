@@ -65,18 +65,26 @@ usePageSeo(() => ({
 </script>
 
 <template>
-  <section class="space-y-8" aria-labelledby="cart-heading">
-    <BaseSectionHeading
-      id="cart-heading"
-      :level="1"
-      :title="$t('cart.title')"
-      :description="$t('cart.subtitle')" />
+  <section class="space-y-10" aria-labelledby="cart-heading">
+    <div
+      class="flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-rule pb-8 dark:border-rule-dark"
+    >
+      <BaseSectionHeading
+        id="cart-heading"
+        class="mb-0!"
+        :level="1"
+        :title="$t('cart.title')"
+        :description="$t('cart.subtitle')" />
+      <NuxtLink
+        :to="localePath('/')"
+        class="meta inline-flex min-h-11 items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
+        ><SiteIcon name="back" class="h-3.5 w-3.5" />{{ $t("cart.continueShopping") }}</NuxtLink
+      >
+    </div>
 
-    <p class="text-sm text-slate-600 dark:text-slate-300">{{ $t('cart.demoNotice') }}</p>
     <BaseAlert v-if="cartStore.lastOrderItems.length && !cartStore.items.length" variant="success">
-      {{ $t('cart.completed') }}
+      {{ $t("cart.completed") }}
     </BaseAlert>
-    <BaseButton :to="localePath('/')" variant="outline">{{ $t('cart.continueShopping') }}</BaseButton>
 
     <BaseAlert v-if="!authStore.isAuthenticated" variant="info">
       <div
@@ -89,8 +97,8 @@ usePageSeo(() => ({
     </BaseAlert>
 
     <div
-      class="grid gap-8 lg:items-start lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-      <section class="space-y-4" aria-labelledby="cart-items-heading">
+      class="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
+      <section aria-labelledby="cart-items-heading">
         <h2 id="cart-items-heading" class="sr-only">
           {{ $t("cart.itemsHeading") }}
         </h2>
@@ -100,11 +108,11 @@ usePageSeo(() => ({
           @increment="handleIncrement"
           @decrement="handleDecrement"
           @remove="handleRemove" />
-        <BaseAlert
+        <p
           v-if="cartStore.restored && !cartStore.items.length && !cartStore.loading"
-          variant="warning">
+          class="border-y border-rule py-16 text-center text-sm text-slate-600 dark:border-rule-dark dark:text-slate-300">
           {{ $t("cart.empty") }}
-        </BaseAlert>
+        </p>
       </section>
       <CartSummary
         :total="cartStore.total"

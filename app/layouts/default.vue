@@ -22,18 +22,18 @@ const head = useLocaleHead({ seo: true });
     </Head>
     <Body>
       <div
-        class="flex min-h-screen flex-col bg-paper text-slate-900 dark:bg-slate-950 dark:text-slate-100"
+        class="flex min-h-screen flex-col bg-paper text-slate-900 dark:bg-slate-950 dark:text-paper"
       >
         <a
           href="#main-content"
-          class="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-3 focus:text-white"
+          class="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-4 focus:z-[100] focus:bg-brand focus:px-4 focus:py-3 focus:text-white"
           >{{ $t("ui.skipToContent") }}</a
         >
         <SiteHeader />
         <main
           id="main-content"
           tabindex="-1"
-          class="mx-auto w-full max-w-7xl flex-1 px-5 py-8 focus:outline-none sm:px-8 sm:py-12 lg:px-10"
+          class="mx-auto w-full max-w-7xl flex-1 px-5 py-8 focus:outline-none sm:px-8 sm:py-10 lg:px-10"
         >
           <slot />
         </main>

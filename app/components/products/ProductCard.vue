@@ -6,46 +6,47 @@ const localePath = useLocalePath();
 const categoryLabel = useCategoryLabel();
 </script>
 <template>
-  <article class="group flex h-full flex-col">
+  <article
+    class="group relative flex h-full flex-col p-3 transition-colors hover:bg-white/60 sm:p-5 dark:hover:bg-white/[0.03]"
+  >
+    <p
+      class="meta flex justify-between gap-3 text-slate-500 dark:text-slate-400"
+    >
+      <span class="shrink-0">{{ catalogNumber(product.id) }}</span
+      ><span class="truncate">{{ categoryLabel(product.category) }}</span>
+    </p>
+    <!-- 整張卡片可點擊：連結以 ::after 蓋住卡片，加入按鈕再疊在上層。 -->
     <NuxtLink
       :to="localePath('/product/' + product.id)"
-      class="block rounded-xl"
+      class="mt-3 block after:absolute after:inset-0"
     >
-      <figure
-        class="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-slate-200/70 bg-white p-6 sm:p-8 dark:border-slate-700"
+      <span
+        class="flex aspect-4/5 items-center justify-center overflow-hidden bg-plate p-5 sm:p-8"
       >
         <!-- 同一連結內已有商品標題，圖片設為裝飾性以免連結名稱重複朗讀。 -->
         <img
           :src="product.image"
           alt=""
           width="360"
-          height="360"
+          height="450"
           loading="lazy"
-          class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+          class="max-h-full w-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]"
         />
-      </figure>
-      <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
-        {{ categoryLabel(product.category) }}
-      </p>
+      </span>
       <h3
-        class="mt-1.5 line-clamp-2 min-h-10 text-sm font-semibold leading-5 transition-colors group-hover:text-brand sm:text-base sm:leading-6 dark:group-hover:text-brand-light"
+        class="mt-4 line-clamp-2 min-h-10 text-sm font-semibold leading-5 sm:text-[15px]"
       >
         {{ product.title }}
       </h3>
     </NuxtLink>
-    <div
-      class="mt-2 flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"
-    >
-      <SiteIcon
-        name="star"
-        class="h-3.5 w-3.5 fill-accent text-accent dark:fill-accent-light dark:text-accent-light"
-      /><span>{{ product.rating?.rate ?? 0 }}</span
-      ><span class="ml-1">({{ product.rating?.count ?? 0 }})</span>
-    </div>
-    <div
-      class="mt-auto flex flex-wrap items-center justify-between gap-1 pt-4 sm:gap-2"
-    >
-      <span class="text-base font-extrabold tracking-tight sm:text-lg">{{
+    <p class="mt-1.5 font-mono text-[11px] text-slate-500 dark:text-slate-400">
+      ★ {{ product.rating.rate }}
+      <span class="text-slate-400 dark:text-slate-500"
+        >/ {{ product.rating.count }}</span
+      >
+    </p>
+    <div class="mt-auto flex items-end justify-between gap-2 pt-5">
+      <span class="text-base font-bold tabular-nums sm:text-lg">{{
         $n(product.price, "currency")
       }}</span
       ><button
@@ -53,11 +54,12 @@ const categoryLabel = useCategoryLabel();
         :aria-label="
           $t('products.actions.addNamedToCart', { title: product.title })
         "
-        :title="$t('products.actions.addToCart')"
-        class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-transparent transition-colors hover:border-brand hover:bg-brand hover:text-white dark:border-slate-700 dark:hover:border-brand"
+        class="relative z-10 inline-flex min-h-10 items-center gap-1 border border-slate-900 px-3 text-xs font-bold transition-colors hover:bg-slate-900 hover:text-paper dark:border-paper/70 dark:hover:bg-paper dark:hover:text-slate-950"
         @click="$emit('add-to-cart', product)"
       >
-        <SiteIcon name="plus" class="h-5 w-5" />
+        <SiteIcon name="plus" class="h-3.5 w-3.5" />{{
+          $t("products.actions.add")
+        }}
       </button>
     </div>
   </article>

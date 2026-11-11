@@ -98,20 +98,26 @@ const addToCart = useAddToCart();
   <div class="space-y-6">
     <NuxtLink
       :to="localePath('/')"
-      class="inline-flex items-center gap-2 text-sm font-medium text-brand"
+      class="meta inline-flex min-h-11 items-center gap-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-paper"
     >
-      <SiteIcon name="back" class="h-4 w-4" />
+      <SiteIcon name="back" class="h-3.5 w-3.5" />
       {{ $t("products.details.back") }}
     </NuxtLink>
 
-    <div v-if="pending" class="grid gap-8 md:grid-cols-[1.2fr_1fr]">
-      <BaseCard class="h-64 animate-pulse bg-slate-100 dark:bg-slate-800" />
-      <BaseCard class="h-64 animate-pulse bg-slate-100 dark:bg-slate-800" />
+    <div v-if="pending" class="grid gap-10 lg:grid-cols-12 lg:gap-14" aria-busy="true">
+      <BaseSkeleton height="auto" class="aspect-square lg:col-span-7" />
+      <div class="space-y-5 lg:col-span-5">
+        <BaseSkeleton width="100%" height="0.75rem" />
+        <BaseSkeleton width="85%" height="2.5rem" />
+        <BaseSkeleton width="30%" height="2rem" />
+        <BaseSkeleton height="6rem" />
+        <BaseSkeleton height="3.25rem" />
+      </div>
     </div>
 
-    <BaseAlert v-else-if="errorMessage" variant="error">
-      {{ errorMessage }}
-      <BaseButton variant="outline" @click="refresh()">{{
+    <BaseAlert v-else-if="errorMessage" variant="error" class="space-y-3">
+      <p>{{ errorMessage }}</p>
+      <BaseButton variant="outline" size="sm" @click="refresh()">{{
         $t("ui.retry")
       }}</BaseButton>
     </BaseAlert>

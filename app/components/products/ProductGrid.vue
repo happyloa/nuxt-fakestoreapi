@@ -7,43 +7,29 @@ const emit = defineEmits<{
   (e: "retry"): void;
 }>();
 
-interface Props {
-  products?: Product[];
-  loading?: boolean;
-  error?: string;
-  hasActiveFilters?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  products: () => [],
-  loading: false,
-  error: "",
-  hasActiveFilters: false,
-});
-
-/**
- * 負責統整商品列表的不同顯示狀態：載入中、空狀態與實際資料。
- */
-const handleAddToCart = (product: Product) => emit("add-to-cart", product);
+withDefaults(
+  defineProps<{
+    products?: Product[];
+    loading?: boolean;
+    error?: string;
+    hasActiveFilters?: boolean;
+  }>(),
+  {
+    products: () => [],
+    loading: false,
+    error: "",
+    hasActiveFilters: false,
+  },
+);
 </script>
 
 <template>
-  <section class="space-y-6" aria-labelledby="product-results-heading">
-    <h2 id="product-results-heading" class="sr-only">
-      {{ $t("products.listingTitle") }}
-    </h2>
-    <div
-      v-if="loading"
-      class="rounded-lg border border-dashed border-slate-200 p-4 dark:border-slate-700"
-      aria-busy="true"
-    >
-      <!-- 載入中改用骨架畫面，避免使用者誤以為發生錯誤 -->
-      <ProductGridSkeleton :count="8" />
-    </div>
-    <BaseAlert v-else-if="error" variant="error">
+  <div>
+    <ProductGridSkeleton v-if="loading" :count="8" />
+    <BaseAlert v-else-if="error" variant="error" class="mt-6">
       <div class="space-y-3">
         <p>{{ error }}</p>
-        <BaseButton variant="outline" @click="emit('retry')">{{
+        <BaseButton variant="outline" size="sm" @click="emit('retry')">{{
           $t("ui.retry")
         }}</BaseButton>
       </div>
@@ -53,13 +39,18 @@ const handleAddToCart = (product: Product) => emit("add-to-cart", product);
       :has-active-filters="hasActiveFilters"
       @reset="emit('reset')"
     />
+    <!-- 無間距格線：外框畫上與左邊線，每格補右與下邊線。 -->
     <ul
       v-else
-      class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 sm:gap-x-7 sm:gap-y-12"
+      class="grid grid-cols-2 border-l border-rule md:grid-cols-3 lg:grid-cols-4 dark:border-rule-dark"
     >
-      <li v-for="product in products" :key="product.id" class="h-full">
-        <ProductCard :product="product" @add-to-cart="handleAddToCart" />
+      <li
+        v-for="product in products"
+        :key="product.id"
+        class="border-b border-r border-rule dark:border-rule-dark"
+      >
+        <ProductCard :product="product" @add-to-cart="emit('add-to-cart', $event)" />
       </li>
     </ul>
-  </section>
+  </div>
 </template>

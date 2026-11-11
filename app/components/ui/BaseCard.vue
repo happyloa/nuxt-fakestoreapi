@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 靜態卡片容器；傳入的 class 等屬性會自動套用到根元素。
+// 以細線框出的區塊；傳入的 class 等屬性會自動套用到根元素。
 withDefaults(
   defineProps<{
     as?: keyof HTMLElementTagNameMap;
@@ -7,7 +7,7 @@ withDefaults(
   }>(),
   {
     as: "article",
-    background: "bg-white dark:bg-slate-900",
+    background: "",
   },
 );
 </script>
@@ -16,7 +16,7 @@ withDefaults(
   <component
     :is="as"
     :class="[
-      'rounded-xl border border-slate-200 p-6 transition-colors duration-200 dark:border-slate-800',
+      'border border-rule p-6 transition-colors duration-200 sm:p-7 dark:border-rule-dark',
       background,
     ]"
   >

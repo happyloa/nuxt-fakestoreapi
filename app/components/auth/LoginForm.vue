@@ -31,7 +31,7 @@ const submit = () => {
       :description="$t('auth.login.subtitle')"
     />
     <p
-      class="rounded-lg bg-slate-100 p-4 text-xs leading-6 dark:bg-slate-900 text-slate-500 dark:text-slate-400"
+      class="border-l-2 border-slate-400 bg-plate/60 px-4 py-3 font-mono text-xs leading-6 text-slate-600 dark:border-slate-500 dark:bg-slate-900 dark:text-slate-300"
     >
       {{ $t("auth.login.demoHint") }}
     </p>

@@ -12,9 +12,10 @@ const navigation = computed(() => [
   { name: t("navigation.newProduct"), to: localePath("/products/new") },
   { name: t("navigation.users"), to: localePath("/users") },
 ]);
-const accountPath = computed(() =>
-  localePath(auth.isAuthenticated ? "/account" : "/login"),
-);
+const accountLink = computed(() => ({
+  to: localePath(auth.isAuthenticated ? "/account" : "/login"),
+  name: auth.isAuthenticated ? t("navigation.account") : t("navigation.login"),
+}));
 const closeMenu = () => menu.value?.close();
 const openMenu = () => {
   menu.value?.showModal();
@@ -33,65 +34,51 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <header
-    class="sticky top-0 z-40 border-b border-slate-200 bg-paper/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95"
+    class="sticky top-0 z-40 border-b border-rule bg-paper dark:border-rule-dark dark:bg-slate-950"
   >
     <div
-      class="mx-auto flex h-20 max-w-7xl items-center gap-2 px-4 sm:gap-5 sm:px-8 lg:px-10"
+      class="mx-auto flex h-16 max-w-7xl items-center gap-6 px-5 sm:px-8 lg:px-10"
     >
       <NuxtLink
         :to="localePath('/')"
-        class="mr-auto flex shrink-0 items-center gap-2 sm:gap-2.5"
-        aria-label="Storefront Lab"
+        class="mr-auto shrink-0 text-[17px] font-extrabold tracking-[-0.03em]"
+        >Storefront Lab</NuxtLink
       >
-        <span
-          class="flex h-9 w-9 items-center justify-center rounded-xl bg-brand text-white sm:h-10 sm:w-10"
-          ><SiteIcon name="bag" class="h-5 w-5"
-        /></span>
-        <span class="text-lg font-extrabold tracking-tight sm:text-2xl"
-          >Storefront<span class="ml-1 hidden text-brand sm:inline"
-            >lab</span
-          ></span
-        >
-      </NuxtLink>
       <nav
         :aria-label="t('navigation.ariaPrimary')"
-        class="hidden items-center gap-5 text-sm font-semibold lg:flex"
+        class="hidden items-center gap-7 text-[13px] font-semibold lg:flex"
       >
         <NuxtLink
           v-for="item in navigation"
           :key="item.to"
           :to="item.to"
           :aria-current="route.path === item.to ? 'page' : undefined"
-          class="py-2 transition-colors hover:text-brand dark:hover:text-brand-light"
+          class="py-2 underline-offset-[7px] transition-colors"
           :class="
             route.path === item.to
-              ? 'text-brand dark:text-brand-light'
-              : 'text-slate-600 dark:text-slate-300'
+              ? 'text-slate-900 underline decoration-brand decoration-2 dark:text-paper dark:decoration-brand-light'
+              : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-paper'
           "
           >{{ item.name }}</NuxtLink
         >
       </nav>
-      <div class="flex shrink-0 items-center sm:gap-2">
+      <div class="flex shrink-0 items-center text-[13px] font-semibold">
         <LanguageSwitcher />
         <ThemeToggle class="hidden sm:flex" />
         <NuxtLink
-          :to="accountPath"
-          :aria-label="
-            auth.isAuthenticated
-              ? t('navigation.account')
-              : t('navigation.login')
-          "
-          class="hidden h-11 w-11 items-center justify-center rounded-full hover:bg-slate-100 sm:flex dark:hover:bg-slate-800"
-          ><SiteIcon name="user" class="h-5 w-5"
-        /></NuxtLink>
+          :to="accountLink.to"
+          class="hidden h-11 items-center px-2 text-slate-600 hover:text-slate-900 sm:flex dark:text-slate-300 dark:hover:text-paper"
+          >{{ accountLink.name }}</NuxtLink
+        >
         <NuxtLink
           :to="localePath('/cart')"
           :aria-label="t('navigation.cart') + ' (' + cart.count + ')'"
-          class="relative flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+          class="flex h-11 items-center gap-1.5 px-2"
         >
-          <SiteIcon name="bag" class="h-5 w-5" /><span
-            v-if="cart.count"
-            class="absolute right-0 top-0 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white"
+          {{ t("navigation.cart")
+          }}<span
+            class="min-w-6 bg-slate-900 px-1.5 py-0.5 text-center font-mono text-[11px] leading-4 text-paper tabular-nums dark:bg-paper dark:text-slate-950"
+            :class="{ 'bg-brand! dark:bg-brand-light!': cart.count > 0 }"
             >{{ cart.count }}</span
           >
         </NuxtLink>
@@ -100,10 +87,10 @@ onBeforeUnmount(() => {
           :aria-expanded="isMenuOpen"
           aria-controls="site-navigation-mobile"
           :aria-label="t('navigation.ariaToggle')"
-          class="flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-100 lg:hidden dark:hover:bg-slate-800"
+          class="flex h-11 items-center pl-3 lg:hidden"
           @click="openMenu"
         >
-          <SiteIcon name="menu" class="h-6 w-6" />
+          {{ t("navigation.menu") }}
         </button>
       </div>
     </div>
@@ -111,53 +98,37 @@ onBeforeUnmount(() => {
       ref="menu"
       id="site-navigation-mobile"
       :aria-label="t('navigation.menu')"
-      class="fixed inset-y-0 left-auto right-0 m-0 h-dvh max-h-none w-80 max-w-[90vw] border-0 bg-paper p-0 text-slate-900 shadow-xl backdrop:bg-slate-950/50 dark:bg-slate-900 dark:text-white"
+      class="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none border-0 bg-paper p-0 text-slate-900 backdrop:bg-transparent dark:bg-slate-950 dark:text-paper"
       @close="isMenuOpen = false"
-      @click="$event.target === menu && closeMenu()"
     >
       <nav
         :aria-label="t('navigation.ariaPrimary')"
-        class="flex min-h-full flex-col p-6"
+        class="flex min-h-full flex-col px-5 pb-8 sm:px-8"
       >
-        <div class="mb-8 flex items-center justify-between">
-          <span class="text-xl font-bold">{{ t("navigation.menu") }}</span
+        <div
+          class="flex h-16 items-center justify-between border-b border-rule dark:border-rule-dark"
+        >
+          <span class="text-[17px] font-extrabold tracking-[-0.03em]"
+            >Storefront Lab</span
           ><button
             autofocus
             type="button"
             :aria-label="t('navigation.ariaClose')"
-            class="flex h-11 w-11 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+            class="flex h-11 w-11 items-center justify-end"
             @click="closeMenu"
           >
-            <SiteIcon name="close" class="h-5 w-5" />
+            <SiteIcon name="close" class="h-6 w-6" />
           </button>
         </div>
         <NuxtLink
-          v-for="item in navigation"
+          v-for="item in [...navigation, accountLink]"
           :key="item.to"
           :to="item.to"
           :aria-current="route.path === item.to ? 'page' : undefined"
-          class="border-b border-slate-200 py-4 text-lg font-semibold dark:border-slate-700"
-          :class="
-            route.path === item.to ? 'text-brand dark:text-brand-light' : ''
-          "
+          class="border-b border-rule py-4 text-3xl font-extrabold tracking-heading dark:border-rule-dark"
+          :class="route.path === item.to && 'text-brand dark:text-brand-light'"
           @click="closeMenu"
           >{{ item.name }}</NuxtLink
-        >
-        <NuxtLink
-          :to="localePath('/cart')"
-          class="border-b border-slate-200 py-4 text-lg font-semibold dark:border-slate-700"
-          @click="closeMenu"
-          >{{ t("navigation.cart") }} ({{ cart.count }})</NuxtLink
-        >
-        <NuxtLink
-          :to="accountPath"
-          class="py-4 text-lg font-semibold"
-          @click="closeMenu"
-          >{{
-            auth.isAuthenticated
-              ? t("navigation.account")
-              : t("navigation.login")
-          }}</NuxtLink
         >
         <div class="mt-auto flex items-center justify-between pt-8">
           <LanguageSwitcher /><ThemeToggle />

@@ -13,9 +13,9 @@ const categoryLabel = useCategoryLabel();
 </script>
 
 <template>
-  <article class="grid items-start gap-8 lg:grid-cols-2 lg:gap-16">
+  <article class="grid gap-10 lg:grid-cols-12 lg:gap-14">
     <figure
-      class="flex aspect-square items-center justify-center rounded-2xl border border-slate-200 bg-white p-12 dark:border-slate-800"
+      class="flex aspect-square items-center justify-center bg-plate p-10 sm:p-16 lg:col-span-7"
     >
       <img
         :src="product.image"
@@ -23,47 +23,56 @@ const categoryLabel = useCategoryLabel();
         width="600"
         height="600"
         fetchpriority="high"
-        class="h-full w-full object-contain"
+        class="max-h-full w-auto object-contain mix-blend-multiply"
       />
     </figure>
-    <div class="space-y-6 lg:py-8">
-      <p class="text-sm text-slate-500 dark:text-slate-400">
-        {{ categoryLabel(product.category) }}
+    <div class="flex flex-col lg:col-span-5 lg:pt-2">
+      <p
+        class="meta flex justify-between gap-4 border-b border-rule pb-3 text-slate-500 dark:border-rule-dark dark:text-slate-400"
+      >
+        <span>{{ catalogNumber(product.id) }}</span
+        ><span>{{ categoryLabel(product.category) }}</span>
       </p>
       <h1
-        class="wrap-anywhere text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl"
+        class="mt-6 text-[clamp(2rem,3.6vw,3.25rem)] font-extrabold leading-[1.02] tracking-heading"
       >
         {{ product.title }}
       </h1>
-      <div v-if="product.rating" class="flex items-center gap-2 text-sm">
-        <SiteIcon
-          name="star"
-          class="h-4 w-4 fill-accent text-accent dark:fill-accent-light dark:text-accent-light"
-        /><span>{{
-          $t("products.details.rating", { rate: product.rating.rate })
-        }}</span
-        ><span class="text-slate-500 dark:text-slate-400">{{
-          $t(
-            "products.details.reviews",
-            { count: product.rating.count },
-            product.rating.count,
-          )
-        }}</span>
-      </div>
-      <p class="text-3xl font-extrabold">{{ $n(product.price, "currency") }}</p>
+      <p class="mt-6 text-3xl font-bold tabular-nums tracking-[-0.02em]">
+        {{ $n(product.price, "currency") }}
+      </p>
       <p
-        class="border-t border-slate-200 pt-6 text-sm leading-7 text-slate-600 dark:border-slate-800 dark:text-slate-300"
+        class="mt-6 text-sm leading-7 text-slate-600 dark:text-slate-300"
       >
         {{ product.description }}
       </p>
-      <BaseButton block size="lg" @click="$emit('add-to-cart', product)"
-        ><SiteIcon name="bag" class="h-5 w-5" />{{
+      <BaseButton
+        block
+        size="lg"
+        class="mt-8"
+        @click="$emit('add-to-cart', product)"
+        ><SiteIcon name="plus" class="h-4 w-4" />{{
           $t("products.actions.addToCart")
         }}</BaseButton
       >
-      <p class="text-xs leading-5 text-slate-500 dark:text-slate-400">
+      <p class="meta mt-3 text-slate-500 dark:text-slate-400">
         {{ $t("cart.demoNotice") }}
       </p>
+      <dl class="mt-10 border-t border-rule text-sm dark:border-rule-dark">
+        <div
+          v-for="row in [
+            { label: $t('products.details.specs.number'), value: catalogNumber(product.id) },
+            { label: $t('products.details.specs.category'), value: categoryLabel(product.category) },
+            { label: $t('products.details.specs.rating'), value: `${product.rating.rate} / 5` },
+            { label: $t('products.details.specs.reviews'), value: String(product.rating.count) },
+          ]"
+          :key="row.label"
+          class="flex justify-between gap-6 border-b border-rule py-3 dark:border-rule-dark"
+        >
+          <dt class="text-slate-500 dark:text-slate-400">{{ row.label }}</dt>
+          <dd class="font-semibold tabular-nums">{{ row.value }}</dd>
+        </div>
+      </dl>
     </div>
   </article>
 </template>

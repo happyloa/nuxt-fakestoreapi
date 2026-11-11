@@ -30,21 +30,21 @@ const props = withDefaults(
 const classes = computed(() => {
   // 根據尺寸、樣式與寬度設定組合 Tailwind class。
   const base =
-    "cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-2 rounded-full font-bold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.97]";
+    "cursor-pointer whitespace-nowrap inline-flex items-center justify-center gap-2 font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40";
   const sizes: Record<Size, string> = {
-    sm: "min-h-10 px-4 py-2 text-sm",
-    md: "min-h-11 px-5 py-3 text-sm",
-    lg: "min-h-12 px-7 py-3.5 text-sm sm:text-base",
+    sm: "min-h-10 px-4 text-[13px]",
+    md: "min-h-11 px-5 text-sm",
+    lg: "min-h-13 px-7 text-[15px]",
   };
   const variants: Record<Variant, string> = {
     primary:
-      "bg-brand text-white hover:bg-brand-dark focus-visible:outline-brand",
+      "bg-slate-900 text-paper hover:bg-brand dark:bg-paper dark:text-slate-950 dark:hover:bg-brand-light",
     secondary:
-      "bg-slate-100 text-slate-900 hover:bg-slate-200 focus-visible:outline-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:outline-slate-500",
+      "bg-plate text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-paper dark:hover:bg-slate-700",
     outline:
-      "border border-slate-200/60 bg-white text-slate-900 hover:bg-slate-50 hover:border-slate-300 focus-visible:outline-brand dark:border-slate-600/60 dark:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800/60 dark:hover:border-slate-500",
+      "border border-slate-900 text-slate-900 hover:bg-slate-900 hover:text-paper dark:border-paper/70 dark:text-paper dark:hover:bg-paper dark:hover:text-slate-950",
     ghost:
-      "text-slate-600 hover:bg-slate-100 focus-visible:outline-brand dark:text-slate-300 dark:hover:bg-slate-800/60 dark:focus-visible:outline-brand",
+      "text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline dark:text-slate-300 dark:hover:text-paper",
   };
   const width = props.block ? "w-full" : "";
   return [base, sizes[props.size], variants[props.variant], width].join(" ");

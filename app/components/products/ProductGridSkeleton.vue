@@ -1,28 +1,23 @@
 <script setup lang="ts">
-const props = defineProps<{ count?: number }>();
-
-const skeletonCount = computed(() => props.count ?? 6);
-
-/**
- * 商品列表載入時的骨架畫面，提升使用者對於資料狀態的感知。
- */
+// 商品格線載入中的佔位，與 ProductCard 相同的格線與比例。
+withDefaults(defineProps<{ count?: number }>(), { count: 8 });
 </script>
 
 <template>
   <ul
-    class="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4"
-    aria-live="polite"
+    class="grid grid-cols-2 border-l border-rule md:grid-cols-3 lg:grid-cols-4 dark:border-rule-dark"
+    aria-busy="true"
+    :aria-label="$t('ui.loading')"
   >
-    <li v-for="index in skeletonCount" :key="index">
-      <div class="space-y-4">
-        <BaseSkeleton height="auto" class="aspect-square" rounded="xl" />
-        <BaseSkeleton width="75%" />
-        <BaseSkeleton width="50%" height="0.75rem" />
-        <div class="flex gap-2">
-          <BaseSkeleton width="4rem" height="1.5rem" rounded="full" />
-          <BaseSkeleton width="5rem" height="1.5rem" rounded="full" />
-        </div>
-      </div>
+    <li
+      v-for="index in count"
+      :key="index"
+      class="space-y-4 border-b border-r border-rule p-3 sm:p-5 dark:border-rule-dark"
+    >
+      <BaseSkeleton width="40%" height="0.6875rem" />
+      <BaseSkeleton height="auto" class="aspect-4/5" />
+      <BaseSkeleton width="80%" />
+      <BaseSkeleton width="35%" height="1.25rem" />
     </li>
   </ul>
 </template>

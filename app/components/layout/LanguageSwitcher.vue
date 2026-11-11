@@ -15,7 +15,7 @@ const toggle = async () => {
 <template>
   <button
     type="button"
-    class="flex h-11 min-w-11 items-center justify-center rounded-full px-2 text-xs font-bold hover:bg-slate-100 disabled:opacity-50 dark:hover:bg-slate-800"
+    class="flex h-11 min-w-11 items-center justify-center px-2 text-[13px] font-semibold text-slate-600 hover:text-slate-900 disabled:opacity-50 dark:text-slate-300 dark:hover:text-paper"
     :aria-label="
       t('header.language.toggleLabel', {
         next: nextLocale === 'en' ? 'English' : '繁體中文',

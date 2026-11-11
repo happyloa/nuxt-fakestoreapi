@@ -28,16 +28,24 @@ useHead(() => ({
 
 <template>
   <div
-    class="flex min-h-screen items-center justify-center bg-paper px-6 text-slate-900 dark:bg-slate-950 dark:text-white"
+    class="flex min-h-screen items-center bg-paper px-5 text-slate-900 sm:px-8 lg:px-10 dark:bg-slate-950 dark:text-paper"
   >
-    <div class="max-w-lg space-y-6 py-16 text-center">
-      <p class="text-sm font-bold text-brand dark:text-brand-light">
+    <div class="mx-auto w-full max-w-7xl space-y-6 py-16">
+      <p
+        class="meta border-b border-rule pb-3 text-slate-500 dark:border-rule-dark dark:text-slate-400"
+      >
         Storefront Lab
       </p>
-      <h1 class="text-6xl font-extrabold tracking-tight">
+      <p
+        class="text-[clamp(6rem,24vw,18rem)] font-extrabold leading-[0.8] tracking-[-0.07em] tabular-nums"
+        aria-hidden="true"
+      >
+        {{ error.statusCode }}
+      </p>
+      <h1 class="text-3xl font-extrabold tracking-heading sm:text-4xl">
         {{ errorTitle }}
       </h1>
-      <p class="text-sm leading-7 text-slate-600 dark:text-slate-400">
+      <p class="max-w-md text-sm leading-7 text-slate-600 dark:text-slate-400">
         {{
           error.statusCode === 404 ? t("error.desc404") : t("error.descGeneric")
         }}

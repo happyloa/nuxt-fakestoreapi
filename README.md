@@ -9,6 +9,16 @@
 - 繁體中文／英文、深色模式與響應式介面
 - 商品、使用者與購物車 API 操作台；上游新增、修改、刪除不保證永久保存
 
+## 介面
+
+版面採商品型錄的做法：紙色底、墨色文字、單一鏽橘色重點、細線分格與方角元件，商品以目錄編號（`No. 001`）標示。設計變數集中在 `app/assets/css/tailwind.css`：
+
+- `paper`／`plate`／`rule`：頁面底色、商品圖底板與細線顏色。商品圖以 `mix-blend-multiply` 疊在 `plate` 上，讓上游的白底照片融入底板；深色模式仍保留淺色底板。
+- `tracking-display`／`tracking-heading`：大標字距。英文收緊，`html:lang(zh-TW)` 時放寬，避免中文字互相擠壓。
+- `meta`：目錄編號、分類與附註使用的等寬小字。
+
+表單欄位共用 `app/utils/form-styles.ts`，目錄編號格式在 `app/utils/catalog.ts`。
+
 ## 本機開發
 
 建議使用 Node.js `24.21.0`、npm `12.2.2`，分別記錄在 `.node-version` 與 `package.json`。`.npmrc` 會拒絕不符合 `engines` 的版本；目前最低需要 npm `12.2.1`，才能套用原生安全補丁與讀取 lockfile v4。`packageManager` 只記錄版本，不會自動升級本機 npm。

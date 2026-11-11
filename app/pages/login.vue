@@ -57,15 +57,14 @@ usePageSeo(() => ({
 
 <template>
   <div
-    class="mx-auto grid max-w-5xl items-center gap-10 py-4 lg:grid-cols-2 lg:gap-20 lg:py-10"
+    class="mx-auto grid max-w-6xl gap-12 py-2 lg:grid-cols-2 lg:gap-0 lg:py-8"
   >
-    <div class="rounded-2xl bg-[#eef0e7] p-8 sm:p-10 dark:bg-[#2c3326]">
-      <SiteIcon
-        name="bag"
-        class="mb-6 h-10 w-10 text-accent dark:text-accent-light"
-      />
+    <div
+      class="flex flex-col border-rule lg:border-r lg:pr-16 dark:border-rule-dark"
+    >
+      <p class="meta mb-6 text-slate-500 dark:text-slate-400">Storefront Lab</p>
       <h2
-        class="whitespace-pre-line text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl"
+        class="whitespace-pre-line text-[clamp(2.25rem,4.5vw,3.75rem)] font-extrabold leading-[0.98] tracking-heading"
       >
         {{ $t("auth.login.welcome") }}
       </h2>
@@ -76,13 +75,14 @@ usePageSeo(() => ({
       </p>
       <NuxtLink
         :to="localePath('/')"
-        class="mt-8 inline-flex items-center gap-2 text-sm font-bold text-brand-dark dark:text-brand-light"
+        class="mt-8 inline-flex items-center gap-2 self-start border-b-2 border-slate-900 pb-1 text-sm font-bold hover:border-brand hover:text-brand lg:mt-auto dark:border-paper dark:hover:border-brand-light dark:hover:text-brand-light"
         >{{ $t("cart.continueShopping")
         }}<SiteIcon name="arrow" class="h-4 w-4"
       /></NuxtLink>
     </div>
     <LoginForm
       v-if="!authStore.isAuthenticated"
+      class="lg:pl-16"
       :loading="authStore.loading"
       :error="authStore.loginError ? $t(authStore.loginError) : ''"
       @submit="handleSubmit"

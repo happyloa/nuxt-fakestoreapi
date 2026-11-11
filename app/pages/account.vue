@@ -30,14 +30,6 @@ const fullName = computed(() => {
   return `${firstName} ${lastName}`;
 });
 
-// 取得使用者首字母 (用於頭像)
-const initials = computed(() => {
-  if (!authStore.user?.name) return "?";
-  const f = authStore.user.name.firstName?.[0] ?? "";
-  const l = authStore.user.name.lastName?.[0] ?? "";
-  return (f + l).toUpperCase();
-});
-
 // 最近一次示範結帳的商品（只存在於目前瀏覽器分頁的狀態中）
 const orderItems = computed(() => cartStore.lastOrderItems);
 
@@ -51,23 +43,22 @@ usePageSeo(() => ({
   <div class="space-y-8">
     <template v-if="authStore.user">
       <div
-        class="grid grid-cols-[4rem_minmax(0,1fr)] items-center gap-5 rounded-2xl bg-[#eef0e7] p-7 sm:flex sm:flex-wrap sm:p-10 dark:bg-[#2c3326]"
+        class="flex flex-wrap items-end justify-between gap-x-8 gap-y-5 border-b border-rule pb-8 dark:border-rule-dark"
       >
-        <div
-          class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent text-xl font-bold text-white"
-        >
-          {{ initials }}
-        </div>
-        <div class="min-w-0 flex-1">
-          <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">
+        <div class="min-w-0">
+          <p class="meta text-slate-500 dark:text-slate-400">
+            {{ catalogNumber(authStore.user.id) }} / {{ authStore.user.username }}
+          </p>
+          <h1
+            class="mt-4 text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[0.95] tracking-heading"
+          >
             {{ $t("account.title") }}
           </h1>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
-            {{ fullName }} ({{ authStore.user.username }})
+          <p class="mt-3 text-base capitalize text-slate-600 dark:text-slate-300">
+            {{ fullName }}
           </p>
         </div>
         <BaseButton
-          class="col-start-2 justify-self-start sm:ml-auto"
           variant="outline"
           @click="handleLogout"
           >{{ $t("account.logout") }}</BaseButton
@@ -75,7 +66,7 @@ usePageSeo(() => ({
       </div>
       <div class="grid items-start gap-6 md:grid-cols-2">
         <BaseCard class="space-y-5"
-          ><h2 class="text-xl font-extrabold">
+          ><h2 class="meta text-slate-500 dark:text-slate-400">
             {{ $t("account.sections.profile") }}
           </h2>
           <dl class="space-y-3 text-sm">
@@ -97,7 +88,7 @@ usePageSeo(() => ({
           </dl></BaseCard
         >
         <BaseCard class="space-y-5"
-          ><h2 class="text-xl font-extrabold">
+          ><h2 class="meta text-slate-500 dark:text-slate-400">
             {{ $t("account.sections.address") }}
           </h2>
           <dl class="space-y-3 text-sm">
@@ -115,26 +106,27 @@ usePageSeo(() => ({
           </dl></BaseCard
         >
         <BaseCard class="space-y-5 md:col-span-2"
-          ><h2 class="text-xl font-extrabold">
+          ><h2 class="meta text-slate-500 dark:text-slate-400">
             {{ $t("account.sections.recentOrders") }}
           </h2>
           <ul
             v-if="orderItems.length"
-            class="divide-y divide-slate-200 dark:divide-slate-800"
+            class="divide-y divide-rule dark:divide-rule-dark"
           >
             <li
               v-for="item in orderItems"
               :key="item.id"
               class="grid grid-cols-[3rem_minmax(0,1fr)] items-start gap-3 py-4 sm:grid-cols-[4rem_minmax(0,1fr)_auto] sm:items-center sm:gap-4"
             >
-              <img
-                :src="item.image"
-                :alt="item.title"
-                width="64"
-                height="64"
-                loading="lazy"
-                class="h-12 w-12 rounded-lg bg-white object-contain p-2 sm:h-16 sm:w-16"
-              />
+              <span class="flex h-12 w-12 items-center justify-center bg-plate p-1.5 sm:h-16 sm:w-16"
+                ><img
+                  :src="item.image"
+                  :alt="item.title"
+                  width="64"
+                  height="64"
+                  loading="lazy"
+                  class="max-h-full object-contain mix-blend-multiply"
+              /></span>
               <div class="min-w-0 flex-1">
                 <p class="wrap-anywhere text-sm font-semibold">
                   {{ item.title }}
