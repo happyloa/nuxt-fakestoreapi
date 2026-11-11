@@ -77,7 +77,7 @@ Node 建置完成後，可用 `npm run preview` 預覽，或以 `node .output/se
 
 TypeScript 6、H3 1 與 Node 24 型別是目前通過驗證的相容組合。更新 i18n 時，請一併更新 lockfile 中相容的 `vue-i18n` 與 `@intlify/*` 相依。
 
-Nuxt 已更新至 `4.6.4`、Vue 至 `3.5.45`、Tailwind CSS 與其 Vite plugin 至 `4.3.5`，`vue-tsc` 維持最新版 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至 `14.0.4`、`11.0.5` 與 `1.4.3`；`node-forge` 使用官方修正，無需本機補丁。
+Nuxt 已更新至 `4.6.4`、Vue 至 `3.5.45`、Vue Router 至 `5.5.0`、Tailwind CSS 與其 Vite plugin 至 `4.3.5`，`vue-tsc` 維持最新版 `3.3.14`。透過 overrides 將間接相依的 `glob`、`minimatch` 與 `node-forge` 更新至 `14.0.4`、`11.0.7` 與 `1.4.3`；`node-forge` 使用官方修正，無需本機補丁。
 
 直接宣告開發相依 `esbuild@^0.28.2`，滿足 Vite 8 的 optional peer 要求。i18n 的 `@intlify/bundle-utils` 仍使用其相容的 `esbuild@0.25.12`；兩者分別安裝，避免舊版被提升至根目錄後導致 `ERESOLVE`。
 
