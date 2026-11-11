@@ -5,21 +5,13 @@ import { useProductsStore } from "~/stores/products";
 const productsStore = useProductsStore();
 const { t } = useI18n();
 
-/**
- * 初始載入首頁所需的商品與分類資料，並透過 useAsyncData 綁定 SSR 快取，避免重複請求 (Double Fetching)
- */
+// SSR 載入的目錄透過 Pinia payload 帶到用戶端；之後切回首頁時 store 已有資料，不會重新下載。
 const {
   pending: isPageLoading,
   error: asyncError,
   refresh,
-} = await useAsyncData("homepageData", async () => {
-  productsStore.error = "";
-  const catalog =
-    await $fetch<import("#shared/types/storefront").CatalogPayload>(
-      "/api/catalog",
-    );
-  productsStore.products = catalog.products;
-  productsStore.categories = catalog.categories;
+} = await useAsyncData("catalog", async () => {
+  await productsStore.loadCatalog();
   return true;
 });
 
@@ -82,6 +74,7 @@ usePageSeo(() => ({
         :selected-category="selectedCategory"
         :sort-order="sortOrder"
         :search-query="searchQuery"
+        :has-active-filters="hasActiveFilters"
         @update:category="selectedCategory = $event"
         @update:sort="sortOrder = $event"
         @update:search="searchQuery = $event"

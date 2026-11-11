@@ -100,9 +100,6 @@ usePageSeo(() => ({
           @increment="handleIncrement"
           @decrement="handleDecrement"
           @remove="handleRemove" />
-        <BaseAlert v-if="cartStore.error" variant="error">
-          {{ cartStore.error }}
-        </BaseAlert>
         <BaseAlert
           v-if="cartStore.restored && !cartStore.items.length && !cartStore.loading"
           variant="warning">

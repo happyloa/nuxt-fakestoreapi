@@ -30,7 +30,7 @@ export const queryProducts = (options: {
  * @param id 產品 ID
  */
 export const getProductById = (id: number) =>
-   $fetch<Product>(`/api/products/${id}`)
+  $fetch<Product>(`/api/products/${id}`)
 
 /**
  * 取得所有產品分類

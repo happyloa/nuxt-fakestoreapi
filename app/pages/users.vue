@@ -7,7 +7,10 @@ const { t } = useI18n();
 
 definePageMeta({ middleware: "auth" });
 
-await usersStore.fetchUsers();
+const { pending, error } = await useAsyncData("users", async () => {
+  await usersStore.loadUsers();
+  return true;
+});
 
 /**
  * 提供使用者清單搜尋，展示 Fake Store API 的使用者資料能力。
@@ -37,8 +40,8 @@ usePageSeo(() => ({
   <div class="space-y-6">
     <UserList
       :users="filteredUsers"
-      :loading="usersStore.loading"
-      :error="usersStore.error"
+      :loading="pending"
+      :error="error ? t('errors.load') : ''"
       :search="search"
       @update:search="search = $event"
     />

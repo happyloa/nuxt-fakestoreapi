@@ -4,7 +4,14 @@
  * 提供使用者的單一取得、建立、更新與刪除功能
  */
 
-import { useUsersStore } from "~/stores/users";
+import {
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  patchUser,
+  updateUser,
+} from "~/services/fakestore/users";
 import { useNotificationsStore } from "~/stores/notifications";
 import type {
   User,
@@ -13,7 +20,6 @@ import type {
 } from "#shared/types/fakestore";
 
 const { t } = useI18n();
-const usersStore = useUsersStore();
 const notifications = useNotificationsStore();
 
 // 查詢會員列表 (Query Users)
@@ -26,7 +32,7 @@ const userQueryState = userQuery.state;
 const handleUserQuery = () =>
   userQuery.run(
     () =>
-      usersStore.queryUsers({
+      getUsers({
         limit: userQueryForm.limit || undefined,
         sort: userQueryForm.sort,
       }),
@@ -41,7 +47,7 @@ const userById = useApiOperation<User | null>(null);
 const userByIdState = userById.state;
 const handleUserById = () => {
   if (!userByIdForm.id) return userById.fail(t("api.errors.idRequired"));
-  return userById.run(() => usersStore.fetchUserById(Number(userByIdForm.id)));
+  return userById.run(() => getUserById(Number(userByIdForm.id)));
 };
 
 // 建立使用者 (Create User)
@@ -74,7 +80,7 @@ const handleUserCreate = () => {
   } catch {
     return userCreate.fail(t("api.errors.invalidJson"));
   }
-  return userCreate.run(() => usersStore.createUser(payload), {
+  return userCreate.run(() => createUser(payload), {
     success: (user) =>
       t("api.users.createSuccess", { username: user!.username }),
     onSuccess: (user) =>
@@ -103,8 +109,8 @@ const handleUserUpdate = () => {
   return userUpdate.run(
     () =>
       userUpdateForm.method === "PATCH"
-        ? usersStore.patchUser(Number(userUpdateForm.id), payload)
-        : usersStore.updateUser(Number(userUpdateForm.id), payload),
+        ? patchUser(Number(userUpdateForm.id), payload)
+        : updateUser(Number(userUpdateForm.id), payload),
     {
       success: (user) => t("api.users.updateSuccess", { id: user!.id }),
       onSuccess: (user) =>
@@ -123,7 +129,7 @@ const handleUserDelete = () => {
   if (!userDeleteForm.id) return userDelete.fail(t("api.errors.idRequired"));
   return userDelete.run(
     async () => {
-      await usersStore.deleteUser(Number(userDeleteForm.id));
+      await deleteUser(Number(userDeleteForm.id));
       return null;
     },
     {

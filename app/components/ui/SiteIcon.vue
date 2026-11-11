@@ -2,6 +2,7 @@
 type Icon =
   | "bag"
   | "arrow"
+  | "back"
   | "close"
   | "menu"
   | "plus"
@@ -13,6 +14,7 @@ defineProps<{ name: Icon }>();
 const paths: Record<Icon, string> = {
   bag: "M5 7h14l1 14H4L5 7ZM8 8V6a4 4 0 0 1 8 0v2",
   arrow: "M4 12h16m-6-6 6 6-6 6",
+  back: "m15 19-7-7 7-7",
   close: "m6 6 12 12M6 18 18 6",
   menu: "M4 7h16M4 17h16",
   plus: "M12 5v14M5 12h14",

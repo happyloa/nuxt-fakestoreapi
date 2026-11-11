@@ -41,6 +41,6 @@ export default defineEventHandler(async (event): Promise<SessionResponse> => {
   const token = await authenticateWithFakeStore(event, username, password);
   const user = await getPublicUserAfterUpstreamLogin(event, token);
 
-  createSession(event, user);
+  await createSession(event, user);
   return { authenticated: true, user };
 });

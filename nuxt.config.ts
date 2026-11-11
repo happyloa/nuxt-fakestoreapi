@@ -1,7 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
 
-const siteUrl = "https://nuxt-fakestoreapi.worksbyaaron.com";
-
 export default defineNuxtConfig({
   compatibilityDate: "2026-08-01",
   devtools: { enabled: process.env.NODE_ENV !== "production" },
@@ -43,10 +41,13 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     fakeStoreApiBase: "https://fakestoreapi.com",
+    // NUXT_SESSION_PASSWORD: at least 32 characters, shared by every instance.
+    sessionPassword: "",
     public: {
-      siteUrl,
+      // NUXT_PUBLIC_I18N_BASE_URL: the single public origin for canonical,
+      // hreflang, og:url and absolute share-image URLs.
       i18n: {
-        baseUrl: siteUrl,
+        baseUrl: "https://nuxt-fakestoreapi.worksbyaaron.com",
       },
     },
   },

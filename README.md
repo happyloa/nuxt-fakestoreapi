@@ -35,11 +35,11 @@ npm.cmd run dev
 
 | 變數 | 用途 |
 | --- | --- |
-| `NUXT_PUBLIC_SITE_URL` | canonical 與社群分享的公開網址 |
-| `NUXT_PUBLIC_I18N_BASE_URL` | 語系連結的公開網址，應與上一項一致 |
+| `NUXT_PUBLIC_I18N_BASE_URL` | 公開網址，用於 canonical、hreflang、`og:url` 與分享圖網址 |
 | `NUXT_FAKE_STORE_API_BASE` | 伺服器端上游 API，預設 `https://fakestoreapi.com` |
+| `NUXT_SESSION_PASSWORD` | 伺服器端 session 加密金鑰，至少 32 字元；所有執行個體需相同 |
 
-`nuxt.config.ts` 只設定 runtime config 預設值，由 Nuxt 在執行時套用上述環境變數。i18n 的 `baseUrl` 放在 `runtimeConfig.public.i18n`，讓同一份建置產物可切換部署網址；`NUXT_PUBLIC_SITE_URL` 與 `NUXT_PUBLIC_I18N_BASE_URL` 請設為相同值。伺服器 API 使用 `useRuntimeConfig(event)` 讀取該次請求的設定。
+`nuxt.config.ts` 只設定 runtime config 預設值，由 Nuxt 在執行時套用上述環境變數。i18n 的 `baseUrl` 放在 `runtimeConfig.public.i18n`，讓同一份建置產物可切換部署網址，也是全站唯一的公開網址設定。伺服器 API 使用 `useRuntimeConfig(event)` 讀取該次請求的設定。
 
 直接執行 Node 正式產物時不會載入 `.env`，需由啟動環境提供變數；Pages 則在對應的 production／preview 環境設定。參考 [Nuxt runtime config](https://nuxt.com/docs/4.x/guide/going-further/runtime-config) 與 [Nuxt i18n runtime config](https://i18n.nuxtjs.org/docs/api/runtime-config)。
 
@@ -50,14 +50,20 @@ npm test          # 執行 tests/*.test.mjs，離線即可
 npm run verify    # typecheck + 測試 + audit:security（audit 需要網路）
 ```
 
-測試使用 Node.js 內建 runner，涵蓋安全補丁、請求大小限制、API 操作台路徑解析與敏感欄位移除、zh／en 語系 key 一致性，以及購物車上限與結帳成功、失敗、登出後過期回應的競態。
+測試使用 Node.js 內建 runner，直接載入 `app/`、`server/` 的 TypeScript 原始碼（Node 剝除型別，`tests/support/register.mjs` 補上 `~/`、`#shared/` 別名與省略的副檔名）。涵蓋範圍：
+
+- API 安全：跨站寫入、非 JSON、超過大小限制的請求；登入 cookie 屬性、加密 session、竄改或金鑰不符的 cookie、登出
+- 示範訂單的登入檢查與每一行的數量、重複與上限驗證
+- API 操作台的路徑解析、允許的操作與敏感欄位移除
+- 購物車上限、本機資料還原，以及結帳成功、失敗、登出後過期回應的競態
+- zh／en 語系 key 一致性、安全補丁與 audit 判讀
 
 ## 建置與部署
 
 | 目標 | 建置指令 | 產物 |
 | --- | --- | --- |
 | Node | `npm run build` | `.output/server/index.mjs` |
-| Cloudflare Pages | `npm run build:cloudflare` | `dist` |
+| Cloudflare Pages | `npm run build:cloudflare`（先跑 `npm test`，失敗就不建置） | `dist` |
 
 Node 建置完成後，可用 `npm run preview` 預覽，正式啟動請用 `npm start`。它會在未設定時把 `NODE_ENV` 設為 `production` 再載入 `.output/server/index.mjs`；直接執行 `node .output/server/index.mjs` 時，外部化的 `vue-router`、`@intlify/*` 會保留開發診斷，例如每個不存在的網址都會輸出路由警告。
 
@@ -68,7 +74,7 @@ Node 建置完成後，可用 `npm run preview` 預覽，正式啟動請用 `npm
 ## 資料與登入限制
 
 - 瀏覽器透過本站 `/api/*` 呼叫上游；登入回應不包含上游 token 或密碼。正式環境的 session cookie 使用 `HttpOnly`、`Secure`、`SameSite=Lax`，需要 HTTPS。
-- Session 存在伺服器程序記憶體中，重啟即失效。Pages 不保證請求落在同一執行個體，登入可能失效；目前沒有跨執行個體的 session 儲存。
+- Session 是以 `NUXT_SESSION_PASSWORD` 加密簽章的 cookie，只存公開的會員資料，任何執行個體都能讀取，有效 7 天。登出會清除瀏覽器 cookie；因為伺服器不保存 session，已被複製的 cookie 在到期前仍有效。未設定金鑰時，每個執行個體會產生隨機金鑰並在記錄中警告，登入只在同一個執行個體內有效，Pages 上可能時好時壞，因此 Pages 的 production／preview 都要設定這個變數。
 - 購物車存在瀏覽器本機，每車最多 50 項、每項最多 99 件。登入保留訪客商品，結帳失敗保留商品，登出會清空商品與收據並忽略舊結帳回應。
 - 示範結帳只在本站回傳收據，不會向上游建立真實訂單。登入、API 與結帳需要伺服器，不提供純靜態建置。
 
@@ -85,7 +91,7 @@ Nuxt 已更新至 `4.6.4`、Vue 至 `3.5.45`、Vue Router 至 `5.5.0`、Tailwind
 | 套件 | 使用版本 | 最新主版本 | 保留原因 |
 | --- | --- | --- | --- |
 | `h3` | `1.15.11` | `2.0.8` | Nuxt `4.6.4` 的 Nitro 2 整合仍依賴 H3 1；H3 2 的事件與請求 API 不相容。 |
-| `typescript` | `6.0.3` | `7.0.2` | `vue-tsc` 與購物車測試仍使用 JavaScript compiler API；TypeScript 7 未提供相同入口。 |
+| `typescript` | `6.0.3` | `7.0.2` | `vue-tsc` 仍透過 `typescript/lib/tsc` 使用 JavaScript compiler API；TypeScript 7 未提供相同入口。 |
 | `@types/node` | `24.19.2` | `26.6.6` | 型別需與專案的 Node 24 執行環境一致。 |
 
 Nuxt 已處理 Vue 打包與 Windows renderer 路徑，無需額外的 `@vue/shared`、Nuxt dist inline 設定；保留 Pinia inline，確保 SSR 的 Nuxt plugin 與 stores 使用同一個實例。Tailwind 維持官方 Vite plugin 配置，i18n 模組的相依最佳化交由模組與 Nuxt 管理。

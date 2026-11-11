@@ -38,7 +38,7 @@ const initials = computed(() => {
   return (f + l).toUpperCase();
 });
 
-// 訂單項目：優先顯示當前購物車，否則顯示上次結帳的紀錄
+// 最近一次示範結帳的商品（只存在於目前瀏覽器分頁的狀態中）
 const orderItems = computed(() => cartStore.lastOrderItems);
 
 usePageSeo(() => ({
@@ -157,7 +157,6 @@ usePageSeo(() => ({
         >
       </div>
     </template>
-    <BaseLoader v-else-if="authStore.isAuthenticated" />
     <div v-else class="space-y-5 py-12 text-center">
       <h1 class="text-3xl font-extrabold">{{ $t("account.title") }}</h1>
       <p class="text-slate-500 dark:text-slate-400">

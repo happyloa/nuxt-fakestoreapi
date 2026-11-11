@@ -1,33 +1,53 @@
 import {
   deleteCookie,
   getCookie,
+  sealSession,
   setCookie,
+  unsealSession,
   type H3Event,
+  type SessionConfig,
 } from "h3";
 import type { PublicUser } from "#shared/types/storefront";
 
 const SESSION_COOKIE_NAME = "storefront_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
-const MAX_ACTIVE_SESSIONS = 10_000;
-const SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const MIN_PASSWORD_LENGTH = 32;
 
-interface StoredSession {
-  expiresAt: number;
-  user: PublicUser;
+interface SessionData {
+  user?: PublicUser;
 }
 
-declare global {
-  var __storefrontDemoSessions: Map<string, StoredSession> | undefined;
-}
+let instancePassword: string | undefined;
 
 /**
- * This is intentionally an opaque, server-side demo session. The upstream JWT
- * is used only while handling a successful upstream login and is never stored
- * in the browser cookie or trusted on subsequent requests.
+ * Sessions are sealed (encrypted and signed) cookies, so every server
+ * instance, including separate Cloudflare Workers isolates, can read them.
+ * Only the public profile is stored; the upstream JWT never leaves the login
+ * request. Without NUXT_SESSION_PASSWORD each instance uses its own random
+ * key, which keeps login working but only on the instance that created it.
  */
-const sessionStore =
-  globalThis.__storefrontDemoSessions ??
-  (globalThis.__storefrontDemoSessions = new Map<string, StoredSession>());
+function getSessionPassword(event: H3Event): string {
+  const configured = useRuntimeConfig(event).sessionPassword;
+  if (typeof configured === "string" && configured.length >= MIN_PASSWORD_LENGTH) {
+    return configured;
+  }
+  if (!instancePassword) {
+    instancePassword = Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) =>
+      byte.toString(16).padStart(2, "0")).join("");
+    console.warn(
+      "[session] NUXT_SESSION_PASSWORD is missing or shorter than 32 characters; sessions are limited to this server instance.",
+    );
+  }
+  return instancePassword;
+}
+
+function sessionConfig(event: H3Event): SessionConfig {
+  return {
+    name: SESSION_COOKIE_NAME,
+    password: getSessionPassword(event),
+    maxAge: SESSION_MAX_AGE_SECONDS,
+  };
+}
 
 function cookieOptions() {
   return {
@@ -38,65 +58,38 @@ function cookieOptions() {
   };
 }
 
-function copyPublicUser(user: PublicUser): PublicUser {
-  return {
-    ...user,
-    name: { ...user.name },
-    address: { ...user.address },
+export async function getSessionUser(event: H3Event): Promise<PublicUser | null> {
+  const sealed = getCookie(event, SESSION_COOKIE_NAME);
+  if (!sealed) return null;
+
+  try {
+    const session = await unsealSession(event, sessionConfig(event), sealed);
+    const user = (session.data as SessionData | undefined)?.user;
+    if (user) return user;
+  } catch {
+    // Tampered, expired, or sealed with a different password.
+  }
+  deleteCookie(event, SESSION_COOKIE_NAME, cookieOptions());
+  return null;
+}
+
+export async function createSession(event: H3Event, user: PublicUser): Promise<void> {
+  // Seal a fresh session directly. h3's useSession() would also create one for
+  // anonymous visitors, which would set a cookie on every request.
+  event.context.sessions ??= Object.create(null);
+  event.context.sessions![SESSION_COOKIE_NAME] = {
+    id: crypto.randomUUID(),
+    createdAt: Date.now(),
+    data: { user } satisfies SessionData,
   };
-}
-
-function getSessionId(event: H3Event): string | null {
-  const sessionId = getCookie(event, SESSION_COOKIE_NAME);
-  return sessionId && SESSION_ID_PATTERN.test(sessionId) ? sessionId : null;
-}
-
-function removeExpiredSessions(now = Date.now()): void {
-  for (const [sessionId, session] of sessionStore) {
-    if (session.expiresAt <= now) sessionStore.delete(sessionId);
-  }
-}
-
-export function getSessionUser(event: H3Event): PublicUser | null {
-  const sessionId = getSessionId(event);
-  if (!sessionId) return null;
-
-  const session = sessionStore.get(sessionId);
-  if (!session || session.expiresAt <= Date.now()) {
-    sessionStore.delete(sessionId);
-    deleteCookie(event, SESSION_COOKIE_NAME, cookieOptions());
-    return null;
-  }
-
-  return copyPublicUser(session.user);
-}
-
-export function createSession(event: H3Event, user: PublicUser): void {
-  removeExpiredSessions();
-
-  const previousSessionId = getSessionId(event);
-  if (previousSessionId) sessionStore.delete(previousSessionId);
-
-  // Bound process memory even when valid demo credentials are used repeatedly.
-  if (sessionStore.size >= MAX_ACTIVE_SESSIONS) {
-    const oldestSessionId = sessionStore.keys().next().value;
-    if (oldestSessionId) sessionStore.delete(oldestSessionId);
-  }
-
-  const sessionId = crypto.randomUUID();
-  sessionStore.set(sessionId, {
-    expiresAt: Date.now() + SESSION_MAX_AGE_SECONDS * 1_000,
-    user: copyPublicUser(user),
-  });
-
-  setCookie(event, SESSION_COOKIE_NAME, sessionId, {
+  const sealed = await sealSession(event, sessionConfig(event));
+  setCookie(event, SESSION_COOKIE_NAME, sealed, {
     ...cookieOptions(),
     maxAge: SESSION_MAX_AGE_SECONDS,
   });
 }
 
+/** Logout clears the browser cookie; sealed sessions have no server-side state to revoke. */
 export function clearStorefrontSession(event: H3Event): void {
-  const sessionId = getSessionId(event);
-  if (sessionId) sessionStore.delete(sessionId);
   deleteCookie(event, SESSION_COOKIE_NAME, cookieOptions());
 }

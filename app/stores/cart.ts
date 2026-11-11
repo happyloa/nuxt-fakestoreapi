@@ -7,7 +7,6 @@ export const useCartStore = defineStore("cart", {
     items: [] as CartItem[],
     lastOrderItems: [] as CartItem[],
     loading: false,
-    error: "",
     checkoutGeneration: 0,
     // False on the server and during hydration; set once localStorage has been read.
     restored: false,
@@ -55,7 +54,6 @@ export const useCartStore = defineStore("cart", {
       this.items = [];
       this.lastOrderItems = [];
       this.loading = false;
-      this.error = "";
     },
     async checkout() {
       if (this.loading || !this.items.length) return null;

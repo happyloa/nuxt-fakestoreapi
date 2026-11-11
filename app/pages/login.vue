@@ -84,7 +84,7 @@ usePageSeo(() => ({
     <LoginForm
       v-if="!authStore.isAuthenticated"
       :loading="authStore.loading"
-      :error="authStore.error ?? undefined"
+      :error="authStore.loginError ? $t(authStore.loginError) : ''"
       @submit="handleSubmit"
     />
   </div>

@@ -4,6 +4,14 @@
  * 提供產品的查詢、單一取得、更新與刪除功能
  */
 
+import {
+  deleteProduct,
+  getProductById,
+  getProductCategories,
+  patchProduct,
+  queryProducts,
+  updateProduct,
+} from "~/services/fakestore/products";
 import { useProductsStore } from "~/stores/products";
 import { useNotificationsStore } from "~/stores/notifications";
 import type { Product, UpdateProductPayload } from "#shared/types/fakestore";
@@ -23,7 +31,7 @@ const productQueryState = productQuery.state;
 const handleProductQuery = () =>
   productQuery.run(
     () =>
-      productsStore.queryProducts({
+      queryProducts({
         category: productQueryForm.category,
         limit: productQueryForm.limit,
         sort: productQueryForm.sort,
@@ -40,19 +48,14 @@ const productById = useApiOperation<Product | null>(null);
 const productByIdState = productById.state;
 const handleProductById = () => {
   if (!productByIdForm.id) return productById.fail(t("api.errors.idRequired"));
-  return productById.run(() =>
-    productsStore.fetchProductById(Number(productByIdForm.id)),
-  );
+  return productById.run(() => getProductById(Number(productByIdForm.id)));
 };
 
 // 取得全部分類 (Fetch All Categories)
 const productCategories = useApiOperation<string[]>([]);
 const productCategoriesState = productCategories.state;
 const handleFetchCategories = () =>
-  productCategories.run(async () => {
-    await productsStore.fetchCategories(true);
-    return productsStore.categories;
-  });
+  productCategories.run(() => getProductCategories());
 
 // 更新產品 (Update Product)
 const productUpdateForm = reactive({
@@ -74,8 +77,8 @@ const handleProductUpdate = () => {
   return productUpdate.run(
     () =>
       productUpdateForm.method === "PATCH"
-        ? productsStore.patchProduct(Number(productUpdateForm.id), parsed)
-        : productsStore.updateProduct(Number(productUpdateForm.id), parsed),
+        ? patchProduct(Number(productUpdateForm.id), parsed)
+        : updateProduct(Number(productUpdateForm.id), parsed),
     {
       success: (product) =>
         t("api.products.updateSuccess", { id: product!.id }),
@@ -96,7 +99,7 @@ const handleProductDelete = () => {
     return productDelete.fail(t("api.errors.idRequired"));
   return productDelete.run(
     async () => {
-      await productsStore.deleteProduct(Number(productDeleteForm.id));
+      await deleteProduct(Number(productDeleteForm.id));
       return null;
     },
     {

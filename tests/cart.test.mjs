@@ -1,27 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createPinia, disposePinia, setActivePinia } from "pinia";
 import { computed, ref } from "vue";
-import { ModuleKind, ScriptTarget, transpileModule } from "typescript";
-
-// Run the real stores without booting Nuxt or copying their implementation.
-const moduleUrl = (source) => `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
-const loadSource = (path) => transpileModule(
-  readFileSync(new URL(path, import.meta.url), "utf8"),
-  { compilerOptions: { module: ModuleKind.ESNext, target: ScriptTarget.ES2022 } },
-).outputText;
-const piniaUrl = import.meta.resolve("pinia");
-const cartUtilsUrl = moduleUrl(loadSource("../app/utils/cart.ts"));
-const { useCartStore } = await import(moduleUrl(
-  loadSource("../app/stores/cart.ts")
-    .replace('from "pinia"', `from ${JSON.stringify(piniaUrl)}`)
-    .replace('from "~/utils/cart"', `from ${JSON.stringify(cartUtilsUrl)}`),
-));
-const { useAuthStore } = await import(moduleUrl(
-  loadSource("../app/stores/auth.ts")
-    .replace('from "pinia"', `from ${JSON.stringify(piniaUrl)}`),
-));
+// Loaded through tests/support/register.mjs: the real stores, without booting Nuxt.
+import { useCartStore } from "../app/stores/cart.ts";
+import { useAuthStore } from "../app/stores/auth.ts";
 
 const product = (id) => ({ id, title: `Product ${id}`, price: 12.34, image: `https://example.com/${id}.png` });
 const deferred = () => {

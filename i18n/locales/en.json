@@ -303,7 +303,7 @@
     "save": "Failed to save. Please try again.",
     "delete": "Failed to delete. Please try again.",
     "login": "Login failed. Please check your username and password.",
-    "profile": "Failed to load your profile."
+    "loginUnavailable": "The login service is temporarily unavailable. Please try again shortly."
   },
   "error": {
     "title404": "404",

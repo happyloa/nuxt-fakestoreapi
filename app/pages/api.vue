@@ -41,7 +41,10 @@ function moveTab(event: KeyboardEvent) {
 }
 
 // 預先抓取商品分類，供 ProductsSection 的下拉選單使用
-await productsStore.fetchCategories();
+await useAsyncData("api-categories", async () => {
+  await productsStore.loadCategories();
+  return true;
+});
 
 // 設定 SEO Meta 標籤
 usePageSeo(() => ({

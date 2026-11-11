@@ -5,12 +5,14 @@ const props = withDefaults(
     selectedCategory?: string;
     sortOrder?: "asc" | "desc";
     searchQuery?: string;
+    hasActiveFilters?: boolean;
   }>(),
   {
     categories: () => [],
     selectedCategory: "all",
     sortOrder: "asc",
     searchQuery: "",
+    hasActiveFilters: false,
   },
 );
 const emit = defineEmits<{
@@ -72,7 +74,7 @@ const sortOptions = computed(() => [
         {{ category.label }}
       </button>
       <button
-        v-if="selectedCategory !== 'all' || searchQuery || sortOrder !== 'asc'"
+        v-if="hasActiveFilters"
         type="button"
         class="min-h-11 px-3 text-sm text-brand underline underline-offset-4 dark:text-brand-light"
         @click="emit('refresh')"

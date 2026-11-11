@@ -58,7 +58,7 @@ function parseDemoOrderInput(value: unknown): DemoOrderInput {
 
 export default defineEventHandler(async (event): Promise<DemoOrder> => {
   setResponseHeader(event, "Cache-Control", "no-store");
-  const user = getSessionUser(event);
+  const user = await getSessionUser(event);
   if (!user) {
     throw createError({ statusCode: 401, statusMessage: "Authentication is required" });
   }
